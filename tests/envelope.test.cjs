@@ -4,10 +4,12 @@ const { chromium } = require('playwright');
 const { pathToFileURL } = require('node:url');
 const path = require('node:path');
 
-test('envelope theme conceals, reveals, and replays each winner', { timeout: 60000 }, async () => {
+for (const [themeId, prefix] of [['black-gold-v2', 'v2'], ['claude-paper', 'paper']]) {
+test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }, async () => {
   const browser = await chromium.launch({ headless: true });
   try {
     const page = await browser.newPage({ viewport: { width: 1600, height: 900 } });
+    page.setDefaultTimeout(10000);
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.route('https://fonts.googleapis.com/**', route => route.abort());
@@ -32,55 +34,66 @@ test('envelope theme conceals, reveals, and replays each winner', { timeout: 600
     });
     await page.reload();
     await page.waitForFunction(() => window.app?.themeManager.current);
-    await page.selectOption('#theme-select', 'black-gold-v2');
-    await page.waitForFunction(() => app.themeManager.current.id === 'black-gold-v2' && !app.startBtn.disabled);
+    await page.selectOption('#theme-select', themeId);
+    await page.waitForFunction(id => app.themeManager.current.id === id && !app.startBtn.disabled, themeId);
     const stored = await page.evaluate(() => localStorage.getItem('award_ceremony_data'));
     await page.locator('#start-btn').click();
     await page.waitForFunction(() => !!document.fullscreenElement);
+    // Waiting longer than the complete animation must not reveal the winner.
+    await page.waitForTimeout(4300);
+    assert.equal(await page.locator(`.${prefix}-card`).isVisible(), false);
+    assert.equal(await page.locator(`.${prefix}-envelope`).evaluate(el => Number(getComputedStyle(el).opacity)), 1);
+    assert.equal(await page.locator(`.${prefix}-flap`).evaluate(el => new DOMMatrix(getComputedStyle(el).transform).isIdentity), true);
+    assert.equal(await page.evaluate(() => app.themeManager.revealed), false);
+    await page.locator('#stage').click({ position: { x: 800, y: 450 } });
+    assert.equal(await page.locator('#current-index-label').textContent(), '1');
     await page.waitForTimeout(600);
-    assert.equal(await page.locator('.v2-header[data-award-category]').textContent(), 'Delight');
-    assert.equal(await page.locator('.v2-card [data-award-category]').count(), 0);
-    assert(await page.locator('.v2-header').isVisible());
-    assert.equal(await page.locator('.v2-card').evaluate(el => Number(getComputedStyle(el).opacity)), 0);
-    assert.equal(await page.locator('.v2-seal').evaluate(el => Number(getComputedStyle(el).opacity)), 1);
-    assert.equal(await page.locator('.v2-envelope').evaluate(el => Number(getComputedStyle(el).opacity)), 1);
-    if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, 'envelope-closed.png') });
+    assert.equal(await page.locator(`.${prefix}-header[data-award-category]`).textContent(), 'Delight');
+    assert.equal(await page.locator(`.${prefix}-card [data-award-category]`).count(), 0);
+    assert(await page.locator(`.${prefix}-header`).isVisible());
+    assert.equal(await page.locator(`.${prefix}-card`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
+    assert.equal(await page.locator(`.${prefix}-seal`).evaluate(el => Number(getComputedStyle(el).opacity)), 1);
+    assert.equal(await page.locator(`.${prefix}-envelope`).evaluate(el => Number(getComputedStyle(el).opacity)), 1);
+    if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, `${themeId}-closed.png`) });
     await page.waitForTimeout(1700);
-    if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, 'envelope-opening.png') });
+    if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, `${themeId}-opening.png`) });
     await page.waitForTimeout(2200);
-    assert(await page.locator('.v2-card').evaluate(el => {
+    assert(await page.locator(`.${prefix}-card`).evaluate(el => {
       const transform = getComputedStyle(el).transform;
       return transform === 'none' || new DOMMatrix(transform).isIdentity;
     }));
-    assert.equal(await page.locator('.v2-card').evaluate(el => Number(getComputedStyle(el).opacity)), 1);
-    assert.equal(await page.locator('.v2-envelope').evaluate(el => Number(getComputedStyle(el).opacity)), 0);
-    assert.equal(await page.locator('.v2-seal').evaluate(el => Number(getComputedStyle(el).opacity)), 0);
+    assert.equal(await page.locator(`.${prefix}-card`).evaluate(el => Number(getComputedStyle(el).opacity)), 1);
+    assert.equal(await page.locator(`.${prefix}-envelope`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
+    assert.equal(await page.locator(`.${prefix}-seal`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     assert.equal(await page.locator('[data-award-team]').textContent(), 'ABc');
-    assert.equal(await page.locator('.v2-header').textContent(), 'Delight');
-    assert(await page.locator('.v2-header').isVisible());
-    if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, 'envelope-revealed.png') });
+    assert.equal(await page.locator(`.${prefix}-header`).textContent(), 'Delight');
+    assert(await page.locator(`.${prefix}-header`).isVisible());
+    if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, `${themeId}-revealed.png`) });
     assert.equal(await page.evaluate(() => pendingFrames.size), 1);
 
     await page.locator('audio').evaluate(el => { el.currentTime = 15; });
     await page.locator('#stage').click({ position: { x: 800, y: 450 } });
     assert.equal(await page.locator('[data-award-team]').textContent(), '星際探索隊');
-    assert.equal(await page.locator('.v2-header').textContent(), '創新設計組');
-    assert(await page.locator('.v2-header').isVisible());
-    assert.equal(await page.locator('.v2-card').evaluate(el => Number(getComputedStyle(el).opacity)), 0);
+    assert.equal(await page.locator(`.${prefix}-header`).textContent(), '創新設計組');
+    assert(await page.locator(`.${prefix}-header`).isVisible());
+    assert.equal(await page.locator(`.${prefix}-card`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     assert(await page.locator('audio').evaluate(el => el.currentTime < 2));
-    assert.equal(await page.locator('.v2-envelope').evaluate(el => Number(getComputedStyle(el).opacity)), 1);
+    assert.equal(await page.locator(`.${prefix}-envelope`).evaluate(el => Number(getComputedStyle(el).opacity)), 1);
     // Interrupt the reveal repeatedly: only the latest winner should be shown.
     await page.locator('#prev-btn').click();
     await page.keyboard.press('ArrowRight');
+    assert.equal(await page.locator(`.${prefix}-card`).isVisible(), false);
+    await page.evaluate(() => document.activeElement.blur());
+    await page.keyboard.press('Space');
     await page.waitForTimeout(4100);
     assert.equal(await page.locator('[data-award-team]').textContent(), '星際探索隊');
-    assert.equal(await page.locator('.v2-card').evaluate(el => Number(getComputedStyle(el).opacity)), 1);
-    assert.equal(await page.locator('.v2-envelope').evaluate(el => Number(getComputedStyle(el).opacity)), 0);
+    assert.equal(await page.locator(`.${prefix}-card`).evaluate(el => Number(getComputedStyle(el).opacity)), 1);
+    assert.equal(await page.locator(`.${prefix}-envelope`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
 
     await page.evaluate(() => app.changeTheme('neon'));
     assert.equal(await page.evaluate(() => pendingFrames.size), 0);
-    assert.equal(await page.locator('.v2-envelope').count(), 0);
-    await page.evaluate(() => app.changeTheme('black-gold-v2'));
+    assert.equal(await page.locator(`.${prefix}-envelope`).count(), 0);
+    await page.evaluate(id => app.changeTheme(id), themeId);
     assert.equal(await page.evaluate(() => pendingFrames.size), 1);
     await page.keyboard.press('Escape');
     await page.waitForFunction(() => !document.fullscreenElement);
@@ -92,16 +105,18 @@ test('envelope theme conceals, reveals, and replays each winner', { timeout: 600
     await page.evaluate(() => { document.documentElement.requestFullscreen = () => Promise.reject(new Error('Test fallback')); });
     await page.locator('#start-btn').click();
     await page.evaluate(() => app.themeManager.update({ category: '全國高中職跨領域創新永續設計競賽組', team: '<script>測試</script>這是一個非常長的隊伍名稱' }));
+    assert.equal(await page.locator(`.${prefix}-card`).isVisible(), false);
+    await page.locator('#stage').click({ position: { x: 180, y: 420 } });
     await page.waitForTimeout(150);
     assert.equal(await page.evaluate(() => pendingFrames.size), 0);
-    assert.equal(await page.locator('.v2-card').evaluate(el => Number(getComputedStyle(el).opacity)), 1);
-    assert.equal(await page.locator('.v2-envelope').evaluate(el => Number(getComputedStyle(el).opacity)), 0);
+    assert.equal(await page.locator(`.${prefix}-card`).evaluate(el => Number(getComputedStyle(el).opacity)), 1);
+    assert.equal(await page.locator(`.${prefix}-envelope`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     assert(await page.locator('[data-award-team]').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
-    assert(await page.locator('.v2-header').evaluate(el => {
-      const card = el.parentElement.querySelector('.v2-card');
+    assert(await page.locator(`.${prefix}-header`).evaluate(el => {
+      const card = el.parentElement.querySelector('[data-award-team]').parentElement;
       return el.scrollWidth <= el.clientWidth + 1 && el.getBoundingClientRect().bottom < card.getBoundingClientRect().top;
     }));
-    assert(await page.locator('.v2-card').evaluate(el => el.scrollHeight <= el.clientHeight + 1));
+    assert(await page.locator(`.${prefix}-card`).evaluate(el => el.scrollHeight <= el.clientHeight + 1));
     assert.equal(await page.locator('[data-award-team] script').count(), 0);
     assert.equal(await page.evaluate(() => localStorage.getItem('award_ceremony_data')), stored);
     assert.deepEqual(errors, []);
@@ -109,3 +124,5 @@ test('envelope theme conceals, reveals, and replays each winner', { timeout: 600
     await browser.close();
   }
 });
+
+}

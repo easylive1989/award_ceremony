@@ -15,7 +15,7 @@
     <header class="header">
       <div class="badge">Award Presentation System</div>
       <h1>🏆 頒獎典禮名單設定</h1>
-      <p class="subtitle">設定各得獎組別與獲獎隊伍名稱，支援全螢幕展示，點擊畫面即可切換下一組</p>
+      <p class="subtitle">設定各得獎組別與獲獎隊伍名稱，支援全螢幕展示，每頁點擊開始揭曉，再點擊切換下一組</p>
     </header>
 
     <section class="theme-settings" aria-label="舞台外觀">
@@ -56,11 +56,11 @@
   <!-- 手動換頁舞台；composition 只負責頒獎視覺。 -->
   <div id="stage" class="stage-overlay hidden" aria-label="得獎展示舞台">
     <div id="theme-root" class="stage-viewport"></div>
-    <!-- 點擊舞台或按空白鍵前進，方向鍵切換，Esc 結束播放。 -->
+    <!-- 點擊舞台或按空白鍵揭曉，再點擊換頁；方向鍵切換，Esc 結束播放。 -->
     <div class="stage-controls">
-      <div class="stage-progress" title="點擊畫面或按空白鍵：下一組；左右鍵：切換；Esc：結束播放">
+      <div class="stage-progress" title="點擊畫面或按空白鍵：揭曉／下一組；左右鍵：切換；Esc：結束播放">
         <span id="current-index-label">1</span> / <span id="total-count-label">1</span>
-        <span class="stage-click-hint">點擊畫面 · 下一組</span>
+        <span class="stage-click-hint">點擊畫面 · 開始揭曉</span>
       </div>
       <div class="control-buttons" aria-label="播放控制">
         <div class="music-controls" role="group" aria-label="配樂控制">

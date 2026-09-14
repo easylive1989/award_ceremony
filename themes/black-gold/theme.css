@@ -74,3 +74,7 @@
 @media (prefers-reduced-motion: reduce) {
   [data-theme="black-gold"] * { animation: none !important; }
 }
+
+[data-theme="black-gold"].gold-waiting .award-winner-team,
+[data-theme="black-gold"].gold-waiting .stage-award-message,
+[data-theme="black-gold"].gold-waiting .stage-congratulations { visibility: hidden; }

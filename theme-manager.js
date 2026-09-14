@@ -8,6 +8,7 @@ class AwardThemeManager {
     this.current = null;
     this.award = { category: '得獎組別', team: '獲獎隊伍' };
     this.visible = false;
+    this.revealed = false;
     this.revision = 0;
     this.scripts = new Map();
   }
@@ -68,7 +69,8 @@ class AwardThemeManager {
       for (const method of ['update', 'setVisible', 'destroy']) {
         if (typeof instance?.[method] !== 'function') throw new Error(`皮膚缺少 ${method}：${id}`);
       }
-      instance.update({ ...this.award });
+      if (this.revealed || !instance.prepare) instance.update({ ...this.award });
+      else instance.prepare({ ...this.award });
       instance.setVisible(this.visible);
       const previous = this.current;
       this.root.replaceChildren(host);
@@ -91,7 +93,16 @@ class AwardThemeManager {
       category: award.category || '得獎獎項',
       team: award.team || '獲獎隊伍',
     };
-    this.current?.instance.update({ ...this.award });
+    this.revealed = false;
+    const instance = this.current?.instance;
+    if (instance?.prepare) instance.prepare({ ...this.award });
+    else instance?.update({ ...this.award });
+  }
+
+  reveal() {
+    if (this.revealed || !this.visible || !this.current) return;
+    this.revealed = true;
+    this.current.instance.update({ ...this.award });
   }
 
   setVisible(visible) {

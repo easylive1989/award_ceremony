@@ -60,3 +60,10 @@
   [data-theme="black-gold-v2"] * { animation: none !important; }
   [data-theme="black-gold-v2"] .v2-suspense { opacity: 0; }
 }
+
+/* Waiting is a distinct still frame, including when reduced motion is enabled. */
+[data-theme="black-gold-v2"].v2-waiting .v2-envelope { opacity: 1; transform: none; }
+[data-theme="black-gold-v2"].v2-waiting .v2-flap { transform: rotateX(0deg); z-index: 7; }
+[data-theme="black-gold-v2"].v2-waiting .v2-seal { opacity: 1; }
+[data-theme="black-gold-v2"].v2-waiting .v2-card { opacity: 0; visibility: hidden; }
+[data-theme="black-gold-v2"].v2-waiting .v2-suspense { opacity: 1; }

@@ -15,6 +15,12 @@ window.AWARD_THEME_CATALOG = {
       script: 'themes/black-gold-v2/theme.js',
     },
     {
+      id: 'claude-paper',
+      name: 'Claude 暖紙',
+      stylesheet: 'themes/claude-paper/theme.css',
+      script: 'themes/claude-paper/theme.js',
+    },
+    {
       id: 'neon',
       name: '霓虹光幕',
       stylesheet: 'themes/neon/theme.css',

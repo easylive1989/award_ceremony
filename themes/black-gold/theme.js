@@ -126,7 +126,15 @@ const line=ctx.createLinearGradient(w*.17,0,w*.83,0);line.addColorStop(0,'#d8ad5
   document.fonts.ready.then(fitText);
 
   return {
+    prepare(award) {
+      category.textContent = award.category;
+      team.textContent = award.team;
+      presentation.classList.remove('stage-enter');
+      host.classList.add('gold-waiting');
+      fitText();
+    },
     update(award) {
+      host.classList.remove('gold-waiting');
       category.style.animation = 'none';
       team.style.animation = 'none';
       category.textContent = award.category;

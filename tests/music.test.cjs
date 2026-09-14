@@ -35,6 +35,8 @@ test('music restarts on navigation, loops, and stops on exit', { timeout: 60000 
         return !audio.paused && audio.currentTime < 2;
       });
     }
+    await page.locator('#stage').click({ position: { x: 800, y: 460 } });
+    assert.equal(await page.locator('#current-index-label').textContent(), '1');
     await seek();
     await page.locator('#stage').click({ position: { x: 800, y: 460 } });
     await restarted();
@@ -49,6 +51,9 @@ test('music restarts on navigation, loops, and stops on exit', { timeout: 60000 
     assert.equal(await page.locator('#current-index-label').textContent(), '4');
     await seek();
     await page.evaluate(() => document.activeElement.blur());
+    await page.keyboard.press('Space');
+    assert.equal(await page.locator('#current-index-label').textContent(), '4');
+    assert(await page.locator('audio').evaluate(el => el.currentTime >= 12));
     await page.keyboard.press('Space');
     await restarted();
     assert.equal(await page.locator('#current-index-label').textContent(), '1');

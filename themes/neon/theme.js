@@ -36,7 +36,15 @@ window.AwardThemes.set('neon', (host) => {
   document.fonts.ready.then(fit);
 
   return {
+    prepare(award) {
+      category.textContent = award.category;
+      team.textContent = award.team;
+      host.classList.remove('neon-enter');
+      host.classList.add('neon-waiting');
+      fit();
+    },
     update(award) {
+      host.classList.remove('neon-waiting');
       category.textContent = award.category;
       team.textContent = award.team;
       fit();

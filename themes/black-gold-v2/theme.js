@@ -60,7 +60,7 @@ window.AwardThemes.set('black-gold-v2', (host) => {
   function draw() {
     if (!ctx || !width || !height) return;
     const w = width, h = height, unit = w / 1600;
-    const revealAge = reduced ? 8 : elapsed - REVEAL_AT;
+    const revealAge = host.classList.contains('v2-waiting') ? -1 : reduced ? 8 : elapsed - REVEAL_AT;
     const celebration = reduced ? 1 : Math.min(1, Math.max(0, revealAge));
     ctx.clearRect(0, 0, w, h);
     ctx.globalCompositeOperation = 'screen';
@@ -209,7 +209,18 @@ window.AwardThemes.set('black-gold-v2', (host) => {
   document.fonts.ready.then(fitText);
 
   return {
+    prepare(award) {
+      category.textContent = award.category;
+      team.textContent = award.team;
+      elapsed = 0;
+      previous = null;
+      host.classList.remove('v2-run');
+      host.classList.add('v2-waiting');
+      fitText();
+      sync();
+    },
     update(award) {
+      host.classList.remove('v2-waiting');
       category.textContent = award.category;
       team.textContent = award.team;
       elapsed = 0;

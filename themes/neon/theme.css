@@ -18,3 +18,6 @@
 @keyframes neonEnter { from { opacity: 0; transform: translateX(-2cqw); } to { opacity: 1; transform: translateX(0); } }
 @keyframes neonOrbit { from { transform: rotate(-20deg) scale(.96); } to { transform: rotate(30deg) scale(1.04); } }
 @media (prefers-reduced-motion: reduce) { [data-theme="neon"] * { animation: none !important; } }
+
+[data-theme="neon"].neon-waiting .neon-team,
+[data-theme="neon"].neon-waiting .neon-congratulations { visibility: hidden; }

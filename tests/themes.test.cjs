@@ -44,6 +44,9 @@ test('themes preserve manual presentation and clean up when replaced', { timeout
       await page.locator('#start-btn').click();
       await page.waitForFunction(() => !!document.fullscreenElement);
       assert.equal(await page.locator('[data-award-team]').textContent(), 'ABc');
+      assert.equal(await page.locator('[data-award-team]').isVisible(), false);
+      await page.locator('#stage').click({ position: { x: 800, y: 460 } });
+      assert.equal(await page.locator('#current-index-label').textContent(), '1');
       await page.waitForTimeout(2600);
       if (process.env.AWARD_SCREENSHOT_DIR) {
         await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, `theme-${id}.png`) });
@@ -56,7 +59,11 @@ test('themes preserve manual presentation and clean up when replaced', { timeout
       assert.equal(await page.locator('[data-award-team]').textContent(), '星際探索隊');
       await page.evaluate(() => document.activeElement.blur());
       await page.keyboard.press('Space');
+      assert.equal(await page.locator('[data-award-team]').textContent(), '星際探索隊');
+      assert.equal(await page.evaluate(() => app.themeManager.revealed), true);
+      await page.keyboard.press('Space');
       assert.equal(await page.locator('[data-award-team]').textContent(), 'ABc');
+      assert.equal(await page.evaluate(() => app.themeManager.revealed), false);
       assert.equal(await page.locator('#slide-progress').count(), 0);
       await page.keyboard.press('Escape');
       await page.waitForFunction(() => !document.fullscreenElement);
@@ -101,6 +108,7 @@ test('themes preserve manual presentation and clean up when replaced', { timeout
     await page.locator('#next-btn').click();
     await page.evaluate(() => app.changeTheme('neon'));
     assert.equal(await page.locator('[data-award-team]').textContent(), '星際探索隊');
+    assert.equal(await page.locator('[data-award-team]').isVisible(), false);
     assert.equal(await page.evaluate(() => pendingAnimationFrames.size), 0);
     await page.keyboard.press('Escape');
     await page.waitForFunction(() => !document.fullscreenElement);

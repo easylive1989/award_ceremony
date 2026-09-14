@@ -1,0 +1,79 @@
+[data-theme="claude-paper"] {
+  color: #141413;
+  font-family: Arial, 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  background: #bc7a5e;
+  perspective: 1200px;
+}
+[data-theme="claude-paper"] .paper-effects { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+[data-theme="claude-paper"] .paper-vignette { position: absolute; inset: 0; opacity: .065; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23816b50' filter='url(%23paper)' opacity='.45' d='M0 0h180v180H0z'/%3E%3C/svg%3E"); pointer-events: none; }
+[data-theme="claude-paper"] .paper-header { position: absolute; top: 9%; left: 24%; width: 52%; z-index: 7; text-align: center; font-size: 2.8cqw; font-weight: 600; line-height: 1.25; letter-spacing: .12em; color: #30231d; overflow-wrap: anywhere; text-wrap: balance; text-shadow: none; }
+[data-theme="claude-paper"] .paper-suspense { position: absolute; top: 27%; width: 100%; text-align: center; font: 400 2.6cqw Georgia, serif; letter-spacing: .2em; color: #39271f; font-style: italic; }
+[data-theme="claude-paper"] .paper-footer { position: absolute; bottom: 7%; width: 100%; font-size: .8cqw; text-align: center; letter-spacing: .28em; color: #39271f; }
+
+/* The envelope is layered paper geometry, with an independently hinged flap. */
+[data-theme="claude-paper"] .paper-envelope { position: absolute; left: 33%; top: 38%; width: 34cqw; height: 18cqw; z-index: 5; transform-origin: center bottom; transform: translateY(9cqw) scale(.55); opacity: 0; }
+[data-theme="claude-paper"] .paper-shell { position: absolute; inset: 0; perspective: 900px; filter: drop-shadow(0 1.2cqw 1.5cqw #66503924); }
+[data-theme="claude-paper"] .paper-envelope-back { position: absolute; inset: 0; border-radius: .4cqw; border: 1px solid #c7b9a4; background: linear-gradient(150deg, #f2ebdc, #e8dfcb 45%, #ede4d2); }
+[data-theme="claude-paper"] .paper-envelope-lining { position: absolute; inset: .35cqw; background: repeating-linear-gradient(45deg, #d9775714 0 1px, transparent 1px 9px), linear-gradient(#e8d8c2, #f2e5d4); border: 1px solid #c9bba4; }
+[data-theme="claude-paper"] .paper-flap { position: absolute; left: 0; top: 0; width: 100%; height: 14cqw; transform-origin: center top; transform: rotateX(180deg); z-index: 1; }
+[data-theme="claude-paper"] .paper-flap::before { content: ''; position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 50% 73%); background: linear-gradient(160deg, #d6c7b0, #bba98e 56%, #dac9b1); }
+[data-theme="claude-paper"] .paper-flap::after { content: ''; position: absolute; inset: .17cqw .35cqw .3cqw; clip-path: polygon(0 0, 100% 0, 50% 73%); background: linear-gradient(160deg, #faf5e9, #eee6d6 55%, #e0d2bc); }
+[data-theme="claude-paper"] .paper-pocket { position: absolute; inset: 0; z-index: 4; border-radius: .3cqw; overflow: hidden; }
+[data-theme="claude-paper"] .paper-pocket::before { content: ''; position: absolute; inset: 0; clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(115deg, #d4c6b2, #e7dac8 38%, #cbb9a0 68%, #e4d8c5); }
+[data-theme="claude-paper"] .paper-pocket::after { content: ''; position: absolute; inset: .2cqw; clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(35deg, #eee5d4 0%, #f5eedf 49.7%, #d0bea3 50%, #eae0cf 50.3%, #f1e9d9 100%); }
+[data-theme="claude-paper"] .paper-envelope-label { position: absolute; bottom: 12%; left: 0; width: 100%; text-align: center; z-index: 6; font-size: .65cqw; letter-spacing: .5em; color: #8c7a63; }
+[data-theme="claude-paper"] .paper-seal { position: absolute; z-index: 8; top: 40%; left: 43.5%; width: 4.4cqw; height: 4.4cqw; border-radius: 50%; display: grid; place-items: center; border: .2cqw solid #b75e42; outline: 1px solid #d59277; background: radial-gradient(circle at 30% 20%, #e89979, #d97757 52%, #ba6348); color: #fff4e4; font-size: 2.3cqw; box-shadow: 0 .3cqw .6cqw #64402e2b; opacity: 0; }
+
+/* The card begins inside the envelope and becomes the final readable award. */
+[data-theme="claude-paper"] .paper-card { position: absolute; left: 12%; top: 24%; width: 76%; height: 43%; z-index: 6; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 2cqw 3cqw; text-align: center; border: 1px solid #dcd5c7; border-radius: .5cqw; background: linear-gradient(115deg, #fffefa, #faf7ef 65%, #f8f2e6); box-shadow: 0 .3cqw .6cqw #6d513708, 0 1.4cqw 4cqw #6d513718; }
+[data-theme="claude-paper"] .paper-card::before { content: ''; position: absolute; inset: .7cqw; border: 1px solid #e8e0d1; pointer-events: none; }
+[data-theme="claude-paper"] .paper-card > * { flex-shrink: 0; }
+[data-theme="claude-paper"] .paper-kicker { font: italic 1.25cqw Georgia, 'Songti TC', serif; letter-spacing: .02em; color: #ad634b; margin-bottom: 1.2cqw; }
+[data-theme="claude-paper"] .paper-team { max-width: 100%; margin: .8cqw 0 1cqw; font-size: 7.8cqw; font-family: Georgia, 'Songti TC', 'Noto Serif TC', serif; font-weight: 500; line-height: 1.15; letter-spacing: .015em; text-wrap: balance; overflow-wrap: anywhere; color: #292722; }
+[data-theme="claude-paper"] .paper-congrats { font-size: 1.2cqw; letter-spacing: .5em; color: #aa5c43; }
+[data-theme="claude-paper"] .paper-congrats span { display: block; font-size: .55cqw; letter-spacing: .32em; color: #8c8275; margin-top: .65cqw; }
+
+[data-theme="claude-paper"].paper-run .paper-envelope { animation: claudePaperEnvelope 4s both; }
+[data-theme="claude-paper"].paper-run .paper-shell { animation: claudePaperShake 1.6s both; }
+[data-theme="claude-paper"].paper-run .paper-flap { animation: claudePaperFlap .8s 1.5s both; }
+[data-theme="claude-paper"].paper-run .paper-seal { animation: claudePaperSeal .45s 1.32s both; }
+[data-theme="claude-paper"].paper-run .paper-card { animation: claudePaperCard 1.65s 1.85s both; }
+[data-theme="claude-paper"].paper-run .paper-suspense { animation: claudePaperSuspense .5s 1.55s both; }
+[data-theme="claude-paper"].paper-paused * { animation-play-state: paused !important; }
+@keyframes claudePaperEnvelope {
+  0%, 47% { transform: translateY(0) scale(1); }
+  0%, 62% { opacity: 1; }
+  78% { transform: translateY(9.5cqw) scale(.53); }
+  87.5%, 100% { opacity: 0; }
+  100% { transform: translateY(9cqw) scale(.55); }
+}
+@keyframes claudePaperShake { 0%, 16%, 100% { transform: translateX(0) rotate(0); } 23%, 39%, 55%, 71%, 87% { transform: translateX(-.65cqw) rotate(-2.5deg); } 31%, 47%, 63%, 79%, 95% { transform: translateX(.65cqw) rotate(2.5deg); } }
+@keyframes claudePaperFlap { 0% { transform: rotateX(0deg); z-index: 7; } 49% { z-index: 7; } 50%, 100% { z-index: 1; } 100% { transform: rotateX(180deg); } }
+@keyframes claudePaperSeal { 0% { opacity: 1; transform: scale(1); } 65% { opacity: .8; transform: translateY(-1cqw) scale(1.2) rotate(15deg); } 100% { opacity: 0; transform: translateY(2cqw) scale(.6) rotate(35deg); } }
+@keyframes claudePaperCard { 0% { opacity: 0; transform: translateY(13cqw) scale(.37); filter: blur(3px); } 15% { opacity: 1; } 67% { opacity: 1; transform: translateY(-1.1cqw) scale(1.025); filter: blur(0); } 84% { transform: translateY(.3cqw) scale(.993); } 100% { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes claudePaperSuspense { from { opacity: 1; } to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="claude-paper"] * { animation: none !important; }
+  [data-theme="claude-paper"] .paper-suspense { opacity: 0; }
+}
+
+[data-theme="claude-paper"] .paper-seal svg { width: 80%; height: 80%; }
+/* Keep the shared controls legible on the terracotta stage, without changing other skins. */
+#stage:has([data-theme="claude-paper"]) { background: #bc7a5e; }
+#stage:has([data-theme="claude-paper"]) .stage-controls { opacity: .8; }
+#stage:has([data-theme="claude-paper"]) .stage-controls:hover,
+#stage:has([data-theme="claude-paper"]) .stage-controls:focus-within { opacity: 1; }
+#stage:has([data-theme="claude-paper"]) .stage-progress { color: #30231d; }
+#stage:has([data-theme="claude-paper"]) .ctrl-btn { background: #faf9f5dd; border-color: #c7beb0; color: #514638; }
+#stage:has([data-theme="claude-paper"]) .ctrl-btn:hover { background: #eadfd0; }
+#stage:has([data-theme="claude-paper"]) .ctrl-btn:focus-visible,
+#stage:has([data-theme="claude-paper"]) #music-volume:focus-visible { outline-color: #ac593e; }
+#stage:has([data-theme="claude-paper"]) #music-volume { accent-color: #d97757; }
+#stage:has([data-theme="claude-paper"]) .music-status { color: #30231d; }
+
+/* Waiting is a distinct still frame, including when reduced motion is enabled. */
+[data-theme="claude-paper"].paper-waiting .paper-envelope { opacity: 1; transform: none; }
+[data-theme="claude-paper"].paper-waiting .paper-flap { transform: rotateX(0deg); z-index: 7; }
+[data-theme="claude-paper"].paper-waiting .paper-seal { opacity: 1; }
+[data-theme="claude-paper"].paper-waiting .paper-card { opacity: 0; visibility: hidden; }
+[data-theme="claude-paper"].paper-waiting .paper-suspense { opacity: 1; }

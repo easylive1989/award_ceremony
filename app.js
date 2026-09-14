@@ -40,6 +40,7 @@ class AwardCeremonyApp {
     this.themeStatus = document.getElementById('theme-status');
     this.currentIndexLabel = document.getElementById('current-index-label');
     this.totalCountLabel = document.getElementById('total-count-label');
+    this.clickHint = document.querySelector('.stage-click-hint');
 
     // 控制按鈕
     this.prevBtn = document.getElementById('prev-btn');
@@ -60,10 +61,10 @@ class AwardCeremonyApp {
     this.nextBtn.addEventListener('click', () => this.nextSlide());
     this.exitFullscreenBtn.addEventListener('click', () => this.exitPresentation());
 
-    // 點擊舞台換到下一組；控制列的按鈕維持各自的操作。
+    // 每頁先等待點擊揭曉，再次點擊才換頁；控制列維持各自的操作。
     this.stageOverlay.addEventListener('click', (e) => {
       if (e.target.closest('.stage-controls')) return;
-      this.nextSlide();
+      this.advancePresentation();
     });
 
     // 鍵盤快捷鍵
@@ -80,7 +81,7 @@ class AwardCeremonyApp {
         // Let a focused stage button retain its native keyboard action.
         if (e.target.closest('.stage-controls button')) return;
         e.preventDefault();
-        this.nextSlide();
+        if (!e.repeat) this.advancePresentation();
       } else if (e.key === 'Escape') {
         this.exitPresentation();
       }
@@ -277,6 +278,17 @@ class AwardCeremonyApp {
 
     if (!this.stageOverlay.classList.contains('hidden')) this.music.start();
     this.themeManager.update(current);
+    this.clickHint.textContent = '點擊畫面 · 開始揭曉';
+  }
+
+  advancePresentation() {
+    if (this.stageOverlay.classList.contains('hidden')) return;
+    if (!this.themeManager.revealed) {
+      this.themeManager.reveal();
+      this.clickHint.textContent = '點擊畫面 · 下一組';
+    } else {
+      this.nextSlide();
+    }
   }
 
   nextSlide() {

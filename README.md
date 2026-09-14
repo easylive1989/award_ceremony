@@ -2,7 +2,7 @@
 
 直接用瀏覽器開啟 `index.html`，或放在靜態網站伺服器上使用，不需要編譯。
 
-設定名單、選擇「舞台皮膚」，按「開始全螢幕播放」。點擊舞台或按空白鍵切到下一組，左右方向鍵切換，Esc 結束播放。最後一組之後回到第一組，不會自動跳頁。名單與選擇的皮膚分別儲存在瀏覽器中。
+設定名單、選擇「舞台皮膚」，按「開始全螢幕播放」。每頁先等待，點擊舞台或按空白鍵開始揭曉，再點一下切到下一組。左右方向鍵及上一組／下一組按鈕可直接切換到等待畫面，Esc 結束播放。最後一組之後回到第一組，不會自動跳頁。名單與選擇的皮膚分別儲存在瀏覽器中。
 
 ## 配樂
 
@@ -24,13 +24,20 @@
 | `themes/catalog.js` | 可選皮膚清單及預設皮膚 |
 | `themes/black-gold/` | 黑金榮耀的版面、CSS、Canvas 動畫 |
 | `themes/black-gold-v2/` | 信封抖動、開封彈出得獎卡片、金粉噴泉與光束特效 |
+| `themes/claude-paper/` | Claude 風格陶土橘背景、暖紙信封、襯線字與大片彩帶特效 |
 | `themes/neon/` | 霓虹光幕的獨立版面、CSS 動畫；可複製作為範本 |
 
 每款皮膚有自己的 DOM 結構，不必沿用黑金版的獎盃或文字排列。共用程式只傳入 `{ category, team }`，不查詢皮膚裡的元素。
 
 ## 黑金榮耀 v2
 
-在「舞台皮膚」選擇「黑金榮耀 v2」。組別名稱放大置於頂部，從登場到揭曉全程顯示，卡片內僅顯示隊伍名稱與祝賀文字。每次換頁會重播約 4 秒的登場：信封抖動、封蠟脫落、封口掀開、得獎卡片彈出放大，信封在開封後淡出；揭曉後隊伍名稱保持顯示，背景持續播放金粉、光束與側邊噴泉。配樂沿用每次換頁從頭播放的設定。減少動態效果模式會直接顯示得獎卡片。
+在「舞台皮膚」選擇「黑金榮耀 v2」。組別名稱放大置於頂部，從登場到揭曉全程顯示，卡片內僅顯示隊伍名稱與祝賀文字。每次換頁先停在封好的信封，點擊後播放約 4 秒的登場：信封抖動、封蠟脫落、封口掀開、得獎卡片彈出放大，信封在開封後淡出；揭曉後隊伍名稱保持顯示，背景持續播放金粉、光束與側邊噴泉。配樂沿用每次換頁從頭播放的設定。減少動態效果模式仍先等待點擊，點擊後直接顯示得獎卡片。
+
+## Claude 暖紙
+
+在皮膚選單選擇「Claude 暖紙」。沿用黑金 v2 的四秒信封揭曉流程與組別置頂；使用參考圖片的陶土橘背景（`#BC7A5E`）、暖米白紙張、陶土橘封蠟、深灰襯線文字與大片飄落彩帶。開封後信封淡出，換頁先等待點擊才開始動畫，音樂仍在換頁時從頭播放。頂部不加入角落標語或四角星。
+
+配色參考 [Anthropic 公開品牌指南](https://github.com/anthropics/skills/blob/main/skills/brand-guidelines/SKILL.md) 的 `#faf9f5`、`#141413`、`#d97757` 等色彩；這是一款風格改編的頒獎皮膚。
 
 ## 新增皮膚
 
@@ -52,7 +59,7 @@
 
 ## 皮膚介面
 
-每份 `theme.js` 使用一般 script 註冊工廠函式，接收屬於自己的 `host`，回傳三個方法：
+每份 `theme.js` 使用一般 script 註冊工廠函式，接收屬於自己的 `host`，回傳以下方法：
 
 ```js
 window.AwardThemes.set('my-theme', (host) => {
@@ -60,7 +67,14 @@ window.AwardThemes.set('my-theme', (host) => {
   const category = host.querySelector('[data-award-category]');
   const team = host.querySelector('[data-award-team]');
   return {
+    prepare(award) {
+      // 每頁等待畫面：顯示組別、隱藏隊伍，暫不執行揭曉動畫。
+      category.textContent = award.category;
+      team.textContent = award.team;
+      team.style.visibility = 'hidden';
+    },
     update(award) {
+      team.style.visibility = '';
       category.textContent = award.category;
       team.textContent = award.team;
       // 在此重播文字登場動畫。
@@ -75,8 +89,8 @@ window.AwardThemes.set('my-theme', (host) => {
 });
 ```
 
-- `update()` 會在初始化、換頁或換皮時呼叫。`setVisible()` 傳入舞台顯示狀態。`destroy()` 在換皮或卸載時呼叫。
-- 工廠與初次 `update()` / `setVisible()` 可能在 host 尚未插入文件時呼叫；使用 `ResizeObserver` 在實際顯示後量測尺寸，黑金與霓虹範例皆有示範。
+- `prepare()` 在初始化、換頁及尚未揭曉時換皮呼叫；`update()` 在點擊揭曉及已開始揭曉時換皮呼叫。舊皮膚沒有 `prepare()` 時仍相容原本的 `update()` 行為。`setVisible()` 傳入舞台顯示狀態。`destroy()` 在換皮或卸載時呼叫。
+- 工廠與初次 `prepare()` / `update()` / `setVisible()` 可能在 host 尚未插入文件時呼叫；使用 `ResizeObserver` 在實際顯示後量測尺寸，黑金與霓虹範例皆有示範。
 - 只在自己的 host 內查詢及修改 DOM。得獎文字透過 `textContent` 寫入，勿插入 HTML。
 - CSS 必須限定在 `[data-theme="my-theme"]` 之下，避免改到設定頁或其他皮膚；`@keyframes` 名稱也應使用獨立前綴。
 - 尊重 `prefers-reduced-motion`，並在頁面不可見時暫停持續動畫。每次建立工廠都應有獨立狀態，不能累加全域監聽器。
