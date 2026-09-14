@@ -1,0 +1,76 @@
+[data-theme="black-gold"].theme-surface {
+  container-type: inline-size;
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 65%, #252013 0, #0b100d 42%, #040807 75%);
+  font-family: Arial, 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+}
+
+[data-theme="black-gold"] #stage-particles, [data-theme="black-gold"] .stage-shade, [data-theme="black-gold"] .stage-grain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+[data-theme="black-gold"] .stage-shade { background: radial-gradient(ellipse at center, transparent 20%, #02060566 76%); }
+[data-theme="black-gold"] .stage-grain {
+  opacity: .07;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' filter='url(%23n)' opacity='.55' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
+}
+[data-theme="black-gold"] .stage-frame { position: absolute; inset: 3.3%; border: 1px solid #d6b36826; pointer-events: none; }
+[data-theme="black-gold"] .stage-frame::before, [data-theme="black-gold"] .stage-frame::after { content: ''; position: absolute; width: 8%; height: 12%; border-color: #d6b3687a; border-style: solid; }
+[data-theme="black-gold"] .stage-frame::before { left: -1px; top: -1px; border-width: 1px 0 0 1px; }
+[data-theme="black-gold"] .stage-frame::after { right: -1px; bottom: -1px; border-width: 0 1px 1px 0; }
+
+[data-theme="black-gold"] .stage-badge { position: absolute; top: 7%; left: 0; width: 100%; text-align: center; color: #d4bc89; font-size: 1cqw; letter-spacing: .5em; }
+[data-theme="black-gold"] .stage-edition { position: absolute; left: 6%; top: 7%; color: #a69776; font-size: .68cqw; letter-spacing: .15em; }
+[data-theme="black-gold"] .stage-edition span { line-height: 2.4; color: #615d4b; }
+[data-theme="black-gold"] .stage-star { position: absolute; right: 6%; top: 7%; width: 1.5cqw; height: 1.5cqw; color: #d9b977; }
+[data-theme="black-gold"] .stage-ghost { position: absolute; top: 24%; width: 100%; text-align: center; font-family: Georgia, serif; font-size: 17cqw; letter-spacing: .055em; color: transparent; -webkit-text-stroke: 1px #e3c3760c; line-height: 1; }
+[data-theme="black-gold"] .stage-side { position: absolute; left: 5.8%; top: 45%; writing-mode: vertical-rl; font-size: .63cqw; letter-spacing: .3em; color: #8e7e61; }
+[data-theme="black-gold"] .stage-side-right { left: auto; right: 5.8%; transform: rotate(180deg); }
+[data-theme="black-gold"] .stage-footer { position: absolute; bottom: 7%; width: 100%; text-align: center; font-size: .75cqw; letter-spacing: .34em; color: #aa9571; }
+
+[data-theme="black-gold"] .presentation-box { position: absolute; inset: 17% 7% 15%; display: flex; align-items: center; flex-direction: column; justify-content: center; text-align: center; }
+[data-theme="black-gold"] .presentation-box > * { flex-shrink: 0; }
+[data-theme="black-gold"] .stage-emblem { width: 6.3cqw; height: 7cqw; margin-bottom: 1.25cqw; color: #f1d08b; filter: drop-shadow(0 0 18px #e3ac4355); }
+[data-theme="black-gold"] .stage-category-row { display: flex; align-items: center; justify-content: center; gap: 1.6cqw; max-width: 90%; }
+[data-theme="black-gold"] .stage-category-row::before, [data-theme="black-gold"] .stage-category-row::after { content: ''; width: 5cqw; height: 1px; background: linear-gradient(90deg, transparent, #a98943); flex-shrink: 0; }
+[data-theme="black-gold"] .stage-category-row::after { transform: scaleX(-1); }
+[data-theme="black-gold"] .award-category-title { min-width: 0; font-size: 1.55cqw; letter-spacing: .25em; color: #e7d2a2; line-height: 1.5; overflow-wrap: anywhere; animation: blackGoldRise 1.5s .35s both; }
+[data-theme="black-gold"] .award-winner-team {
+  max-width: 100%;
+  font-size: 7.4cqw;
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: .09em;
+  margin: 1.15cqw 0 1.5cqw;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+  background: linear-gradient(115deg, #96723d 0%, #e8c680 16%, #fff6d6 35%, #d7ab59 49%, #fff3c6 65%, #b18343 82%, #f3dca4 100%);
+  background-size: 180% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 3px 1px #0009) drop-shadow(0 0 35px #d6ac4120);
+  animation: blackGoldReveal 1.8s .6s both, blackGoldShimmer 10s 2.4s ease-in-out infinite;
+}
+[data-theme="black-gold"] .stage-award-message { font-size: 1.65cqw; color: #f8e7bc; letter-spacing: .6em; padding-left: .6em; }
+[data-theme="black-gold"] .presentation-box .divider { width: 22cqw; height: 1px; background: linear-gradient(90deg, transparent, #dcb767, transparent); margin: 1.8cqw 0 1.15cqw; }
+[data-theme="black-gold"] .stage-congratulations { font-size: .78cqw; letter-spacing: .65em; color: #b5a077; }
+[data-theme="black-gold"] .stage-enter .stage-emblem { animation: blackGoldRise 1.5s .15s both; }
+[data-theme="black-gold"] .stage-enter .stage-award-message, [data-theme="black-gold"] .stage-enter .divider, [data-theme="black-gold"] .stage-enter .stage-congratulations { animation: blackGoldRise 1.4s 1s both; }
+
+@keyframes blackGoldShimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@keyframes blackGoldRise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes blackGoldReveal { from { opacity: 0; transform: scale(.9) translateY(12px); filter: blur(12px); } to { opacity: 1; transform: scale(1); } }
+
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="black-gold"] * { animation: none !important; }
+}

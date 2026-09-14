@@ -10,15 +10,13 @@ class AwardCeremonyApp {
   constructor() {
     this.awards = [];
     this.currentIndex = 0;
-    this.isPlaying = false;
-    this.timer = null;
-    this.slideDuration = 5000; // 每組播放 5 秒
-    this.progressInterval = null;
-    this.progressStartTime = null;
+    this.themeRevision = 0;
 
     this.cacheDom();
     this.bindEvents();
     this.loadState();
+    this.themeManager = new AwardThemeManager(document.getElementById('theme-root'), window.AWARD_THEME_CATALOG);
+    this.initializeThemes();
   }
 
   cacheDom() {
@@ -32,16 +30,14 @@ class AwardCeremonyApp {
 
     // 舞台 / 全螢幕 DOM
     this.stageOverlay = document.getElementById('stage');
-    this.categoryEl = document.getElementById('display-category');
-    this.teamEl = document.getElementById('display-team');
+    this.themeSelect = document.getElementById('theme-select');
+    this.themeStatus = document.getElementById('theme-status');
     this.currentIndexLabel = document.getElementById('current-index-label');
     this.totalCountLabel = document.getElementById('total-count-label');
-    this.progressBar = document.getElementById('slide-progress');
 
     // 控制按鈕
     this.prevBtn = document.getElementById('prev-btn');
     this.nextBtn = document.getElementById('next-btn');
-    this.togglePlayBtn = document.getElementById('toggle-play-btn');
     this.exitFullscreenBtn = document.getElementById('exit-fullscreen-btn');
   }
 
@@ -51,11 +47,18 @@ class AwardCeremonyApp {
     this.clearAllBtn.addEventListener('click', () => this.clearAll());
     this.startBtn.addEventListener('click', () => this.startPresentation());
 
+    this.themeSelect.addEventListener('change', () => this.changeTheme(this.themeSelect.value));
+
     // 舞台控制按鈕
     this.prevBtn.addEventListener('click', () => this.prevSlide());
     this.nextBtn.addEventListener('click', () => this.nextSlide());
-    this.togglePlayBtn.addEventListener('click', () => this.togglePlayPause());
     this.exitFullscreenBtn.addEventListener('click', () => this.exitPresentation());
+
+    // 點擊舞台換到下一組；控制列的按鈕維持各自的操作。
+    this.stageOverlay.addEventListener('click', (e) => {
+      if (e.target.closest('.stage-controls')) return;
+      this.nextSlide();
+    });
 
     // 鍵盤快捷鍵
     document.addEventListener('keydown', (e) => {
@@ -66,8 +69,10 @@ class AwardCeremonyApp {
       } else if (e.key === 'ArrowLeft') {
         this.prevSlide();
       } else if (e.key === ' ') {
+        // Let a focused stage button retain its native keyboard action.
+        if (e.target.closest('.stage-controls button')) return;
         e.preventDefault();
-        this.togglePlayPause();
+        this.nextSlide();
       } else if (e.key === 'Escape') {
         this.exitPresentation();
       }
@@ -79,6 +84,42 @@ class AwardCeremonyApp {
         this.exitPresentation();
       }
     });
+  }
+
+  initializeThemes() {
+    const catalog = window.AWARD_THEME_CATALOG;
+    for (const theme of catalog.themes) {
+      this.themeSelect.add(new Option(theme.name, theme.id));
+    }
+    let saved;
+    try { saved = localStorage.getItem('award_ceremony_theme'); } catch { /* Theme storage is optional. */ }
+    const id = catalog.themes.some(theme => theme.id === saved) ? saved : catalog.defaultId;
+    this.themeSelect.value = id;
+    this.changeTheme(id, true);
+  }
+
+  async changeTheme(id, initial = false) {
+    const revision = ++this.themeRevision;
+    this.startBtn.disabled = true;
+    this.themeStatus.textContent = '載入皮膚中…';
+    try {
+      const applied = await this.themeManager.select(id);
+      if (!applied || revision !== this.themeRevision) return;
+      this.themeSelect.value = this.themeManager.current.id;
+      this.themeStatus.textContent = '播放前可切換外觀';
+      try { localStorage.setItem('award_ceremony_theme', this.themeManager.current.id); } catch { /* Keep the selected theme for this session. */ }
+    } catch (error) {
+      if (revision !== this.themeRevision) return;
+      if (initial && id !== window.AWARD_THEME_CATALOG.defaultId) {
+        await this.changeTheme(window.AWARD_THEME_CATALOG.defaultId);
+        return;
+      }
+      this.themeSelect.value = this.themeManager.current?.id || id;
+      this.themeStatus.textContent = this.themeManager.current ? '皮膚載入失敗，已保留原本外觀。' : '皮膚載入失敗，請重新選擇。';
+      console.error(error);
+    } finally {
+      if (revision === this.themeRevision) this.startBtn.disabled = !this.themeManager.current;
+    }
   }
 
   loadState() {
@@ -196,6 +237,7 @@ class AwardCeremonyApp {
   }
 
   startPresentation() {
+    if (!this.themeManager.current) return;
     const validAwards = this.getValidAwards();
     if (validAwards.length === 0) {
       alert('請至少填寫一組完整的得獎組別或隊伍名稱！');
@@ -204,6 +246,7 @@ class AwardCeremonyApp {
 
     this.currentIndex = 0;
     this.stageOverlay.classList.remove('hidden');
+    this.themeManager.setVisible(true);
 
     // 嘗試調用瀏覽器全螢幕
     const elem = document.documentElement;
@@ -213,9 +256,7 @@ class AwardCeremonyApp {
       });
     }
 
-    this.isPlaying = true;
     this.renderCurrentSlide();
-    this.startAutoPlayTimer();
   }
 
   renderCurrentSlide() {
@@ -225,50 +266,7 @@ class AwardCeremonyApp {
     this.currentIndexLabel.textContent = this.currentIndex + 1;
     this.totalCountLabel.textContent = validAwards.length;
 
-    // 重新觸發 CSS 動畫
-    this.categoryEl.style.animation = 'none';
-    this.teamEl.style.animation = 'none';
-    void this.categoryEl.offsetHeight; // force reflow
-    void this.teamEl.offsetHeight;
-
-    this.categoryEl.textContent = current.category || '得獎獎項';
-    this.teamEl.textContent = current.team || '獲獎隊伍';
-
-    this.categoryEl.style.animation = '';
-    this.teamEl.style.animation = '';
-
-    // 重置進度條
-    this.resetProgressBar();
-  }
-
-  startAutoPlayTimer() {
-    this.clearTimers();
-    if (!this.isPlaying) return;
-
-    this.progressStartTime = Date.now();
-    this.progressInterval = setInterval(() => {
-      const elapsed = Date.now() - this.progressStartTime;
-      const pct = Math.min(100, (elapsed / this.slideDuration) * 100);
-      this.progressBar.style.width = `${pct}%`;
-
-      if (elapsed >= this.slideDuration) {
-        this.nextSlide();
-      }
-    }, 50);
-  }
-
-  resetProgressBar() {
-    this.progressBar.style.width = '0%';
-    if (this.isPlaying) {
-      this.startAutoPlayTimer();
-    }
-  }
-
-  clearTimers() {
-    if (this.progressInterval) {
-      clearInterval(this.progressInterval);
-      this.progressInterval = null;
-    }
+    this.themeManager.update(current);
   }
 
   nextSlide() {
@@ -277,7 +275,7 @@ class AwardCeremonyApp {
       this.currentIndex++;
       this.renderCurrentSlide();
     } else {
-      // 輪播結束或回到第一組
+      // 最後一組之後回到第一組
       this.currentIndex = 0;
       this.renderCurrentSlide();
     }
@@ -294,19 +292,8 @@ class AwardCeremonyApp {
     }
   }
 
-  togglePlayPause() {
-    this.isPlaying = !this.isPlaying;
-    this.togglePlayBtn.textContent = this.isPlaying ? '⏸' : '▶';
-
-    if (this.isPlaying) {
-      this.startAutoPlayTimer();
-    } else {
-      this.clearTimers();
-    }
-  }
-
   exitPresentation() {
-    this.clearTimers();
+    this.themeManager.setVisible(false);
     this.stageOverlay.classList.add('hidden');
     if (document.fullscreenElement) {
       document.exitFullscreen().catch(() => {});

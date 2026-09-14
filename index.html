@@ -15,8 +15,14 @@
     <header class="header">
       <div class="badge">Award Presentation System</div>
       <h1>🏆 頒獎典禮名單設定</h1>
-      <p class="subtitle">設定各得獎組別與獲獎隊伍名稱，支援多組輪播展示與全螢幕播放</p>
+      <p class="subtitle">設定各得獎組別與獲獎隊伍名稱，支援全螢幕展示，點擊畫面即可切換下一組</p>
     </header>
+
+    <section class="theme-settings" aria-label="舞台外觀">
+      <label for="theme-select">舞台皮膚</label>
+      <select id="theme-select" aria-describedby="theme-status"></select>
+      <span id="theme-status" role="status" aria-live="polite">載入皮膚中…</span>
+    </section>
 
     <section class="card form-card">
       <div class="card-header">
@@ -45,41 +51,25 @@
     </section>
   </main>
 
-  <!-- 全螢幕播放展示舞台 (預設隱藏) -->
-  <div id="stage" class="stage-overlay hidden">
-    <!-- 背景裝飾與光影層 -->
-    <div class="stage-background">
-      <div class="glow-orb orb-1"></div>
-      <div class="glow-orb orb-2"></div>
-    </div>
-
-    <!-- 頂部控制列 -->
+  <!-- 手動換頁舞台；composition 只負責頒獎視覺。 -->
+  <div id="stage" class="stage-overlay hidden" aria-label="得獎展示舞台">
+    <div id="theme-root" class="stage-viewport"></div>
+    <!-- 點擊舞台或按空白鍵前進，方向鍵切換，Esc 結束播放。 -->
     <div class="stage-controls">
-      <div class="stage-progress">
+      <div class="stage-progress" title="點擊畫面或按空白鍵：下一組；左右鍵：切換；Esc：結束播放">
         <span id="current-index-label">1</span> / <span id="total-count-label">1</span>
+        <span class="stage-click-hint">點擊畫面 · 下一組</span>
       </div>
-      <div class="control-buttons">
+      <div class="control-buttons" aria-label="播放控制">
         <button id="prev-btn" class="ctrl-btn" title="上一個 (← 鍵)">⏮</button>
-        <button id="toggle-play-btn" class="ctrl-btn" title="暫停/繼續 (Space 鍵)">⏸</button>
         <button id="next-btn" class="ctrl-btn" title="下一個 (→ 鍵)">⏭</button>
         <button id="exit-fullscreen-btn" class="ctrl-btn exit" title="結束播放 (Esc 鍵)">✕</button>
       </div>
     </div>
-
-    <!-- 動畫展示主體 -->
-    <div class="presentation-box">
-      <div class="stage-badge" id="display-badge">AWARD CEREMONY</div>
-      <div class="award-category-title" id="display-category">最佳創意獎</div>
-      <div class="divider"></div>
-      <div class="award-winner-team" id="display-team">宇宙無敵衝鋒隊</div>
-    </div>
-
-    <!-- 底部進度指示器 -->
-    <div class="progress-bar-container">
-      <div id="slide-progress" class="progress-bar-fill"></div>
-    </div>
   </div>
 
+  <script src="themes/catalog.js"></script>
+  <script src="theme-manager.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

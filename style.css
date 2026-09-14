@@ -275,235 +275,34 @@ body {
   font-size: 1.1rem;
 }
 
-/* ============================
-   全螢幕播放展示舞台 (Stage)
-   ============================ */
-.stage-overlay {
-  position: fixed;
-  inset: 0;
-  background: #05070a;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  user-select: none;
-}
+/* Shared stage shell and manual navigation; independent of the selected theme. */
+.stage-overlay { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; overflow: hidden; background: #030605; color: #f7eedb; user-select: none; }
+.stage-overlay.hidden { display: none; }
+.stage-viewport { position: relative; width: min(100vw, 177.7778vh); height: min(100vh, 56.25vw); }
+.theme-surface { container-type: inline-size; position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; isolation: isolate; }
+.theme-settings { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+.theme-settings label { font-size: .9rem; }
+.theme-settings select { font: inherit; color: var(--text-main); background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 9px 12px; min-width: 160px; }
+#theme-status { font-size: .8rem; color: var(--text-muted); }
+.btn:disabled { opacity: .5; cursor: wait; }
+/* Manual navigation controls; no timer or progress bar. */
+.stage-controls { position: absolute; top: 20px; left: 28px; right: 28px; display: flex; justify-content: space-between; align-items: center; gap: 16px; z-index: 10; opacity: .2; transition: opacity .3s; }
+.stage-controls:hover, .stage-controls:focus-within { opacity: 1; }
+.stage-click-hint { display: block; margin-top: 3px; font-family: var(--font-base); font-size: 11px; letter-spacing: .06em; }
+.stage-progress { font-family: var(--font-display); font-size: 1rem; letter-spacing: 1px; color: #cbb98e; }
+.control-buttons { display: flex; gap: 10px; }
+.ctrl-btn { background: #10140fb8; backdrop-filter: blur(10px); border: 1px solid #d6b36840; color: #e8d4a5; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: background .2s, transform .2s; }
+.ctrl-btn:hover { background: #544729aa; transform: scale(1.08); }
+.ctrl-btn:focus-visible { outline: 2px solid #f1d08b; outline-offset: 4px; }
+.ctrl-btn.exit:hover { background: #713b2a; }
 
-.stage-overlay.hidden {
-  display: none;
+@media (max-width: 600px) {
+  .stage-controls { top: 12px; left: 14px; right: 14px; }
+  .control-buttons { gap: 6px; }
 }
-
-/* 光影效果 */
-.stage-background {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.glow-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.25;
-}
-
-.orb-1 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, #f59e0b, transparent 70%);
-  top: 10%;
-  left: 20%;
-  animation: floatOrb 12s infinite alternate ease-in-out;
-}
-
-.orb-2 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, #ec4899, transparent 70%);
-  bottom: 10%;
-  right: 20%;
-  animation: floatOrb 16s infinite alternate-reverse ease-in-out;
-}
-
-@keyframes floatOrb {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(60px, -40px) scale(1.15); }
-}
-
-/* 舞台頂部控制列 */
-.stage-controls {
-  position: absolute;
-  top: 28px;
-  left: 36px;
-  right: 36px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 10;
-  opacity: 0.2;
-  transition: opacity 0.3s;
-}
-
-.stage-overlay:hover .stage-controls {
-  opacity: 1;
-}
-
-.stage-progress {
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  letter-spacing: 1px;
-  color: var(--text-muted);
-}
-
-.control-buttons {
-  display: flex;
-  gap: 12px;
-}
-
-.ctrl-btn {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #fff;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  transition: all 0.2s;
-}
-
-.ctrl-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.08);
-}
-
-.ctrl-btn.exit:hover {
-  background: rgba(239, 68, 68, 0.5);
-}
-
-/* 獲獎展示主體卡片 */
-.presentation-box {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 40px;
-  max-width: 90vw;
-}
-
-.stage-badge {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  letter-spacing: 6px;
-  font-weight: 700;
-  color: var(--accent);
-  text-shadow: 0 0 15px var(--accent-glow);
-  margin-bottom: 24px;
-  animation: fadeInDown 0.8s ease backwards;
-}
-
-.award-category-title {
-  font-size: clamp(2rem, 5vw, 3.8rem);
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: 1px;
-  margin-bottom: 28px;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-  animation: zoomFadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-}
-
-.divider {
-  width: 80px;
-  height: 4px;
-  background: var(--accent-gradient);
-  margin: 0 auto 36px;
-  border-radius: 2px;
-  box-shadow: 0 0 16px var(--accent);
-  animation: expandDivider 0.8s ease backwards 0.3s;
-}
-
-.award-winner-team {
-  font-size: clamp(2.6rem, 7vw, 5.5rem);
-  font-weight: 900;
-  background: linear-gradient(135deg, #ffffff 30%, #e2e8f0 70%, #fcd34d 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: 2px;
-  text-shadow: 0 10px 40px rgba(245, 158, 11, 0.2);
-  animation: winnerReveal 1s cubic-bezier(0.16, 1, 0.3, 1) backwards 0.5s;
-}
-
-/* 動畫設定 */
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes zoomFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes expandDivider {
-  from {
-    width: 0;
-    opacity: 0;
-  }
-  to {
-    width: 80px;
-    opacity: 1;
-  }
-}
-
-@keyframes winnerReveal {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* 重新觸發動畫的 class */
-.animate-in {
-  animation: pulseCard 0.6s ease-out;
-}
-
-/* 底部計時進度條 */
-.progress-bar-container {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.progress-bar-fill {
-  height: 100%;
-  width: 0%;
-  background: var(--accent-gradient);
-  box-shadow: 0 0 10px var(--accent);
+@media (pointer: coarse) { .stage-controls { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .stage-controls, .ctrl-btn { animation: none !important; transition: none !important; }
 }
 
 @media (max-width: 600px) {
