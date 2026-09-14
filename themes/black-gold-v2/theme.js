@@ -4,7 +4,7 @@ window.AwardThemes.set('black-gold-v2', (host) => {
     <div class="v2-vignette" aria-hidden="true"></div>
     <div class="v2-frame" aria-hidden="true"></div>
     <div class="v2-edition" aria-hidden="true">THE GOLDEN ENVELOPE<span>A MOMENT TO REMEMBER</span></div>
-    <div class="v2-header">榮 耀 時 刻</div>
+    <div class="v2-header" data-award-category aria-live="polite" aria-atomic="true"></div>
     <div class="v2-corner-star" aria-hidden="true">✦</div>
     <div class="v2-suspense" aria-hidden="true">And the winner is…</div>
     <div class="v2-envelope" aria-hidden="true">
@@ -19,7 +19,6 @@ window.AwardThemes.set('black-gold-v2', (host) => {
     </div>
     <div class="v2-card" aria-live="polite" aria-atomic="true">
       <div class="v2-kicker">✦ &nbsp; THE WINNING MOMENT &nbsp; ✦</div>
-      <div class="v2-category" data-award-category></div>
       <div class="v2-team" data-award-team></div>
       <div class="v2-congrats">恭喜獲獎<span>CONGRATULATIONS</span></div>
     </div>
@@ -41,7 +40,7 @@ window.AwardThemes.set('black-gold-v2', (host) => {
 
   function fitText() {
     if (disposed || !width || !height) return;
-    for (const [element, ratio, maxHeight] of [[category, .0165, .065], [team, .078, .185]]) {
+    for (const [element, ratio, maxHeight] of [[category, .028, .10], [team, .078, .185]]) {
       let size = width * ratio;
       element.style.fontSize = `${size}px`;
       while (size > 1 && (element.scrollWidth > element.clientWidth + 1 || element.offsetHeight > height * maxHeight)) {

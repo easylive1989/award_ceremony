@@ -8,7 +8,7 @@
 [data-theme="black-gold-v2"] .v2-vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 25%, #02070499 90%); pointer-events: none; }
 [data-theme="black-gold-v2"] .v2-frame { position: absolute; inset: 4%; border: 1px solid #e6c77d35; pointer-events: none; }
 [data-theme="black-gold-v2"] .v2-frame::before { content: ''; position: absolute; inset: .5cqw; border: 1px solid #e6c77d12; }
-[data-theme="black-gold-v2"] .v2-header { position: absolute; top: 9%; width: 100%; text-align: center; font-size: 1.15cqw; letter-spacing: .65em; color: #e6ce92; }
+[data-theme="black-gold-v2"] .v2-header { position: absolute; top: 9%; left: 24%; width: 52%; z-index: 7; text-align: center; font-size: 2.8cqw; font-weight: 600; line-height: 1.25; letter-spacing: .12em; color: #f0d499; overflow-wrap: anywhere; text-wrap: balance; text-shadow: 0 0 1.5cqw #e6b45c22; }
 [data-theme="black-gold-v2"] .v2-edition { position: absolute; top: 9%; left: 7%; font-size: .65cqw; letter-spacing: .22em; color: #9c8e6c; }
 [data-theme="black-gold-v2"] .v2-edition span { display: block; font-size: .56cqw; margin-top: .55cqw; }
 [data-theme="black-gold-v2"] .v2-corner-star { position: absolute; right: 7%; top: 8%; font-size: 2.2cqw; color: #e6c77d; }
@@ -16,7 +16,7 @@
 [data-theme="black-gold-v2"] .v2-footer { position: absolute; bottom: 7%; width: 100%; font-size: .8cqw; text-align: center; letter-spacing: .28em; color: #bba579; }
 
 /* The envelope is layered paper geometry, with an independently hinged flap. */
-[data-theme="black-gold-v2"] .v2-envelope { position: absolute; left: 33%; top: 38%; width: 34cqw; height: 18cqw; z-index: 5; transform-origin: center bottom; transform: translateY(9cqw) scale(.55); }
+[data-theme="black-gold-v2"] .v2-envelope { position: absolute; left: 33%; top: 38%; width: 34cqw; height: 18cqw; z-index: 5; transform-origin: center bottom; transform: translateY(9cqw) scale(.55); opacity: 0; }
 [data-theme="black-gold-v2"] .v2-shell { position: absolute; inset: 0; perspective: 900px; filter: drop-shadow(0 1.3cqw 1.5cqw #000a); }
 [data-theme="black-gold-v2"] .v2-envelope-back { position: absolute; inset: 0; border-radius: .4cqw; border: 1px solid #ccac63; background: linear-gradient(150deg, #6c4d22, #2d2515 45%, #8c6937); }
 [data-theme="black-gold-v2"] .v2-envelope-lining { position: absolute; inset: .35cqw; background: repeating-linear-gradient(45deg, #cbab6520 0 1px, transparent 1px 9px), linear-gradient(#1a160d, #5e4521); border: 1px solid #a98c48; }
@@ -34,7 +34,6 @@
 [data-theme="black-gold-v2"] .v2-card::before { content: ''; position: absolute; inset: .7cqw; border: 1px solid #dec07b2e; pointer-events: none; }
 [data-theme="black-gold-v2"] .v2-card > * { flex-shrink: 0; }
 [data-theme="black-gold-v2"] .v2-kicker { font-size: .72cqw; letter-spacing: .5em; color: #a99665; margin-bottom: 1cqw; }
-[data-theme="black-gold-v2"] .v2-category { max-width: 94%; font-size: 1.65cqw; letter-spacing: .22em; line-height: 1.35; color: #d8c08b; overflow-wrap: anywhere; }
 [data-theme="black-gold-v2"] .v2-team { max-width: 100%; margin: .8cqw 0 1cqw; font-size: 7.8cqw; font-weight: 700; line-height: 1.15; letter-spacing: .06em; text-wrap: balance; overflow-wrap: anywhere; background: linear-gradient(110deg, #a87832, #f5d99d 25%, #fff5d4 43%, #c79440 59%, #ffe8b0 76%, #a77935); background-size: 160% 100%; background-clip: text; -webkit-background-clip: text; color: transparent; filter: drop-shadow(0 .2cqw .08cqw #0009); }
 [data-theme="black-gold-v2"] .v2-congrats { font-size: 1.2cqw; letter-spacing: .5em; color: #f4dba3; }
 [data-theme="black-gold-v2"] .v2-congrats span { display: block; font-size: .55cqw; letter-spacing: .32em; color: #9e8e67; margin-top: .65cqw; }
@@ -47,7 +46,13 @@
 [data-theme="black-gold-v2"].v2-run .v2-suspense { animation: goldV2Suspense .5s 1.55s both; }
 [data-theme="black-gold-v2"].v2-run .v2-team { animation: goldV2Shimmer 8s 3.6s ease-in-out infinite; }
 [data-theme="black-gold-v2"].v2-paused * { animation-play-state: paused !important; }
-@keyframes goldV2Envelope { 0%, 47% { transform: translateY(0) scale(1); } 78% { transform: translateY(9.5cqw) scale(.53); } 100% { transform: translateY(9cqw) scale(.55); } }
+@keyframes goldV2Envelope {
+  0%, 47% { transform: translateY(0) scale(1); }
+  0%, 62% { opacity: 1; }
+  78% { transform: translateY(9.5cqw) scale(.53); }
+  87.5%, 100% { opacity: 0; }
+  100% { transform: translateY(9cqw) scale(.55); }
+}
 @keyframes goldV2Shake { 0%, 16%, 100% { transform: translateX(0) rotate(0); } 23%, 39%, 55%, 71%, 87% { transform: translateX(-.65cqw) rotate(-2.5deg); } 31%, 47%, 63%, 79%, 95% { transform: translateX(.65cqw) rotate(2.5deg); } }
 @keyframes goldV2Flap { 0% { transform: rotateX(0deg); z-index: 7; } 49% { z-index: 7; } 50%, 100% { z-index: 1; } 100% { transform: rotateX(180deg); } }
 @keyframes goldV2Seal { 0% { opacity: 1; transform: scale(1); } 65% { opacity: .8; transform: translateY(-1cqw) scale(1.2) rotate(15deg); } 100% { opacity: 0; transform: translateY(2cqw) scale(.6) rotate(35deg); } }

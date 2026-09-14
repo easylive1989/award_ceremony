@@ -38,8 +38,12 @@ test('envelope theme conceals, reveals, and replays each winner', { timeout: 600
     await page.locator('#start-btn').click();
     await page.waitForFunction(() => !!document.fullscreenElement);
     await page.waitForTimeout(600);
+    assert.equal(await page.locator('.v2-header[data-award-category]').textContent(), 'Delight');
+    assert.equal(await page.locator('.v2-card [data-award-category]').count(), 0);
+    assert(await page.locator('.v2-header').isVisible());
     assert.equal(await page.locator('.v2-card').evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     assert.equal(await page.locator('.v2-seal').evaluate(el => Number(getComputedStyle(el).opacity)), 1);
+    assert.equal(await page.locator('.v2-envelope').evaluate(el => Number(getComputedStyle(el).opacity)), 1);
     if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, 'envelope-closed.png') });
     await page.waitForTimeout(1700);
     if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, 'envelope-opening.png') });
@@ -49,22 +53,29 @@ test('envelope theme conceals, reveals, and replays each winner', { timeout: 600
       return transform === 'none' || new DOMMatrix(transform).isIdentity;
     }));
     assert.equal(await page.locator('.v2-card').evaluate(el => Number(getComputedStyle(el).opacity)), 1);
+    assert.equal(await page.locator('.v2-envelope').evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     assert.equal(await page.locator('.v2-seal').evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     assert.equal(await page.locator('[data-award-team]').textContent(), 'ABc');
+    assert.equal(await page.locator('.v2-header').textContent(), 'Delight');
+    assert(await page.locator('.v2-header').isVisible());
     if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, 'envelope-revealed.png') });
     assert.equal(await page.evaluate(() => pendingFrames.size), 1);
 
     await page.locator('audio').evaluate(el => { el.currentTime = 15; });
     await page.locator('#stage').click({ position: { x: 800, y: 450 } });
     assert.equal(await page.locator('[data-award-team]').textContent(), '星際探索隊');
+    assert.equal(await page.locator('.v2-header').textContent(), '創新設計組');
+    assert(await page.locator('.v2-header').isVisible());
     assert.equal(await page.locator('.v2-card').evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     assert(await page.locator('audio').evaluate(el => el.currentTime < 2));
+    assert.equal(await page.locator('.v2-envelope').evaluate(el => Number(getComputedStyle(el).opacity)), 1);
     // Interrupt the reveal repeatedly: only the latest winner should be shown.
     await page.locator('#prev-btn').click();
     await page.keyboard.press('ArrowRight');
     await page.waitForTimeout(4100);
     assert.equal(await page.locator('[data-award-team]').textContent(), '星際探索隊');
     assert.equal(await page.locator('.v2-card').evaluate(el => Number(getComputedStyle(el).opacity)), 1);
+    assert.equal(await page.locator('.v2-envelope').evaluate(el => Number(getComputedStyle(el).opacity)), 0);
 
     await page.evaluate(() => app.changeTheme('neon'));
     assert.equal(await page.evaluate(() => pendingFrames.size), 0);
@@ -75,7 +86,7 @@ test('envelope theme conceals, reveals, and replays each winner', { timeout: 600
     await page.waitForFunction(() => !document.fullscreenElement);
     assert.equal(await page.evaluate(() => pendingFrames.size), 0);
 
-    // Reduced motion goes directly to the open envelope and final card.
+    // Reduced motion goes directly to the final card with the envelope hidden.
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.setViewportSize({ width: 390, height: 844 });
     await page.evaluate(() => { document.documentElement.requestFullscreen = () => Promise.reject(new Error('Test fallback')); });
@@ -84,7 +95,12 @@ test('envelope theme conceals, reveals, and replays each winner', { timeout: 600
     await page.waitForTimeout(150);
     assert.equal(await page.evaluate(() => pendingFrames.size), 0);
     assert.equal(await page.locator('.v2-card').evaluate(el => Number(getComputedStyle(el).opacity)), 1);
+    assert.equal(await page.locator('.v2-envelope').evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     assert(await page.locator('[data-award-team]').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
+    assert(await page.locator('.v2-header').evaluate(el => {
+      const card = el.parentElement.querySelector('.v2-card');
+      return el.scrollWidth <= el.clientWidth + 1 && el.getBoundingClientRect().bottom < card.getBoundingClientRect().top;
+    }));
     assert(await page.locator('.v2-card').evaluate(el => el.scrollHeight <= el.clientHeight + 1));
     assert.equal(await page.locator('[data-award-team] script').count(), 0);
     assert.equal(await page.evaluate(() => localStorage.getItem('award_ceremony_data')), stored);
