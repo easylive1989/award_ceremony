@@ -1,0 +1,525 @@
+:root {
+  --bg-primary: #0d1117;
+  --bg-surface: #161b22;
+  --bg-surface-hover: #1f242c;
+  --border-color: #30363d;
+  --accent: #f59e0b;
+  --accent-glow: rgba(245, 158, 11, 0.35);
+  --accent-gradient: linear-gradient(135deg, #fbbf24, #d97706);
+  --text-main: #f0f6fc;
+  --text-muted: #8b949e;
+  --danger: #ef4444;
+  --radius-lg: 16px;
+  --radius-md: 10px;
+  --radius-sm: 6px;
+  --font-base: 'Noto Sans TC', system-ui, -apple-system, sans-serif;
+  --font-display: 'Outfit', 'Noto Sans TC', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-base);
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ============================
+   設定管理後台樣式
+   ============================ */
+.setup-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 4px 14px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card-header h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* 按鈕風格 */
+.btn {
+  font-family: var(--font-base);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--accent-gradient);
+  color: #000;
+  border: none;
+  box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+}
+
+.btn-secondary {
+  background: #238636;
+  color: #ffffff;
+}
+
+.btn-secondary:hover {
+  background: #2ea043;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-main);
+  border-color: var(--border-color);
+}
+
+.btn-outline:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--text-muted);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.text-danger {
+  color: var(--danger) !important;
+}
+
+.btn-large {
+  font-size: 1.1rem;
+  padding: 12px 28px;
+  font-weight: 800;
+}
+
+/* 得獎清單卡片項目 */
+.award-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.award-item {
+  display: grid;
+  grid-template-columns: 40px 1fr 1fr 40px;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  padding: 14px;
+  border-radius: var(--radius-md);
+  transition: border-color 0.2s;
+}
+
+.award-item:hover {
+  border-color: #58a6ff;
+}
+
+.item-index {
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input-group label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input-group input {
+  background: #0d1117;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  padding: 9px 12px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-group input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.del-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+}
+
+.del-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+.status-info {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.status-info .highlight {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* ============================
+   全螢幕播放展示舞台 (Stage)
+   ============================ */
+.stage-overlay {
+  position: fixed;
+  inset: 0;
+  background: #05070a;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  user-select: none;
+}
+
+.stage-overlay.hidden {
+  display: none;
+}
+
+/* 光影效果 */
+.stage-background {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.25;
+}
+
+.orb-1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #f59e0b, transparent 70%);
+  top: 10%;
+  left: 20%;
+  animation: floatOrb 12s infinite alternate ease-in-out;
+}
+
+.orb-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #ec4899, transparent 70%);
+  bottom: 10%;
+  right: 20%;
+  animation: floatOrb 16s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(60px, -40px) scale(1.15); }
+}
+
+/* 舞台頂部控制列 */
+.stage-controls {
+  position: absolute;
+  top: 28px;
+  left: 36px;
+  right: 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  opacity: 0.2;
+  transition: opacity 0.3s;
+}
+
+.stage-overlay:hover .stage-controls {
+  opacity: 1;
+}
+
+.stage-progress {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.control-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.ctrl-btn {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: all 0.2s;
+}
+
+.ctrl-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.08);
+}
+
+.ctrl-btn.exit:hover {
+  background: rgba(239, 68, 68, 0.5);
+}
+
+/* 獲獎展示主體卡片 */
+.presentation-box {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 40px;
+  max-width: 90vw;
+}
+
+.stage-badge {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 6px;
+  font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 0 15px var(--accent-glow);
+  margin-bottom: 24px;
+  animation: fadeInDown 0.8s ease backwards;
+}
+
+.award-category-title {
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin-bottom: 28px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  animation: zoomFadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.divider {
+  width: 80px;
+  height: 4px;
+  background: var(--accent-gradient);
+  margin: 0 auto 36px;
+  border-radius: 2px;
+  box-shadow: 0 0 16px var(--accent);
+  animation: expandDivider 0.8s ease backwards 0.3s;
+}
+
+.award-winner-team {
+  font-size: clamp(2.6rem, 7vw, 5.5rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, #ffffff 30%, #e2e8f0 70%, #fcd34d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+  text-shadow: 0 10px 40px rgba(245, 158, 11, 0.2);
+  animation: winnerReveal 1s cubic-bezier(0.16, 1, 0.3, 1) backwards 0.5s;
+}
+
+/* 動畫設定 */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes expandDivider {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 80px;
+    opacity: 1;
+  }
+}
+
+@keyframes winnerReveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 重新觸發動畫的 class */
+.animate-in {
+  animation: pulseCard 0.6s ease-out;
+}
+
+/* 底部計時進度條 */
+.progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent-gradient);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+@media (max-width: 600px) {
+  .award-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .item-index {
+    display: none;
+  }
+  .form-footer {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .btn-large {
+    width: 100%;
+    justify-content: center;
+  }
+}

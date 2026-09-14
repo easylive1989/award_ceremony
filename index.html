@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>頒獎典禮播放系統</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;800&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- 設定管理後台 / 輸入介面 -->
+  <main id="app" class="setup-container">
+    <header class="header">
+      <div class="badge">Award Presentation System</div>
+      <h1>🏆 頒獎典禮名單設定</h1>
+      <p class="subtitle">設定各得獎組別與獲獎隊伍名稱，支援多組輪播展示與全螢幕播放</p>
+    </header>
+
+    <section class="card form-card">
+      <div class="card-header">
+        <h2>名單清單</h2>
+        <div class="actions">
+          <button id="add-item-btn" class="btn btn-secondary">
+            <span class="icon">➕</span> 新增得獎項目
+          </button>
+          <button id="load-sample-btn" class="btn btn-outline">載入範例資料</button>
+          <button id="clear-all-btn" class="btn btn-ghost text-danger">清空</button>
+        </div>
+      </div>
+
+      <div id="award-list" class="award-list">
+        <!-- 動態產生的輸入卡片會放在這裡 -->
+      </div>
+
+      <div class="form-footer">
+        <div class="status-info">
+          目前共有 <span id="award-count" class="highlight">0</span> 個得獎項目
+        </div>
+        <button id="start-btn" class="btn btn-primary btn-large">
+          <span class="icon">▶</span> 開始全螢幕播放
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- 全螢幕播放展示舞台 (預設隱藏) -->
+  <div id="stage" class="stage-overlay hidden">
+    <!-- 背景裝飾與光影層 -->
+    <div class="stage-background">
+      <div class="glow-orb orb-1"></div>
+      <div class="glow-orb orb-2"></div>
+    </div>
+
+    <!-- 頂部控制列 -->
+    <div class="stage-controls">
+      <div class="stage-progress">
+        <span id="current-index-label">1</span> / <span id="total-count-label">1</span>
+      </div>
+      <div class="control-buttons">
+        <button id="prev-btn" class="ctrl-btn" title="上一個 (← 鍵)">⏮</button>
+        <button id="toggle-play-btn" class="ctrl-btn" title="暫停/繼續 (Space 鍵)">⏸</button>
+        <button id="next-btn" class="ctrl-btn" title="下一個 (→ 鍵)">⏭</button>
+        <button id="exit-fullscreen-btn" class="ctrl-btn exit" title="結束播放 (Esc 鍵)">✕</button>
+      </div>
+    </div>
+
+    <!-- 動畫展示主體 -->
+    <div class="presentation-box">
+      <div class="stage-badge" id="display-badge">AWARD CEREMONY</div>
+      <div class="award-category-title" id="display-category">最佳創意獎</div>
+      <div class="divider"></div>
+      <div class="award-winner-team" id="display-team">宇宙無敵衝鋒隊</div>
+    </div>
+
+    <!-- 底部進度指示器 -->
+    <div class="progress-bar-container">
+      <div id="slide-progress" class="progress-bar-fill"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
