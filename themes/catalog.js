@@ -9,6 +9,12 @@ window.AWARD_THEME_CATALOG = {
       script: 'themes/black-gold/theme.js',
     },
     {
+      id: 'black-gold-v2',
+      name: '黑金榮耀 v2',
+      stylesheet: 'themes/black-gold-v2/theme.css',
+      script: 'themes/black-gold-v2/theme.js',
+    },
+    {
       id: 'neon',
       name: '霓虹光幕',
       stylesheet: 'themes/neon/theme.css',
