@@ -39,6 +39,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     const stored = await page.evaluate(() => localStorage.getItem('award_ceremony_data'));
     await page.locator('#start-btn').click();
     await page.waitForFunction(() => !!document.fullscreenElement);
+      assert.equal(await page.locator('#stage button, #stage input, .stage-progress, .stage-controls').count(), 0);
     // Waiting longer than the complete animation must not reveal the winner.
     await page.waitForTimeout(4300);
     assert.equal(await page.locator(`.${prefix}-card`).isVisible(), false);
@@ -46,7 +47,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     assert.equal(await page.locator(`.${prefix}-flap`).evaluate(el => new DOMMatrix(getComputedStyle(el).transform).isIdentity), true);
     assert.equal(await page.evaluate(() => app.themeManager.revealed), false);
     await page.locator('#stage').click({ position: { x: 800, y: 450 } });
-    assert.equal(await page.locator('#current-index-label').textContent(), '1');
+    assert.equal(await page.evaluate(() => String(app.currentIndex + 1)), '1');
     await page.waitForTimeout(600);
     assert.equal(await page.locator(`.${prefix}-header[data-award-category]`).textContent(), 'Delight');
     assert.equal(await page.locator(`.${prefix}-card [data-award-category]`).count(), 0);
@@ -80,7 +81,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     assert(await page.locator('audio').evaluate(el => el.currentTime < 2));
     assert.equal(await page.locator(`.${prefix}-envelope`).evaluate(el => Number(getComputedStyle(el).opacity)), 1);
     // Interrupt the reveal repeatedly: only the latest winner should be shown.
-    await page.locator('#prev-btn').click();
+    await page.keyboard.press('ArrowLeft');
     await page.keyboard.press('ArrowRight');
     assert.equal(await page.locator(`.${prefix}-card`).isVisible(), false);
     await page.evaluate(() => document.activeElement.blur());

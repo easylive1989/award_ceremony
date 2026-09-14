@@ -34,18 +34,12 @@ class AwardCeremonyApp {
     this.clearAllBtn = document.getElementById('clear-all-btn');
     this.startBtn = document.getElementById('start-btn');
 
+    this.setupContainer = document.getElementById('app');
+
     // 舞台 / 全螢幕 DOM
     this.stageOverlay = document.getElementById('stage');
     this.themeSelect = document.getElementById('theme-select');
     this.themeStatus = document.getElementById('theme-status');
-    this.currentIndexLabel = document.getElementById('current-index-label');
-    this.totalCountLabel = document.getElementById('total-count-label');
-    this.clickHint = document.querySelector('.stage-click-hint');
-
-    // 控制按鈕
-    this.prevBtn = document.getElementById('prev-btn');
-    this.nextBtn = document.getElementById('next-btn');
-    this.exitFullscreenBtn = document.getElementById('exit-fullscreen-btn');
   }
 
   bindEvents() {
@@ -56,14 +50,8 @@ class AwardCeremonyApp {
 
     this.themeSelect.addEventListener('change', () => this.changeTheme(this.themeSelect.value));
 
-    // 舞台控制按鈕
-    this.prevBtn.addEventListener('click', () => this.prevSlide());
-    this.nextBtn.addEventListener('click', () => this.nextSlide());
-    this.exitFullscreenBtn.addEventListener('click', () => this.exitPresentation());
-
-    // 每頁先等待點擊揭曉，再次點擊才換頁；控制列維持各自的操作。
-    this.stageOverlay.addEventListener('click', (e) => {
-      if (e.target.closest('.stage-controls')) return;
+    // 每頁先等待點擊揭曉，再次點擊才換頁。
+    this.stageOverlay.addEventListener('click', () => {
       this.advancePresentation();
     });
 
@@ -78,8 +66,6 @@ class AwardCeremonyApp {
       } else if (e.key === 'ArrowLeft') {
         this.prevSlide();
       } else if (e.key === ' ') {
-        // Let a focused stage button retain its native keyboard action.
-        if (e.target.closest('.stage-controls button')) return;
         e.preventDefault();
         if (!e.repeat) this.advancePresentation();
       } else if (e.key === 'Escape') {
@@ -254,7 +240,9 @@ class AwardCeremonyApp {
     }
 
     this.currentIndex = 0;
+    this.setupContainer.inert = true;
     this.stageOverlay.classList.remove('hidden');
+    this.stageOverlay.focus({ preventScroll: true });
     this.themeManager.setVisible(true);
 
     this.renderCurrentSlide();
@@ -273,19 +261,14 @@ class AwardCeremonyApp {
     const validAwards = this.getValidAwards();
     const current = validAwards[this.currentIndex];
 
-    this.currentIndexLabel.textContent = this.currentIndex + 1;
-    this.totalCountLabel.textContent = validAwards.length;
-
     if (!this.stageOverlay.classList.contains('hidden')) this.music.start();
     this.themeManager.update(current);
-    this.clickHint.textContent = '點擊畫面 · 開始揭曉';
   }
 
   advancePresentation() {
     if (this.stageOverlay.classList.contains('hidden')) return;
     if (!this.themeManager.revealed) {
       this.themeManager.reveal();
-      this.clickHint.textContent = '點擊畫面 · 下一組';
     } else {
       this.nextSlide();
     }
@@ -318,6 +301,8 @@ class AwardCeremonyApp {
     this.music.stop();
     this.themeManager.setVisible(false);
     this.stageOverlay.classList.add('hidden');
+    this.setupContainer.inert = false;
+    this.startBtn.focus({ preventScroll: true });
     if (document.fullscreenElement) {
       document.exitFullscreen().catch(() => {});
     }

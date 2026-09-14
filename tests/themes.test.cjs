@@ -43,17 +43,18 @@ test('themes preserve manual presentation and clean up when replaced', { timeout
       assert.equal(await page.locator('[data-award-theme-style]').count(), 1);
       await page.locator('#start-btn').click();
       await page.waitForFunction(() => !!document.fullscreenElement);
+      assert.equal(await page.locator('#stage button, #stage input, .stage-progress, .stage-controls').count(), 0);
       assert.equal(await page.locator('[data-award-team]').textContent(), 'ABc');
       assert.equal(await page.locator('[data-award-team]').isVisible(), false);
       await page.locator('#stage').click({ position: { x: 800, y: 460 } });
-      assert.equal(await page.locator('#current-index-label').textContent(), '1');
+      assert.equal(await page.evaluate(() => String(app.currentIndex + 1)), '1');
       await page.waitForTimeout(2600);
       if (process.env.AWARD_SCREENSHOT_DIR) {
         await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, `theme-${id}.png`) });
       }
       await page.locator('#stage').click({ position: { x: 800, y: 460 } });
       assert.equal(await page.locator('[data-award-team]').textContent(), '星際探索隊');
-      await page.locator('#prev-btn').click();
+      await page.keyboard.press('ArrowLeft');
       assert.equal(await page.locator('[data-award-team]').textContent(), 'ABc');
       await page.keyboard.press('ArrowLeft');
       assert.equal(await page.locator('[data-award-team]').textContent(), '星際探索隊');
@@ -100,12 +101,13 @@ test('themes preserve manual presentation and clean up when replaced', { timeout
     await page.waitForFunction(() => window.app?.themeManager.current?.id === 'black-gold');
     await page.locator('#start-btn').click();
     await page.waitForFunction(() => !!document.fullscreenElement);
+      assert.equal(await page.locator('#stage button, #stage input, .stage-progress, .stage-controls').count(), 0);
     await page.waitForTimeout(5500);
     assert.equal(await page.locator('[data-award-team]').textContent(), 'ABc');
     assert.equal(await page.evaluate(() => pendingAnimationFrames.size), 1);
 
     // Switching a visible stage retains the displayed award and releases the canvas loop.
-    await page.locator('#next-btn').click();
+    await page.keyboard.press('ArrowRight');
     await page.evaluate(() => app.changeTheme('neon'));
     assert.equal(await page.locator('[data-award-team]').textContent(), '星際探索隊');
     assert.equal(await page.locator('[data-award-team]').isVisible(), false);

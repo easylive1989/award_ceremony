@@ -24,6 +24,17 @@
       <span id="theme-status" role="status" aria-live="polite">載入皮膚中…</span>
     </section>
 
+    <section class="music-settings" aria-label="配樂設定">
+      <label for="music-volume">配樂音量</label>
+      <div class="music-controls" role="group" aria-label="配樂控制">
+        <button id="music-toggle" class="btn btn-outline" type="button" aria-label="靜音配樂" aria-pressed="false" title="靜音配樂">🔊</button>
+        <input id="music-volume" type="range" min="0" max="100" step="1" value="35" aria-label="配樂音量" aria-valuetext="35%">
+      </div>
+      <span class="music-help">音量與靜音設定會自動儲存，進入展示後開始播放。</span>
+      <div id="music-status" class="music-status" role="status" aria-live="polite"></div>
+    </section>
+    <p class="presentation-help">點擊或空白鍵：揭曉／下一組　← →：切換組別　Esc：返回設定</p>
+
     <section class="card form-card">
       <div class="card-header">
         <h2>名單清單</h2>
@@ -54,25 +65,8 @@
   <audio id="award-music" src="assets/audio/triomphe-eclatant.mp3" preload="metadata" loop></audio>
 
   <!-- 手動換頁舞台；composition 只負責頒獎視覺。 -->
-  <div id="stage" class="stage-overlay hidden" aria-label="得獎展示舞台">
+  <div id="stage" class="stage-overlay hidden" tabindex="-1" aria-label="得獎展示舞台">
     <div id="theme-root" class="stage-viewport"></div>
-    <!-- 點擊舞台或按空白鍵揭曉，再點擊換頁；方向鍵切換，Esc 結束播放。 -->
-    <div class="stage-controls">
-      <div class="stage-progress" title="點擊畫面或按空白鍵：揭曉／下一組；左右鍵：切換；Esc：結束播放">
-        <span id="current-index-label">1</span> / <span id="total-count-label">1</span>
-        <span class="stage-click-hint">點擊畫面 · 開始揭曉</span>
-      </div>
-      <div class="control-buttons" aria-label="播放控制">
-        <div class="music-controls" role="group" aria-label="配樂控制">
-          <button id="music-toggle" class="ctrl-btn" type="button" aria-label="靜音配樂" aria-pressed="false" title="靜音配樂">🔊</button>
-          <input id="music-volume" type="range" min="0" max="100" step="1" value="35" aria-label="配樂音量" aria-valuetext="35%">
-        </div>
-        <button id="prev-btn" class="ctrl-btn" title="上一個 (← 鍵)">⏮</button>
-        <button id="next-btn" class="ctrl-btn" title="下一個 (→ 鍵)">⏭</button>
-        <button id="exit-fullscreen-btn" class="ctrl-btn exit" title="結束播放 (Esc 鍵)">✕</button>
-      </div>
-      <div id="music-status" class="music-status" role="status" aria-live="polite"></div>
-    </div>
   </div>
 
   <script src="themes/catalog.js"></script>

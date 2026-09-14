@@ -23,7 +23,6 @@
 [data-theme="black-gold-v2"] .v2-pocket { position: absolute; inset: 0; z-index: 4; border-radius: .3cqw; overflow: hidden; }
 [data-theme="black-gold-v2"] .v2-pocket::before { content: ''; position: absolute; inset: 0; clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(115deg, #c6a05a, #f3d99f 38%, #b28a47 68%, #e8cb8c); }
 [data-theme="black-gold-v2"] .v2-pocket::after { content: ''; position: absolute; inset: .2cqw; clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(35deg, #312818 0%, #68502a 49.7%, #b6914e 50%, #4d3c20 50.3%, #262215 100%); }
-[data-theme="black-gold-v2"] .v2-envelope-label { position: absolute; bottom: 12%; left: 0; width: 100%; text-align: center; z-index: 6; font-size: .65cqw; letter-spacing: .5em; color: #d9ba79; }
 [data-theme="black-gold-v2"] .v2-seal { position: absolute; z-index: 8; top: 40%; left: 43.5%; width: 4.4cqw; height: 4.4cqw; border-radius: 50%; display: grid; place-items: center; border: .28cqw double #eccc84; outline: 1px solid #91703b; background: radial-gradient(circle at 30% 20%, #f3dda8, #cda557 52%, #81602c); color: #76541f; font-size: 2.3cqw; text-shadow: 0 1px #f9e5b4; box-shadow: 0 .3cqw .6cqw #0007; opacity: 0; }
 
 /* The card begins inside the envelope and becomes the final readable award. */

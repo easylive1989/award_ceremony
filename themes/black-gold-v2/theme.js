@@ -11,7 +11,6 @@ window.AwardThemes.set('black-gold-v2', (host) => {
         <div class="v2-envelope-lining"></div>
         <div class="v2-flap"></div>
         <div class="v2-pocket"></div>
-        <div class="v2-envelope-label">EXCELLENCE • SEALED IN GOLD</div>
         <div class="v2-seal">✦</div>
       </div>
     </div>

@@ -62,7 +62,13 @@ class AwardMusicController {
   }
 
   toggleSound() {
-    if (!this.active) return;
+    if (!this.active) {
+      this.audio.muted = !(this.audio.muted || this.audio.volume === 0);
+      if (!this.audio.muted && this.audio.volume === 0) this.audio.volume = 0.35;
+      this.savePreferences();
+      this.syncControls();
+      return;
+    }
     if (this.failed || this.audio.paused) {
       this.audio.muted = false;
       if (this.audio.volume === 0) this.audio.volume = 0.35;

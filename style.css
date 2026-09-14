@@ -285,26 +285,6 @@ body {
 .theme-settings select { font: inherit; color: var(--text-main); background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 9px 12px; min-width: 160px; }
 #theme-status { font-size: .8rem; color: var(--text-muted); }
 .btn:disabled { opacity: .5; cursor: wait; }
-/* Manual navigation controls; no timer or progress bar. */
-.stage-controls { position: absolute; top: 20px; left: 28px; right: 28px; display: flex; justify-content: space-between; align-items: center; gap: 16px; z-index: 10; opacity: .2; transition: opacity .3s; }
-.stage-controls:hover, .stage-controls:focus-within { opacity: 1; }
-.stage-click-hint { display: block; margin-top: 3px; font-family: var(--font-base); font-size: 11px; letter-spacing: .06em; }
-.stage-progress { font-family: var(--font-display); font-size: 1rem; letter-spacing: 1px; color: #cbb98e; }
-.control-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
-.ctrl-btn { background: #10140fb8; backdrop-filter: blur(10px); border: 1px solid #d6b36840; color: #e8d4a5; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: background .2s, transform .2s; }
-.ctrl-btn:hover { background: #544729aa; transform: scale(1.08); }
-.ctrl-btn:focus-visible { outline: 2px solid #f1d08b; outline-offset: 4px; }
-.ctrl-btn.exit:hover { background: #713b2a; }
-
-@media (max-width: 600px) {
-  .stage-controls { top: 12px; left: 14px; right: 14px; }
-  .control-buttons { gap: 6px; }
-}
-@media (pointer: coarse) { .stage-controls { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) {
-  .stage-controls, .ctrl-btn { animation: none !important; transition: none !important; }
-}
-
 @media (max-width: 600px) {
   .award-item {
     grid-template-columns: 1fr;
@@ -323,14 +303,15 @@ body {
   }
 }
 
-/* Shared music controls stay outside theme markup and never advance a slide. */
-.stage-controls { flex-wrap: wrap; }
-.music-controls { display: flex; align-items: center; gap: 10px; }
-#music-volume { width: 86px; height: 44px; accent-color: #d6b368; cursor: pointer; }
-#music-volume:focus-visible { outline: 2px solid #f1d08b; outline-offset: 4px; }
-.music-status { flex-basis: 100%; text-align: right; color: #f1d08b; font-size: 12px; }
+/* Audio settings belong to the setup screen, outside the presentation. */
+.music-settings { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding: 16px 20px; margin-bottom: 12px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); }
+.music-settings label { font-size: .9rem; }
+.music-controls { display: flex; align-items: center; gap: 12px; }
+#music-toggle { width: 44px; height: 44px; padding: 0; justify-content: center; font-size: 1.1rem; }
+#music-volume { width: 160px; max-width: 40vw; height: 44px; accent-color: var(--accent); cursor: pointer; }
+#music-volume:focus-visible, #music-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.music-help, .presentation-help { color: var(--text-muted); font-size: .8rem; }
+.presentation-help { margin-bottom: 24px; }
+.music-status { flex-basis: 100%; color: var(--accent); font-size: .8rem; }
 .music-status:empty { display: none; }
-.stage-controls:has(.music-status:not(:empty)) { opacity: 1; }
-@media (max-width: 600px) {
-  .stage-controls .control-buttons { width: 100%; }
-}
+.stage-overlay:focus { outline: none; }

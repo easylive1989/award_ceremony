@@ -21,7 +21,6 @@
 [data-theme="claude-paper"] .paper-pocket { position: absolute; inset: 0; z-index: 4; border-radius: .3cqw; overflow: hidden; }
 [data-theme="claude-paper"] .paper-pocket::before { content: ''; position: absolute; inset: 0; clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(115deg, #d4c6b2, #e7dac8 38%, #cbb9a0 68%, #e4d8c5); }
 [data-theme="claude-paper"] .paper-pocket::after { content: ''; position: absolute; inset: .2cqw; clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(35deg, #eee5d4 0%, #f5eedf 49.7%, #d0bea3 50%, #eae0cf 50.3%, #f1e9d9 100%); }
-[data-theme="claude-paper"] .paper-envelope-label { position: absolute; bottom: 12%; left: 0; width: 100%; text-align: center; z-index: 6; font-size: .65cqw; letter-spacing: .5em; color: #8c7a63; }
 [data-theme="claude-paper"] .paper-seal { position: absolute; z-index: 8; top: 40%; left: 43.5%; width: 4.4cqw; height: 4.4cqw; border-radius: 50%; display: grid; place-items: center; border: .2cqw solid #b75e42; outline: 1px solid #d59277; background: radial-gradient(circle at 30% 20%, #e89979, #d97757 52%, #ba6348); color: #fff4e4; font-size: 2.3cqw; box-shadow: 0 .3cqw .6cqw #64402e2b; opacity: 0; }
 
 /* The card begins inside the envelope and becomes the final readable award. */
@@ -58,18 +57,7 @@
 }
 
 [data-theme="claude-paper"] .paper-seal svg { width: 80%; height: 80%; }
-/* Keep the shared controls legible on the terracotta stage, without changing other skins. */
 #stage:has([data-theme="claude-paper"]) { background: #bc7a5e; }
-#stage:has([data-theme="claude-paper"]) .stage-controls { opacity: .8; }
-#stage:has([data-theme="claude-paper"]) .stage-controls:hover,
-#stage:has([data-theme="claude-paper"]) .stage-controls:focus-within { opacity: 1; }
-#stage:has([data-theme="claude-paper"]) .stage-progress { color: #30231d; }
-#stage:has([data-theme="claude-paper"]) .ctrl-btn { background: #faf9f5dd; border-color: #c7beb0; color: #514638; }
-#stage:has([data-theme="claude-paper"]) .ctrl-btn:hover { background: #eadfd0; }
-#stage:has([data-theme="claude-paper"]) .ctrl-btn:focus-visible,
-#stage:has([data-theme="claude-paper"]) #music-volume:focus-visible { outline-color: #ac593e; }
-#stage:has([data-theme="claude-paper"]) #music-volume { accent-color: #d97757; }
-#stage:has([data-theme="claude-paper"]) .music-status { color: #30231d; }
 
 /* Waiting is a distinct still frame, including when reduced motion is enabled. */
 [data-theme="claude-paper"].paper-waiting .paper-envelope { opacity: 1; transform: none; }
