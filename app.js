@@ -13,6 +13,12 @@ class AwardCeremonyApp {
     this.themeRevision = 0;
 
     this.cacheDom();
+    this.music = new AwardMusicController(
+      document.getElementById('award-music'),
+      document.getElementById('music-toggle'),
+      document.getElementById('music-volume'),
+      document.getElementById('music-status')
+    );
     this.bindEvents();
     this.loadState();
     this.themeManager = new AwardThemeManager(document.getElementById('theme-root'), window.AWARD_THEME_CATALOG);
@@ -63,6 +69,8 @@ class AwardCeremonyApp {
     // 鍵盤快捷鍵
     document.addEventListener('keydown', (e) => {
       if (this.stageOverlay.classList.contains('hidden')) return;
+
+      if (e.key !== 'Escape' && e.target.matches('input, select, textarea')) return;
 
       if (e.key === 'ArrowRight') {
         this.nextSlide();
@@ -248,6 +256,8 @@ class AwardCeremonyApp {
     this.stageOverlay.classList.remove('hidden');
     this.themeManager.setVisible(true);
 
+    this.renderCurrentSlide();
+
     // 嘗試調用瀏覽器全螢幕
     const elem = document.documentElement;
     if (elem.requestFullscreen) {
@@ -256,7 +266,6 @@ class AwardCeremonyApp {
       });
     }
 
-    this.renderCurrentSlide();
   }
 
   renderCurrentSlide() {
@@ -266,6 +275,7 @@ class AwardCeremonyApp {
     this.currentIndexLabel.textContent = this.currentIndex + 1;
     this.totalCountLabel.textContent = validAwards.length;
 
+    if (!this.stageOverlay.classList.contains('hidden')) this.music.start();
     this.themeManager.update(current);
   }
 
@@ -293,6 +303,7 @@ class AwardCeremonyApp {
   }
 
   exitPresentation() {
+    this.music.stop();
     this.themeManager.setVisible(false);
     this.stageOverlay.classList.add('hidden');
     if (document.fullscreenElement) {

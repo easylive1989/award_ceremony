@@ -290,7 +290,7 @@ body {
 .stage-controls:hover, .stage-controls:focus-within { opacity: 1; }
 .stage-click-hint { display: block; margin-top: 3px; font-family: var(--font-base); font-size: 11px; letter-spacing: .06em; }
 .stage-progress { font-family: var(--font-display); font-size: 1rem; letter-spacing: 1px; color: #cbb98e; }
-.control-buttons { display: flex; gap: 10px; }
+.control-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
 .ctrl-btn { background: #10140fb8; backdrop-filter: blur(10px); border: 1px solid #d6b36840; color: #e8d4a5; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: background .2s, transform .2s; }
 .ctrl-btn:hover { background: #544729aa; transform: scale(1.08); }
 .ctrl-btn:focus-visible { outline: 2px solid #f1d08b; outline-offset: 4px; }
@@ -321,4 +321,16 @@ body {
     width: 100%;
     justify-content: center;
   }
+}
+
+/* Shared music controls stay outside theme markup and never advance a slide. */
+.stage-controls { flex-wrap: wrap; }
+.music-controls { display: flex; align-items: center; gap: 10px; }
+#music-volume { width: 86px; height: 44px; accent-color: #d6b368; cursor: pointer; }
+#music-volume:focus-visible { outline: 2px solid #f1d08b; outline-offset: 4px; }
+.music-status { flex-basis: 100%; text-align: right; color: #f1d08b; font-size: 12px; }
+.music-status:empty { display: none; }
+.stage-controls:has(.music-status:not(:empty)) { opacity: 1; }
+@media (max-width: 600px) {
+  .stage-controls .control-buttons { width: 100%; }
 }
