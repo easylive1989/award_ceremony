@@ -18,6 +18,32 @@ window.AwardThemes.set('claude-paper', (host) => {
       <div class="paper-team" data-award-team></div>
       <div class="paper-congrats">恭喜獲獎<span>CONGRATULATIONS</span></div>
     </div>
+    <div class="paper-delivery" aria-hidden="true">
+      <div class="paper-helper">
+        <div class="paper-helper-body">
+          <svg class="paper-mascot" viewBox="0 0 140 116" fill="none">
+            <g fill="#d97853" stroke="#fff8e8" stroke-width="3.5" stroke-linejoin="round">
+              <path class="paper-foot paper-foot-a" d="M22 77h17v32H22z"/>
+              <path class="paper-foot paper-foot-b" d="M48 77h17v32H48z"/>
+              <path class="paper-foot paper-foot-a" d="M83 77h17v32H83z"/>
+              <path class="paper-foot paper-foot-b" d="M109 77h17v32h-17z"/>
+              <path d="M22 12h104v25h11v32h-11v17H22V69H9V37h13z"/>
+            </g>
+            <path d="m40 38 16 8-16 8m64-16-16 8 16 8" stroke="#241e1b" stroke-width="6" stroke-linejoin="miter"/>
+          </svg>
+        </div>
+      </div>
+      <svg class="paper-podium" viewBox="0 0 300 118" fill="none">
+        <ellipse cx="150" cy="107" rx="143" ry="8" fill="#573c2c" opacity=".16"/>
+        <path d="M14 53 38 38h224l24 15v49H14z" fill="#e4cfad" stroke="#6f5140" stroke-width="1.5"/>
+        <path d="M14 53h272v49H14z" fill="#eee1c9"/>
+        <path d="M14 53h272M18 101h264" stroke="#c1a582" stroke-width="2"/>
+        <path d="m99 19 14-10h74l14 10v83H99z" fill="#faf4e6" stroke="#c1a582" stroke-width="1.5"/>
+        <path d="M99 19h102l-14-10h-74z" fill="#fffaf0"/>
+        <path d="M107 95h86" stroke="#dbc8a9"/>
+        <path d="M138 39h24v10c0 10-5 16-12 16s-12-6-12-16V39Zm0 5h-7v7c0 7 4 10 10 11m21-18h7v7c0 7-4 10-10 11m-9 3v10m-9 4h18" stroke="#b66a49" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
     <div class="paper-footer">每 一 份 熱 愛 ・ 都 值 得 閃 耀</div>
   `;
   const canvas = host.querySelector('canvas');
@@ -61,19 +87,9 @@ window.AwardThemes.set('claude-paper', (host) => {
     const celebration = reduced ? 1 : Math.min(1, Math.max(0, revealAge));
     ctx.clearRect(0, 0, w, h);
     ctx.globalCompositeOperation = 'source-over';
-    // Quiet warm washes and pencil-like contours replace the theatre spotlights.
+    // Keep the terracotta background soft and free of contour lines.
     wash(w * (.08 + Math.sin(time * .08) * .025), h * .76, w * .38, .10);
     wash(w * .92, h * (.18 + Math.sin(time * .09) * .025), w * .33, .075);
-    ctx.strokeStyle = 'rgba(255,238,211,.16)';
-    ctx.lineWidth = .85 * unit;
-    for (let i = 0; i < 7; i++) {
-      ctx.beginPath();
-      ctx.ellipse(w * .035, h * .88, w * (.16 + i * .022), h * (.12 + i * .043), -.4 + Math.sin(time * .06) * .03, -2, 1.2);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.ellipse(w * .97, h * .18, w * (.12 + i * .017), h * (.14 + i * .033), -.4, 1.8, 4.1);
-      ctx.stroke();
-    }
     for (const speck of dust) {
       const x = speck.x * w + Math.sin(time * .14 + speck.phase) * 10 * unit;
       const y = ((speck.y - time * .006 * speck.speed) % 1 + 1) % 1 * h;

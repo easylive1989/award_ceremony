@@ -46,6 +46,9 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     assert.equal(await page.locator(`.${prefix}-envelope`).evaluate(el => Number(getComputedStyle(el).opacity)), 1);
     assert.equal(await page.locator(`.${prefix}-flap`).evaluate(el => new DOMMatrix(getComputedStyle(el).transform).isIdentity), true);
     assert.equal(await page.evaluate(() => app.themeManager.revealed), false);
+    if (themeId === 'claude-paper') {
+      assert(await page.locator('.paper-delivery').evaluate(el => el.getBoundingClientRect().right < 0));
+    }
     await page.locator('#stage').click({ position: { x: 800, y: 450 } });
     assert.equal(await page.evaluate(() => String(app.currentIndex + 1)), '1');
     await page.waitForTimeout(600);
@@ -66,6 +69,13 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     assert.equal(await page.locator(`.${prefix}-card`).evaluate(el => Number(getComputedStyle(el).opacity)), 1);
     assert.equal(await page.locator(`.${prefix}-envelope`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     assert.equal(await page.locator(`.${prefix}-seal`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
+    if (themeId === 'claude-paper') {
+      assert(await page.locator('.paper-podium').evaluate(el => {
+        const podium = el.getBoundingClientRect(), stage = el.closest('.theme-surface').getBoundingClientRect();
+        const card = el.closest('.theme-surface').querySelector('.paper-card').getBoundingClientRect();
+        return Math.abs(podium.x + podium.width / 2 - stage.x - stage.width / 2) < 1 && podium.top > card.bottom;
+      }));
+    }
     assert.equal(await page.locator('[data-award-team]').textContent(), 'ABc');
     assert.equal(await page.locator(`.${prefix}-header`).textContent(), 'Delight');
     assert(await page.locator(`.${prefix}-header`).isVisible());
@@ -84,6 +94,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     await page.keyboard.press('ArrowLeft');
     await page.keyboard.press('ArrowRight');
     assert.equal(await page.locator(`.${prefix}-card`).isVisible(), false);
+    if (themeId === 'claude-paper') assert(await page.locator('.paper-delivery').evaluate(el => el.getBoundingClientRect().right < 0));
     await page.evaluate(() => document.activeElement.blur());
     await page.keyboard.press('Space');
     await page.waitForTimeout(4100);
