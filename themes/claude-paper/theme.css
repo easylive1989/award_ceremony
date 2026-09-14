@@ -3,11 +3,14 @@
   font-family: Arial, 'PingFang TC', 'Microsoft JhengHei', sans-serif;
   background: #bc7a5e;
   perspective: 1200px;
+  /* The bottom decoration can extend into letterboxing; the stage clips the screen edges. */
+  overflow: visible;
 }
 [data-theme="claude-paper"] .paper-effects { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 [data-theme="claude-paper"] .paper-vignette { position: absolute; inset: 0; opacity: .065; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23816b50' filter='url(%23paper)' opacity='.45' d='M0 0h180v180H0z'/%3E%3C/svg%3E"); pointer-events: none; }
 [data-theme="claude-paper"] .paper-header { position: absolute; top: 9%; left: 24%; width: 52%; z-index: 7; text-align: center; font-size: 2.8cqw; font-weight: 600; line-height: 1.25; letter-spacing: .12em; color: #30231d; overflow-wrap: anywhere; text-wrap: balance; text-shadow: none; }
 [data-theme="claude-paper"] .paper-suspense { position: absolute; top: 27%; width: 100%; text-align: center; font: 400 2.6cqw Georgia, serif; letter-spacing: .2em; color: #39271f; font-style: italic; }
+
 [data-theme="claude-paper"] .paper-footer { position: absolute; bottom: 7%; width: 100%; font-size: .8cqw; text-align: center; letter-spacing: .28em; color: #39271f; }
 
 /* The envelope is layered paper geometry, with an independently hinged flap. */
@@ -66,39 +69,22 @@
 [data-theme="claude-paper"].paper-waiting .paper-card { opacity: 0; visibility: hidden; }
 [data-theme="claude-paper"].paper-waiting .paper-suspense { opacity: 1; }
 
-/* The helper pushes the podium as one unit, then celebrates its arrival. */
-[data-theme="claude-paper"] .paper-delivery { position: absolute; left: calc(50% - 14.4cqw); bottom: 12%; width: 24cqw; height: 7cqw; z-index: 4; pointer-events: none; transform: translateX(-65cqw); }
-[data-theme="claude-paper"] .paper-helper { position: absolute; left: 0; bottom: .15cqw; width: 7cqw; transform-origin: 85% 100%; }
+/* The helper carries the podium across the bottom once per reveal. */
+[data-theme="claude-paper"] .paper-delivery { position: absolute; left: calc(50% - 8.64cqw); bottom: calc((min(100vh, 56.25vw) - 100vh) / 2); width: 14.4cqw; height: 4.2cqw; z-index: 4; pointer-events: none; transform: translateX(-100vw); }
+[data-theme="claude-paper"] .paper-helper { position: absolute; left: 0; bottom: 0; width: 4.2cqw; transform-origin: 85% 100%; }
 [data-theme="claude-paper"] .paper-helper-body { transform-origin: 80% 100%; }
-[data-theme="claude-paper"] .paper-mascot { display: block; width: 100%; overflow: visible; filter: drop-shadow(0 .2cqw .12cqw #573c2c25); }
-[data-theme="claude-paper"] .paper-foot { transform-box: fill-box; transform-origin: center top; }
-[data-theme="claude-paper"] .paper-podium { position: absolute; left: 5.9cqw; bottom: 0; width: 17cqw; }
-[data-theme="claude-paper"].paper-run .paper-delivery { animation: claudePodiumDelivery 3.8s .15s both; }
-[data-theme="claude-paper"].paper-run .paper-helper { animation: claudeHelperCelebrate 4.5s .15s both; }
-[data-theme="claude-paper"].paper-run .paper-helper-body { animation: claudeHelperPush .24s .15s 14; }
-[data-theme="claude-paper"].paper-run .paper-foot-a { animation: claudeHelperFeet .24s .15s 14; }
-[data-theme="claude-paper"].paper-run .paper-foot-b { animation: claudeHelperFeet .24s .15s 14 reverse; }
+[data-theme="claude-paper"] .paper-mascot { display: block; width: 100%; height: auto; filter: drop-shadow(0 .2cqw .12cqw #573c2c25); }
+[data-theme="claude-paper"] .paper-podium { position: absolute; left: 3.54cqw; bottom: 0; width: 10.2cqw; }
+[data-theme="claude-paper"].paper-run .paper-delivery { animation: claudePodiumDelivery 7s .15s linear both; }
+[data-theme="claude-paper"].paper-run .paper-helper-body { animation: claudeHelperPush .24s .15s 30; }
 @keyframes claudePodiumDelivery {
-  0% { transform: translateX(-65cqw); }
-  16% { transform: translateX(-43cqw); }
-  80% { transform: translateX(-1.5cqw); }
-  94% { transform: translateX(.25cqw); }
-  100% { transform: translateX(0); }
+  from { transform: translateX(-100vw); }
+  to { transform: translateX(100vw); }
 }
 @keyframes claudeHelperPush {
   0%, 100% { transform: rotate(5deg) translateY(0); }
-  50% { transform: rotate(7deg) translateY(-.18cqw); }
-}
-@keyframes claudeHelperFeet {
-  0%, 100% { transform: rotate(-8deg); }
-  50% { transform: rotate(12deg) translateY(-2px); }
-}
-@keyframes claudeHelperCelebrate {
-  0%, 83% { transform: translateY(0); }
-  89% { transform: translateY(-.8cqw) rotate(-5deg); }
-  95% { transform: translateY(.1cqw); }
-  100% { transform: translateY(0); }
+  50% { transform: rotate(7deg) translateY(-.11cqw); }
 }
 @media (prefers-reduced-motion: reduce) {
-  [data-theme="claude-paper"].paper-run .paper-delivery { transform: none; }
+  [data-theme="claude-paper"].paper-run .paper-delivery { visibility: hidden; }
 }

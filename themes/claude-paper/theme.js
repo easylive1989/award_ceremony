@@ -21,16 +21,7 @@ window.AwardThemes.set('claude-paper', (host) => {
     <div class="paper-delivery" aria-hidden="true">
       <div class="paper-helper">
         <div class="paper-helper-body">
-          <svg class="paper-mascot" viewBox="0 0 140 116" fill="none">
-            <g fill="#d97853" stroke="#fff8e8" stroke-width="3.5" stroke-linejoin="round">
-              <path class="paper-foot paper-foot-a" d="M22 77h17v32H22z"/>
-              <path class="paper-foot paper-foot-b" d="M48 77h17v32H48z"/>
-              <path class="paper-foot paper-foot-a" d="M83 77h17v32H83z"/>
-              <path class="paper-foot paper-foot-b" d="M109 77h17v32h-17z"/>
-              <path d="M22 12h104v25h11v32h-11v17H22V69H9V37h13z"/>
-            </g>
-            <path d="m40 38 16 8-16 8m64-16-16 8 16 8" stroke="#241e1b" stroke-width="6" stroke-linejoin="miter"/>
-          </svg>
+          <img class="paper-mascot" src="assets/images/clawd-base.png" width="924" height="750" alt="" draggable="false">
         </div>
       </div>
       <svg class="paper-podium" viewBox="0 0 300 118" fill="none">

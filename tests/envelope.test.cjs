@@ -73,7 +73,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
       assert(await page.locator('.paper-podium').evaluate(el => {
         const podium = el.getBoundingClientRect(), stage = el.closest('.theme-surface').getBoundingClientRect();
         const card = el.closest('.theme-surface').querySelector('.paper-card').getBoundingClientRect();
-        return Math.abs(podium.x + podium.width / 2 - stage.x - stage.width / 2) < 1 && podium.top > card.bottom;
+        return podium.x + podium.width / 2 > stage.x + stage.width / 2 && podium.top > card.bottom && Math.abs(podium.bottom - innerHeight) < 1;
       }));
     }
     assert.equal(await page.locator('[data-award-team]').textContent(), 'ABc');
@@ -81,6 +81,11 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     assert(await page.locator(`.${prefix}-header`).isVisible());
     if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, `${themeId}-revealed.png`) });
     assert.equal(await page.evaluate(() => pendingFrames.size), 1);
+    if (themeId === 'claude-paper') {
+      await page.waitForTimeout(3000);
+      assert(await page.locator('.paper-delivery').evaluate(el => el.getBoundingClientRect().left > innerWidth));
+      assert.equal(await page.locator('[data-award-team]').textContent(), 'ABc');
+    }
 
     await page.locator('audio').evaluate(el => { el.currentTime = 15; });
     await page.locator('#stage').click({ position: { x: 800, y: 450 } });
@@ -130,6 +135,10 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     }));
     assert(await page.locator(`.${prefix}-card`).evaluate(el => el.scrollHeight <= el.clientHeight + 1));
     assert.equal(await page.locator('[data-award-team] script').count(), 0);
+    if (themeId === 'claude-paper') {
+      assert(await page.locator('.paper-mascot').evaluate(el => el.tagName === 'IMG' && el.complete && el.naturalWidth === 924));
+      assert.equal(await page.locator('.paper-delivery').isVisible(), false);
+    }
     assert.equal(await page.evaluate(() => localStorage.getItem('award_ceremony_data')), stored);
     assert.deepEqual(errors, []);
   } finally {
