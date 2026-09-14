@@ -9,9 +9,6 @@
 [data-theme="black-gold-v2"] .v2-frame { position: absolute; inset: 4%; border: 1px solid #e6c77d35; pointer-events: none; }
 [data-theme="black-gold-v2"] .v2-frame::before { content: ''; position: absolute; inset: .5cqw; border: 1px solid #e6c77d12; }
 [data-theme="black-gold-v2"] .v2-header { position: absolute; top: 9%; left: 24%; width: 52%; z-index: 7; text-align: center; font-size: 2.8cqw; font-weight: 600; line-height: 1.25; letter-spacing: .12em; color: #f0d499; overflow-wrap: anywhere; text-wrap: balance; text-shadow: 0 0 1.5cqw #e6b45c22; }
-[data-theme="black-gold-v2"] .v2-edition { position: absolute; top: 9%; left: 7%; font-size: .65cqw; letter-spacing: .22em; color: #9c8e6c; }
-[data-theme="black-gold-v2"] .v2-edition span { display: block; font-size: .56cqw; margin-top: .55cqw; }
-[data-theme="black-gold-v2"] .v2-corner-star { position: absolute; right: 7%; top: 8%; font-size: 2.2cqw; color: #e6c77d; }
 [data-theme="black-gold-v2"] .v2-suspense { position: absolute; top: 27%; width: 100%; text-align: center; font: 400 2.6cqw Georgia, serif; letter-spacing: .2em; color: #e6ce928f; }
 [data-theme="black-gold-v2"] .v2-footer { position: absolute; bottom: 7%; width: 100%; font-size: .8cqw; text-align: center; letter-spacing: .28em; color: #bba579; }
 

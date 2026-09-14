@@ -3,9 +3,7 @@ window.AwardThemes.set('black-gold-v2', (host) => {
     <canvas class="v2-effects" aria-hidden="true"></canvas>
     <div class="v2-vignette" aria-hidden="true"></div>
     <div class="v2-frame" aria-hidden="true"></div>
-    <div class="v2-edition" aria-hidden="true">THE GOLDEN ENVELOPE<span>A MOMENT TO REMEMBER</span></div>
     <div class="v2-header" data-award-category aria-live="polite" aria-atomic="true"></div>
-    <div class="v2-corner-star" aria-hidden="true">✦</div>
     <div class="v2-suspense" aria-hidden="true">And the winner is…</div>
     <div class="v2-envelope" aria-hidden="true">
       <div class="v2-shell">
