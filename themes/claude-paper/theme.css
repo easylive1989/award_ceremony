@@ -69,9 +69,10 @@
 [data-theme="claude-paper"].paper-waiting .paper-card { opacity: 0; visibility: hidden; }
 [data-theme="claude-paper"].paper-waiting .paper-suspense { opacity: 1; }
 
-/* The helper carries the podium across the bottom once per reveal. */
-[data-theme="claude-paper"] .paper-delivery { position: absolute; left: calc(50% - 8.64cqw); bottom: calc((min(100vh, 56.25vw) - 100vh) / 2); width: 14.4cqw; height: 4.2cqw; z-index: 4; pointer-events: none; transform: translateX(-100vw); }
+/* Two helpers carry the podium between them across the bottom once per reveal. */
+[data-theme="claude-paper"] .paper-delivery { position: absolute; left: calc(50% - 8.64cqw); bottom: calc((min(100vh, 56.25vw) - 100vh) / 2); width: 17.28cqw; height: 4.2cqw; z-index: 4; pointer-events: none; transform: translateX(-100vw); }
 [data-theme="claude-paper"] .paper-helper { position: absolute; left: 0; bottom: 0; width: 4.2cqw; transform-origin: 85% 100%; }
+[data-theme="claude-paper"] .paper-helper-front { left: 13.08cqw; }
 [data-theme="claude-paper"] .paper-helper-body { transform-origin: 80% 100%; }
 [data-theme="claude-paper"] .paper-mascot { display: block; width: 100%; height: auto; filter: drop-shadow(0 .2cqw .12cqw #573c2c25); }
 [data-theme="claude-paper"] .paper-podium { position: absolute; left: 3.54cqw; bottom: 0; width: 10.2cqw; }

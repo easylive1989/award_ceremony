@@ -19,7 +19,7 @@ window.AwardThemes.set('claude-paper', (host) => {
       <div class="paper-congrats">恭喜獲獎<span>CONGRATULATIONS</span></div>
     </div>
     <div class="paper-delivery" aria-hidden="true">
-      <div class="paper-helper">
+      <div class="paper-helper paper-helper-rear">
         <div class="paper-helper-body">
           <img class="paper-mascot" src="assets/images/clawd-base.png" width="924" height="750" alt="" draggable="false">
         </div>
@@ -34,6 +34,11 @@ window.AwardThemes.set('claude-paper', (host) => {
         <path d="M107 95h86" stroke="#dbc8a9"/>
         <path d="M138 39h24v10c0 10-5 16-12 16s-12-6-12-16V39Zm0 5h-7v7c0 7 4 10 10 11m21-18h7v7c0 7-4 10-10 11m-9 3v10m-9 4h18" stroke="#b66a49" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
+      <div class="paper-helper paper-helper-front">
+        <div class="paper-helper-body">
+          <img class="paper-mascot" src="assets/images/clawd-base.png" width="924" height="750" alt="" draggable="false">
+        </div>
+      </div>
     </div>
     <div class="paper-footer">每 一 份 熱 愛 ・ 都 值 得 閃 耀</div>
   `;

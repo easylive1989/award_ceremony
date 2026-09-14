@@ -136,7 +136,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     assert(await page.locator(`.${prefix}-card`).evaluate(el => el.scrollHeight <= el.clientHeight + 1));
     assert.equal(await page.locator('[data-award-team] script').count(), 0);
     if (themeId === 'claude-paper') {
-      assert(await page.locator('.paper-mascot').evaluate(el => el.tagName === 'IMG' && el.complete && el.naturalWidth === 924));
+      assert(await page.locator('.paper-mascot').evaluateAll(images => images.length === 2 && images.every(el => el.tagName === 'IMG' && el.complete && el.naturalWidth === 924)));
       assert.equal(await page.locator('.paper-delivery').isVisible(), false);
     }
     assert.equal(await page.evaluate(() => localStorage.getItem('award_ceremony_data')), stored);
