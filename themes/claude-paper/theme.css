@@ -11,7 +11,6 @@
 [data-theme="claude-paper"] .paper-header { position: absolute; top: 9%; left: 24%; width: 52%; z-index: 7; text-align: center; font-size: 2.8cqw; font-weight: 600; line-height: 1.25; letter-spacing: .12em; color: #30231d; overflow-wrap: anywhere; text-wrap: balance; text-shadow: none; }
 [data-theme="claude-paper"] .paper-suspense { position: absolute; top: 27%; width: 100%; text-align: center; font: 400 2.6cqw Georgia, serif; letter-spacing: .2em; color: #39271f; font-style: italic; }
 
-[data-theme="claude-paper"] .paper-footer { position: absolute; bottom: 7%; width: 100%; font-size: .8cqw; text-align: center; letter-spacing: .28em; color: #39271f; }
 
 /* The envelope is layered paper geometry, with an independently hinged flap. */
 [data-theme="claude-paper"] .paper-envelope,
@@ -24,8 +23,8 @@
 [data-theme="claude-paper"] .paper-flap::before { content: ''; position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 50% 73%); background: linear-gradient(160deg, #d6c7b0, #bba98e 56%, #dac9b1); }
 [data-theme="claude-paper"] .paper-flap::after { content: ''; position: absolute; inset: .17cqw .35cqw .3cqw; clip-path: polygon(0 0, 100% 0, 50% 73%); background: linear-gradient(160deg, #faf5e9, #eee6d6 55%, #e0d2bc); }
 [data-theme="claude-paper"] .paper-pocket { position: absolute; inset: 0; z-index: 4; border-radius: .3cqw; overflow: hidden; }
-[data-theme="claude-paper"] .paper-pocket::before { content: ''; position: absolute; inset: 0; clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(115deg, #d4c6b2, #e7dac8 38%, #cbb9a0 68%, #e4d8c5); }
-[data-theme="claude-paper"] .paper-pocket::after { content: ''; position: absolute; inset: .2cqw; clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(35deg, #eee5d4 0%, #f5eedf 49.7%, #d0bea3 50%, #eae0cf 50.3%, #f1e9d9 100%); }
+[data-theme="claude-paper"] .paper-pocket::before { content: ''; position: absolute; inset: 0; clip-path: polygon(0 0, 40% 44%, 50% 30%, 60% 44%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(115deg, #d4c6b2, #e7dac8 38%, #cbb9a0 68%, #e4d8c5); }
+[data-theme="claude-paper"] .paper-pocket::after { content: ''; position: absolute; inset: .2cqw; clip-path: polygon(0 0, 40% 44%, 50% 30%, 60% 44%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(35deg, #eee5d4 0%, #f5eedf 49.7%, #d0bea3 50%, #eae0cf 50.3%, #f1e9d9 100%); }
 [data-theme="claude-paper"] .paper-seal { position: absolute; z-index: 8; top: 40%; left: 43.5%; width: 4.4cqw; height: 4.4cqw; border-radius: 50%; display: grid; place-items: center; border: .2cqw solid #b75e42; outline: 1px solid #d59277; background: radial-gradient(circle at 30% 20%, #e89979, #d97757 52%, #ba6348); color: #fff4e4; font-size: 2.3cqw; box-shadow: 0 .3cqw .6cqw #64402e2b; opacity: 0; }
 
 /* The card begins inside the envelope and becomes the final readable award. */
@@ -46,7 +45,7 @@
 [data-theme="claude-paper"].paper-run .paper-suspense { animation: claudePaperSuspense .5s 1.55s both; }
 [data-theme="claude-paper"].paper-paused * { animation-play-state: paused !important; }
 @keyframes claudePaperEnvelope {
-  0%, 72% { transform: translateY(0) scale(1); opacity: 1; }
+  0%, 75% { transform: translateY(0) scale(1); opacity: 1; }
   86% { transform: translateY(9cqw) scale(.55); opacity: .3; }
   90%, 100% { transform: translateY(9cqw) scale(.55); opacity: 0; }
 }
@@ -55,12 +54,13 @@
 @keyframes claudePaperSeal { 0% { opacity: 1; transform: scale(1); } 65% { opacity: .8; transform: translateY(-1cqw) scale(1.2) rotate(15deg); } 100% { opacity: 0; transform: translateY(2cqw) scale(.6) rotate(35deg); } }
 /* Keep the same card behind the pocket until its bottom clears the opening. */
 @keyframes claudePaperCard {
-  0% { opacity: 0; transform: translateY(9.3cqw) scale(.37); z-index: 6; }
-  10% { opacity: 1; transform: translateY(9.3cqw) scale(.37); z-index: 6; }
-  50%, 55% { opacity: 1; transform: translateY(-9.6cqw) scale(.37); z-index: 6; }
-  56% { opacity: 1; transform: translateY(-9.6cqw) scale(.37); z-index: 8; }
-  87% { opacity: 1; transform: translateY(-.6cqw) scale(1.015); z-index: 8; }
-  100% { opacity: 1; transform: none; z-index: 8; }
+  0% { opacity: 0; height: 60%; transform: translateY(6.8cqw) scale(.37); z-index: 6; }
+  10% { opacity: 1; height: 60%; transform: translateY(6.8cqw) scale(.37); z-index: 6; }
+  25%, 40% { opacity: 1; height: 60%; transform: translateY(-6.5cqw) scale(.37); z-index: 6; }
+  55% { opacity: 1; height: 60%; transform: translateY(-15.5cqw) scale(.37); z-index: 6; }
+  56% { opacity: 1; height: 60%; transform: translateY(-15.5cqw) scale(.37); z-index: 8; }
+  87% { opacity: 1; height: 43%; transform: translateY(-.6cqw) scale(1.015); z-index: 8; }
+  100% { opacity: 1; height: 43%; transform: none; z-index: 8; }
 }
 @keyframes claudePaperSuspense { from { opacity: 1; } to { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
@@ -79,23 +79,60 @@
 [data-theme="claude-paper"].paper-waiting .paper-card { opacity: 0; visibility: hidden; }
 [data-theme="claude-paper"].paper-waiting .paper-suspense { opacity: 1; }
 
-/* Two helpers carry the podium between them across the bottom once per reveal. */
+/* A small ceremony: carry, set down, jump up, then hand over one trophy. */
 [data-theme="claude-paper"] .paper-delivery { position: absolute; left: calc(50% - 8.64cqw); bottom: calc((min(100vh, 56.25vw) - 100vh) / 2); width: 17.28cqw; height: 4.2cqw; z-index: 4; pointer-events: none; transform: translateX(-100vw); }
-[data-theme="claude-paper"] .paper-helper { position: absolute; left: 0; bottom: 0; width: 4.2cqw; transform-origin: 85% 100%; }
-[data-theme="claude-paper"] .paper-helper-front { left: 13.08cqw; }
+[data-theme="claude-paper"] .paper-helper { position: absolute; left: 0; bottom: 0; width: 4.2cqw; transform-origin: 50% 100%; }
+[data-theme="claude-paper"] .paper-helper-front { left: 13.08cqw; z-index: 2; }
 [data-theme="claude-paper"] .paper-helper-body { transform-origin: 80% 100%; }
 [data-theme="claude-paper"] .paper-mascot { display: block; width: 100%; height: auto; filter: drop-shadow(0 .2cqw .12cqw #573c2c25); }
 [data-theme="claude-paper"] .paper-podium { position: absolute; left: 3.54cqw; bottom: 0; width: 10.2cqw; }
-[data-theme="claude-paper"].paper-run .paper-delivery { animation: claudePodiumDelivery 7s .15s linear both; }
-[data-theme="claude-paper"].paper-run .paper-helper-body { animation: claudeHelperPush .24s .15s 30; }
+[data-theme="claude-paper"] .paper-presenter { position: absolute; left: calc(50% + 4.44cqw); bottom: calc((min(100vh, 56.25vw) - 100vh) / 2); width: 4.2cqw; z-index: 5; pointer-events: none; transform: translateX(100vw); }
+[data-theme="claude-paper"] .paper-trophy { position: absolute; left: -.8cqw; bottom: 1.5cqw; width: 1.7cqw; height: 2.2cqw; overflow: visible; filter: drop-shadow(0 .1cqw .12cqw #573c2c30); }
+[data-theme="claude-paper"].paper-run .paper-delivery { animation: claudePodiumDelivery 3.2s .15s both; }
+[data-theme="claude-paper"].paper-run .paper-podium { animation: claudePodiumSetDown 3.6s .15s both; }
+[data-theme="claude-paper"].paper-run .paper-delivery .paper-helper-body { animation: claudeHelperWalk .24s .15s 14; }
+[data-theme="claude-paper"].paper-run .paper-recipient { animation: claudeRecipientJump .95s 3.75s both; }
+[data-theme="claude-paper"].paper-run .paper-presenter { animation: claudePresenterEnter 4.9s .15s both; }
+[data-theme="claude-paper"].paper-run .paper-presenter .paper-helper-body { animation: claudeHelperWalk .24s .15s 20; }
+[data-theme="claude-paper"].paper-run .paper-trophy { animation: claudeTrophyHandoff 1.2s 5.25s both; }
 @keyframes claudePodiumDelivery {
   from { transform: translateX(-100vw); }
-  to { transform: translateX(100vw); }
+  to { transform: translateX(0); }
 }
-@keyframes claudeHelperPush {
-  0%, 100% { transform: rotate(5deg) translateY(0); }
-  50% { transform: rotate(7deg) translateY(-.11cqw); }
+@keyframes claudePodiumSetDown {
+  0%, 88% { transform: translateY(-.25cqw); }
+  96% { transform: translateY(.06cqw); }
+  100% { transform: translateY(0); }
+}
+@keyframes claudeHelperWalk {
+  0%, 100% { transform: rotate(0) translateY(0); }
+  50% { transform: rotate(5deg) translateY(-.11cqw); }
+}
+@keyframes claudeRecipientJump {
+  0% { transform: translate(0, 0) scale(1); }
+  15% { transform: translate(0, .1cqw) scale(1.04, .9); }
+  55% { transform: translate(-3.8cqw, -6cqw) rotate(-9deg); }
+  88% { transform: translate(-6.54cqw, -3.55cqw) scale(1.04, .95); }
+  100% { transform: translate(-6.54cqw, -3.65cqw); }
+}
+@keyframes claudePresenterEnter {
+  0% { transform: translateX(100vw); }
+  68% { transform: translateX(5cqw); }
+  100% { transform: translateX(0); }
+}
+@keyframes claudeTrophyHandoff {
+  0%, 15% { transform: translate(0, 0) rotate(0); }
+  60% { transform: translate(-1cqw, -2.3cqw) rotate(-10deg); }
+  100% { transform: translate(-2.03cqw, -3.65cqw) rotate(0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  [data-theme="claude-paper"].paper-run .paper-delivery { visibility: hidden; }
+  [data-theme="claude-paper"].paper-run .paper-delivery,
+  [data-theme="claude-paper"].paper-run .paper-presenter { visibility: hidden; }
+}
+
+[data-theme="claude-paper"] .paper-card-window { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+[data-theme="claude-paper"].paper-run .paper-card-window { animation: claudePaperCardWindow 2s 1.85s both; }
+@keyframes claudePaperCardWindow {
+  0%, 55% { z-index: 6; clip-path: polygon(0 0, 100% 0, 100% 38%, 67% 38%, 53.4% 52.08%, 50% 47.6%, 46.6% 52.08%, 33% 38%, 0 38%); }
+  56%, 100% { z-index: 8; clip-path: polygon(0 0, 100% 0, 100% 100%, 67% 100%, 53.4% 100%, 50% 100%, 46.6% 100%, 33% 100%, 0 100%); }
 }

@@ -23,8 +23,8 @@
 [data-theme="black-gold-v2"] .v2-flap::before { content: ''; position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 50% 73%); background: linear-gradient(160deg, #f3d592, #a37b3c 56%, #f4d99b); }
 [data-theme="black-gold-v2"] .v2-flap::after { content: ''; position: absolute; inset: .17cqw .35cqw .3cqw; clip-path: polygon(0 0, 100% 0, 50% 73%); background: linear-gradient(160deg, #4c3920, #292314 55%, #77572a); }
 [data-theme="black-gold-v2"] .v2-pocket { position: absolute; inset: 0; z-index: 4; border-radius: .3cqw; overflow: hidden; }
-[data-theme="black-gold-v2"] .v2-pocket::before { content: ''; position: absolute; inset: 0; clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(115deg, #c6a05a, #f3d99f 38%, #b28a47 68%, #e8cb8c); }
-[data-theme="black-gold-v2"] .v2-pocket::after { content: ''; position: absolute; inset: .2cqw; clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(35deg, #312818 0%, #68502a 49.7%, #b6914e 50%, #4d3c20 50.3%, #262215 100%); }
+[data-theme="black-gold-v2"] .v2-pocket::before { content: ''; position: absolute; inset: 0; clip-path: polygon(0 0, 40% 44%, 50% 30%, 60% 44%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(115deg, #c6a05a, #f3d99f 38%, #b28a47 68%, #e8cb8c); }
+[data-theme="black-gold-v2"] .v2-pocket::after { content: ''; position: absolute; inset: .2cqw; clip-path: polygon(0 0, 40% 44%, 50% 30%, 60% 44%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(35deg, #312818 0%, #68502a 49.7%, #b6914e 50%, #4d3c20 50.3%, #262215 100%); }
 [data-theme="black-gold-v2"] .v2-seal { position: absolute; z-index: 8; top: 40%; left: 43.5%; width: 4.4cqw; height: 4.4cqw; border-radius: 50%; display: grid; place-items: center; border: .28cqw double #eccc84; outline: 1px solid #91703b; background: radial-gradient(circle at 30% 20%, #f3dda8, #cda557 52%, #81602c); color: #76541f; font-size: 2.3cqw; text-shadow: 0 1px #f9e5b4; box-shadow: 0 .3cqw .6cqw #0007; opacity: 0; }
 
 /* The card begins inside the envelope and becomes the final readable award. */
@@ -46,7 +46,7 @@
 [data-theme="black-gold-v2"].v2-run .v2-team { animation: goldV2Shimmer 8s 3.6s ease-in-out infinite; }
 [data-theme="black-gold-v2"].v2-paused * { animation-play-state: paused !important; }
 @keyframes goldV2Envelope {
-  0%, 72% { transform: translateY(0) scale(1); opacity: 1; }
+  0%, 75% { transform: translateY(0) scale(1); opacity: 1; }
   86% { transform: translateY(9cqw) scale(.55); opacity: .3; }
   90%, 100% { transform: translateY(9cqw) scale(.55); opacity: 0; }
 }
@@ -54,12 +54,13 @@
 @keyframes goldV2Flap { 0% { transform: rotateX(0deg); z-index: 7; } 49% { z-index: 7; } 50%, 100% { z-index: 1; } 100% { transform: rotateX(180deg); } }
 @keyframes goldV2Seal { 0% { opacity: 1; transform: scale(1); } 65% { opacity: .8; transform: translateY(-1cqw) scale(1.2) rotate(15deg); } 100% { opacity: 0; transform: translateY(2cqw) scale(.6) rotate(35deg); } }
 @keyframes goldV2Card {
-  0% { opacity: 0; transform: translateY(9.3cqw) scale(.37); z-index: 6; }
-  10% { opacity: 1; transform: translateY(9.3cqw) scale(.37); z-index: 6; }
-  50%, 55% { opacity: 1; transform: translateY(-9.6cqw) scale(.37); z-index: 6; }
-  56% { opacity: 1; transform: translateY(-9.6cqw) scale(.37); z-index: 8; }
-  87% { opacity: 1; transform: translateY(-.6cqw) scale(1.015); z-index: 8; }
-  100% { opacity: 1; transform: none; z-index: 8; }
+  0% { opacity: 0; height: 60%; transform: translateY(6.8cqw) scale(.37); z-index: 6; }
+  10% { opacity: 1; height: 60%; transform: translateY(6.8cqw) scale(.37); z-index: 6; }
+  25%, 40% { opacity: 1; height: 60%; transform: translateY(-6.5cqw) scale(.37); z-index: 6; }
+  55% { opacity: 1; height: 60%; transform: translateY(-15.5cqw) scale(.37); z-index: 6; }
+  56% { opacity: 1; height: 60%; transform: translateY(-15.5cqw) scale(.37); z-index: 8; }
+  87% { opacity: 1; height: 43%; transform: translateY(-.6cqw) scale(1.015); z-index: 8; }
+  100% { opacity: 1; height: 43%; transform: none; z-index: 8; }
 }
 @keyframes goldV2Suspense { from { opacity: 1; } to { opacity: 0; } }
 @keyframes goldV2Shimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
@@ -75,3 +76,10 @@
 [data-theme="black-gold-v2"].v2-waiting .v2-seal { opacity: 1; }
 [data-theme="black-gold-v2"].v2-waiting .v2-card { opacity: 0; visibility: hidden; }
 [data-theme="black-gold-v2"].v2-waiting .v2-suspense { opacity: 1; }
+
+[data-theme="black-gold-v2"] .v2-card-window { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+[data-theme="black-gold-v2"].v2-run .v2-card-window { animation: goldV2CardWindow 2s 1.85s both; }
+@keyframes goldV2CardWindow {
+  0%, 55% { z-index: 6; clip-path: polygon(0 0, 100% 0, 100% 38%, 67% 38%, 53.4% 52.08%, 50% 47.6%, 46.6% 52.08%, 33% 38%, 0 38%); }
+  56%, 100% { z-index: 8; clip-path: polygon(0 0, 100% 0, 100% 100%, 67% 100%, 53.4% 100%, 50% 100%, 46.6% 100%, 33% 100%, 0 100%); }
+}

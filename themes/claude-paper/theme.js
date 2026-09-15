@@ -17,10 +17,12 @@ window.AwardThemes.set('claude-paper', (host) => {
         <div class="paper-seal"><svg viewBox="-2 -2 104 104" aria-hidden="true"><path fill="currentColor" d="m19.6 66.5 19.7-11 .3-1-.3-.5h-1l-3.3-.2-11.2-.3L14 53l-9.5-.5-2.4-.5L0 49l.2-1.5 2-1.3 2.9.2 6.3.5 9.5.6 6.9.4L38 49.1h1.6l.2-.7-.5-.4-.4-.4L29 41l-10.6-7-5.6-4.1-3-2-1.5-2-.6-4.2 2.7-3 3.7.3.9.2 3.7 2.9 8 6.1L37 36l1.5 1.2.6-.4.1-.3-.7-1.1L33 25l-6-10.4-2.7-4.3-.7-2.6c-.3-1-.4-2-.4-3l3-4.2L28 0l4.2.6L33.8 2l2.6 6 4.1 9.3L47 29.9l2 3.8 1 3.4.3 1h.7v-.5l.5-7.2 1-8.7 1-11.2.3-3.2 1.6-3.8 3-2L61 2.6l2 2.9-.3 1.8-1.1 7.7L59 27.1l-1.5 8.2h.9l1-1.1 4.1-5.4 6.9-8.6 3-3.5L77 13l2.3-1.8h4.3l3.1 4.7-1.4 4.9-4.4 5.6-3.7 4.7-5.3 7.1-3.2 5.7.3.4h.7l12-2.6 6.4-1.1 7.6-1.3 3.5 1.6.4 1.6-1.4 3.4-8.2 2-9.6 2-14.3 3.3-.2.1.2.3 6.4.6 2.8.2h6.8l12.6 1 3.3 2 1.9 2.7-.3 2-5.1 2.6-6.8-1.6-16-3.8-5.4-1.3h-.8v.4l4.6 4.5 8.3 7.5L89 80.1l.5 2.4-1.3 2-1.4-.2-9.2-7-3.6-3-8-6.8h-.5v.7l1.8 2.7 9.8 14.7.5 4.5-.7 1.4-2.6 1-2.7-.6-5.8-8-6-9-4.7-8.2-.5.4-2.9 30.2-1.3 1.5-3 1.2-2.5-2-1.4-3 1.4-6.2 1.6-8 1.3-6.4 1.2-7.9.7-2.6v-.2H49L43 72l-9 12.3-7.2 7.6-1.7.7-3-1.5.3-2.8L24 86l10-12.8 6-7.9 4-4.6-.1-.5h-.3L17.2 77.4l-4.7.6-2-2 .2-3 1-1 8-5.5Z"/></svg></div>
       </div>
     </div>
+    <div class="paper-card-window">
     <div class="paper-card" aria-live="polite" aria-atomic="true">
       <div class="paper-kicker">A moment worth celebrating.</div>
       <div class="paper-team" data-award-team></div>
       <div class="paper-congrats">恭喜獲獎<span>CONGRATULATIONS</span></div>
+    </div>
     </div>
     <div class="paper-delivery" aria-hidden="true">
       <div class="paper-helper paper-helper-rear">
@@ -38,13 +40,23 @@ window.AwardThemes.set('claude-paper', (host) => {
         <path d="M107 95h86" stroke="#dbc8a9"/>
         <path d="M138 39h24v10c0 10-5 16-12 16s-12-6-12-16V39Zm0 5h-7v7c0 7 4 10 10 11m21-18h7v7c0 7-4 10-10 11m-9 3v10m-9 4h18" stroke="#b66a49" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <div class="paper-helper paper-helper-front">
+      <div class="paper-helper paper-helper-front paper-recipient">
         <div class="paper-helper-body">
           <img class="paper-mascot" src="assets/images/clawd-base.png" width="924" height="750" alt="" draggable="false">
         </div>
       </div>
     </div>
-    <div class="paper-footer">每 一 份 熱 愛 ・ 都 值 得 閃 耀</div>
+    <div class="paper-presenter" aria-hidden="true">
+      <div class="paper-helper-body">
+        <img class="paper-mascot" src="assets/images/clawd-base.png" width="924" height="750" alt="" draggable="false">
+      </div>
+      <svg class="paper-trophy" viewBox="0 0 64 80" fill="none">
+        <path d="M18 10H46V30C46 43 40 51 32 51S18 43 18 30V10Z" fill="#f8d780" stroke="#775130" stroke-width="2.5"/>
+        <path d="M18 17H7V29C7 40 14 44 23 44M46 17H57V29C57 40 50 44 41 44" stroke="#f8d780" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M32 51V64M23 64H41L45 72H19L23 64Z" stroke="#775130" stroke-width="3" fill="#f8d780"/>
+        <path d="m32 18 3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1Z" fill="#fff7dc"/>
+      </svg>
+    </div>
   `;
   const canvas = host.querySelector('canvas');
   const ctx = canvas.getContext('2d');

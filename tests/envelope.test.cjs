@@ -62,10 +62,11 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     await page.waitForTimeout(1700);
     // The small card is still inside the opening and behind the opaque front pocket.
     assert(await page.locator(`.${prefix}-card`).evaluate((card, prefix) => {
-      const front = card.parentElement.querySelector(`.${prefix}-envelope-front`);
+      const front = card.closest('.theme-surface').querySelector(`.${prefix}-envelope-front`);
       const c = card.getBoundingClientRect(), f = front.getBoundingClientRect();
       return c.width < f.width && c.bottom > f.top && c.bottom < f.bottom
-        && Number(getComputedStyle(card).zIndex) < Number(getComputedStyle(front).zIndex);
+        && Number(getComputedStyle(card).zIndex) < Number(getComputedStyle(front).zIndex)
+        && getComputedStyle(card.parentElement).clipPath !== 'none';
     }, prefix));
     if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, `${themeId}-opening.png`) });
     await page.waitForTimeout(2200);
@@ -81,7 +82,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
       assert(await page.locator('.paper-podium').evaluate(el => {
         const podium = el.getBoundingClientRect(), stage = el.closest('.theme-surface').getBoundingClientRect();
         const card = el.closest('.theme-surface').querySelector('.paper-card').getBoundingClientRect();
-        return podium.x + podium.width / 2 > stage.x + stage.width / 2 && podium.top > card.bottom && Math.abs(podium.bottom - innerHeight) < 1;
+        return Math.abs(podium.x + podium.width / 2 - stage.x - stage.width / 2) < 1 && podium.top > card.bottom && Math.abs(podium.bottom - innerHeight) < 1;
       }));
     }
     assert.equal(await page.locator('[data-award-team]').textContent(), 'ABc');
@@ -91,7 +92,15 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     assert.equal(await page.evaluate(() => pendingFrames.size), 1);
     if (themeId === 'claude-paper') {
       await page.waitForTimeout(3000);
-      assert(await page.locator('.paper-delivery').evaluate(el => el.getBoundingClientRect().left > innerWidth));
+      assert(await page.locator('.paper-recipient').evaluate(el => {
+        const person = el.getBoundingClientRect(), podium = el.parentElement.querySelector('.paper-podium').getBoundingClientRect();
+        return Math.abs(person.x + person.width / 2 - podium.x - podium.width / 2) < 1 && person.bottom < podium.top + 10;
+      }));
+      assert(await page.locator('.paper-trophy').evaluate(el => {
+        const trophy = el.getBoundingClientRect(), recipient = el.closest('.theme-surface').querySelector('.paper-recipient').getBoundingClientRect();
+        return Math.abs(trophy.x - recipient.right) < recipient.width / 2 && trophy.bottom < recipient.bottom;
+      }));
+      assert.equal(await page.locator('.paper-footer').count(), 0);
       assert.equal(await page.locator('[data-award-team]').textContent(), 'ABc');
     }
 
@@ -144,8 +153,9 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     assert(await page.locator(`.${prefix}-card`).evaluate(el => el.scrollHeight <= el.clientHeight + 1));
     assert.equal(await page.locator('[data-award-team] script').count(), 0);
     if (themeId === 'claude-paper') {
-      assert(await page.locator('.paper-mascot').evaluateAll(images => images.length === 2 && images.every(el => el.tagName === 'IMG' && el.complete && el.naturalWidth === 924)));
+      assert(await page.locator('.paper-mascot').evaluateAll(images => images.length === 3 && images.every(el => el.tagName === 'IMG' && el.complete && el.naturalWidth === 924)));
       assert.equal(await page.locator('.paper-delivery').isVisible(), false);
+      assert.equal(await page.locator('.paper-presenter').isVisible(), false);
     }
     assert.equal(await page.evaluate(() => localStorage.getItem('award_ceremony_data')), stored);
     assert.deepEqual(errors, []);

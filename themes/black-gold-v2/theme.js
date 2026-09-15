@@ -18,10 +18,12 @@ window.AwardThemes.set('black-gold-v2', (host) => {
         <div class="v2-seal">✦</div>
       </div>
     </div>
+    <div class="v2-card-window">
     <div class="v2-card" aria-live="polite" aria-atomic="true">
       <div class="v2-kicker">✦ &nbsp; THE WINNING MOMENT &nbsp; ✦</div>
       <div class="v2-team" data-award-team></div>
       <div class="v2-congrats">恭喜獲獎<span>CONGRATULATIONS</span></div>
+    </div>
     </div>
     <div class="v2-footer">每 一 份 熱 愛 ・ 都 值 得 閃 耀</div>
   `;
