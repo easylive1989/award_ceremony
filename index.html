@@ -18,26 +18,42 @@
       <p class="subtitle">設定各得獎組別與獲獎隊伍名稱，支援全螢幕展示，每頁點擊開始揭曉，再點擊切換下一組</p>
     </header>
 
-    <section class="theme-settings" aria-label="舞台外觀">
-      <label for="theme-select">舞台皮膚</label>
-      <select id="theme-select" aria-describedby="theme-status"></select>
-      <span id="theme-status" role="status" aria-live="polite">載入皮膚中…</span>
+    <section class="appearance-settings" aria-label="舞台外觀與配樂">
+      <div class="theme-settings">
+        <label for="theme-select">舞台皮膚</label>
+        <select id="theme-select" aria-describedby="theme-status"></select>
+        <span id="theme-status" role="status" aria-live="polite">載入皮膚中…</span>
+      </div>
+
+      <div class="music-settings">
+        <label for="music-volume">配樂音量</label>
+        <div class="music-controls" role="group" aria-label="配樂控制">
+          <button id="music-toggle" class="btn btn-outline" type="button" aria-label="靜音配樂" aria-pressed="false" title="靜音配樂">🔊</button>
+          <input id="music-volume" type="range" min="0" max="100" step="1" value="35" aria-label="配樂音量" aria-valuetext="35%">
+        </div>
+        <div id="music-status" class="music-status" role="status" aria-live="polite"></div>
+      </div>
     </section>
 
-    <section class="music-settings" aria-label="配樂設定">
-      <label for="music-volume">配樂音量</label>
-      <div class="music-controls" role="group" aria-label="配樂控制">
-        <button id="music-toggle" class="btn btn-outline" type="button" aria-label="靜音配樂" aria-pressed="false" title="靜音配樂">🔊</button>
-        <input id="music-volume" type="range" min="0" max="100" step="1" value="35" aria-label="配樂音量" aria-valuetext="35%">
+    <section class="display-settings" aria-label="播放螢幕設定">
+      <label for="display-select">播放螢幕</label>
+      <div class="display-controls" role="group" aria-label="播放螢幕控制">
+        <select id="display-select" aria-describedby="display-status" disabled>
+          <option value="current">目前所在螢幕</option>
+        </select>
+        <button id="detect-displays-btn" class="btn btn-outline" type="button">偵測螢幕</button>
       </div>
-      <span class="music-help">音量與靜音設定會自動儲存，進入展示後開始播放。</span>
-      <div id="music-status" class="music-status" role="status" aria-live="polite"></div>
+      <span id="display-status" class="display-status" role="status" aria-live="polite"></span>
+      <span class="display-help">初次偵測時，瀏覽器會詢問多螢幕管理權限。</span>
     </section>
     <p class="presentation-help">點擊或空白鍵：揭曉／下一組　← →：切換組別　Esc：返回設定</p>
 
     <section class="card form-card">
       <div class="card-header">
-        <h2>名單清單</h2>
+        <div class="card-title-row">
+          <h2>名單清單</h2>
+          <button id="toggle-award-list-btn" class="btn btn-ghost btn-compact" type="button" aria-expanded="true" aria-controls="award-list-content">隱藏名單</button>
+        </div>
         <div class="actions">
           <button id="add-item-btn" class="btn btn-secondary">
             <span class="icon">➕</span> 新增得獎項目
@@ -47,19 +63,24 @@
         </div>
       </div>
 
-      <div id="award-list" class="award-list">
-        <!-- 動態產生的輸入卡片會放在這裡 -->
-      </div>
-
-      <div class="form-footer">
-        <div class="status-info">
-          目前共有 <span id="award-count" class="highlight">0</span> 個得獎項目
+      <div id="award-list-content">
+        <div id="award-list" class="award-list">
+          <!-- 動態產生的輸入卡片會放在這裡 -->
         </div>
-        <button id="start-btn" class="btn btn-primary btn-large">
-          <span class="icon">▶</span> 開始全螢幕播放
-        </button>
+
+        <div class="form-footer">
+          <div class="status-info">
+            目前共有 <span id="award-count" class="highlight">0</span> 個得獎項目
+          </div>
+        </div>
       </div>
     </section>
+
+    <div class="presentation-launch">
+      <button id="start-btn" class="btn btn-primary btn-large">
+        <span class="icon">▶</span> 開始全螢幕播放
+      </button>
+    </div>
   </main>
 
   <audio id="award-music" src="assets/audio/triomphe-eclatant.mp3" preload="metadata" loop></audio>

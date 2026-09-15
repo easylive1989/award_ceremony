@@ -11,6 +11,8 @@ class AwardCeremonyApp {
     this.awards = [];
     this.currentIndex = 0;
     this.themeRevision = 0;
+    this.screenDetails = null;
+    this.availableScreens = [];
 
     this.cacheDom();
     this.music = new AwardMusicController(
@@ -20,6 +22,7 @@ class AwardCeremonyApp {
       document.getElementById('music-status')
     );
     this.bindEvents();
+    this.initializeDisplays();
     this.loadState();
     this.themeManager = new AwardThemeManager(document.getElementById('theme-root'), window.AWARD_THEME_CATALOG);
     this.initializeThemes();
@@ -33,6 +36,12 @@ class AwardCeremonyApp {
     this.loadSampleBtn = document.getElementById('load-sample-btn');
     this.clearAllBtn = document.getElementById('clear-all-btn');
     this.startBtn = document.getElementById('start-btn');
+    this.toggleAwardListBtn = document.getElementById('toggle-award-list-btn');
+    this.awardListContent = document.getElementById('award-list-content');
+    this.formCard = document.querySelector('.form-card');
+    this.displaySelect = document.getElementById('display-select');
+    this.detectDisplaysBtn = document.getElementById('detect-displays-btn');
+    this.displayStatus = document.getElementById('display-status');
 
     this.setupContainer = document.getElementById('app');
 
@@ -47,6 +56,9 @@ class AwardCeremonyApp {
     this.loadSampleBtn.addEventListener('click', () => this.loadSampleData());
     this.clearAllBtn.addEventListener('click', () => this.clearAll());
     this.startBtn.addEventListener('click', () => this.startPresentation());
+    this.toggleAwardListBtn.addEventListener('click', () => this.toggleAwardList());
+    this.detectDisplaysBtn.addEventListener('click', () => this.detectDisplays());
+    this.displaySelect.addEventListener('change', () => this.selectDisplay());
 
     this.themeSelect.addEventListener('change', () => this.changeTheme(this.themeSelect.value));
 
@@ -79,6 +91,105 @@ class AwardCeremonyApp {
         this.exitPresentation();
       }
     });
+  }
+
+  toggleAwardList() {
+    this.setAwardListCollapsed(!this.awardListContent.hidden);
+  }
+
+  setAwardListCollapsed(collapsed) {
+    this.awardListContent.hidden = collapsed;
+    this.formCard.classList.toggle('is-collapsed', collapsed);
+    this.toggleAwardListBtn.setAttribute('aria-expanded', String(!collapsed));
+    this.toggleAwardListBtn.textContent = collapsed ? '顯示名單' : '隱藏名單';
+  }
+
+  initializeDisplays() {
+    if ('getScreenDetails' in window) {
+      this.displayStatus.textContent = '按「偵測螢幕」選擇外接螢幕或投影機。';
+      return;
+    }
+
+    this.detectDisplaysBtn.disabled = true;
+    this.detectDisplaysBtn.title = '此瀏覽器不支援多螢幕選擇';
+    this.displayStatus.textContent = '此瀏覽器不支援指定螢幕，將在目前所在螢幕播放。';
+  }
+
+  async detectDisplays() {
+    if (!('getScreenDetails' in window)) return;
+
+    this.detectDisplaysBtn.disabled = true;
+    this.displayStatus.textContent = '正在偵測螢幕…';
+    try {
+      const details = await window.getScreenDetails();
+      if (this.screenDetails !== details) {
+        this.screenDetails?.removeEventListener?.('screenschange', this.handleScreensChange);
+        this.screenDetails?.removeEventListener?.('currentscreenchange', this.handleScreensChange);
+        this.screenDetails = details;
+        this.handleScreensChange = () => this.renderDisplayOptions();
+        details.addEventListener?.('screenschange', this.handleScreensChange);
+        details.addEventListener?.('currentscreenchange', this.handleScreensChange);
+      }
+      this.renderDisplayOptions();
+    } catch (error) {
+      this.availableScreens = [];
+      this.displaySelect.innerHTML = '<option value="current">目前所在螢幕</option>';
+      this.displaySelect.disabled = true;
+      this.displayStatus.textContent = error?.name === 'NotAllowedError'
+        ? '未取得多螢幕權限，將在目前所在螢幕播放。'
+        : '無法偵測螢幕，將在目前所在螢幕播放。';
+      console.warn('Screen detection denied or unavailable:', error);
+    } finally {
+      this.detectDisplaysBtn.disabled = false;
+    }
+  }
+
+  renderDisplayOptions() {
+    const screens = Array.from(this.screenDetails?.screens || []);
+    const previousKey = this.displaySelect.value === 'current'
+      ? this.getSavedDisplayKey()
+      : this.getScreenKey(this.availableScreens[Number(this.displaySelect.value)]);
+
+    this.availableScreens = screens;
+    this.displaySelect.innerHTML = '';
+    screens.forEach((screen, index) => {
+      const markers = [];
+      if (screen === this.screenDetails.currentScreen) markers.push('目前使用');
+      if (screen.isPrimary) markers.push('主螢幕');
+      const name = screen.label || `螢幕 ${index + 1}`;
+      const resolution = screen.width && screen.height ? ` · ${screen.width}×${screen.height}` : '';
+      const suffix = markers.length ? `（${markers.join('、')}）` : '';
+      this.displaySelect.add(new Option(`${name}${resolution}${suffix}`, String(index)));
+    });
+
+    const rememberedIndex = screens.findIndex(screen => this.getScreenKey(screen) === previousKey);
+    const currentIndex = screens.indexOf(this.screenDetails.currentScreen);
+    this.displaySelect.value = String(rememberedIndex >= 0 ? rememberedIndex : Math.max(0, currentIndex));
+    this.displaySelect.disabled = screens.length < 2;
+    this.selectDisplay();
+    this.displayStatus.textContent = screens.length > 1
+      ? `已偵測到 ${screens.length} 個螢幕，播放時會在所選螢幕進入全螢幕。`
+      : '目前只偵測到一個螢幕。';
+  }
+
+  selectDisplay() {
+    const screen = this.getSelectedScreen();
+    if (!screen) return;
+    try { localStorage.setItem('award_ceremony_display', this.getScreenKey(screen)); } catch { /* Display storage is optional. */ }
+  }
+
+  getSelectedScreen() {
+    if (this.displaySelect.value === 'current') return null;
+    return this.availableScreens[Number(this.displaySelect.value)] || null;
+  }
+
+  getScreenKey(screen) {
+    if (!screen) return '';
+    return [screen.label, screen.left, screen.top, screen.width, screen.height].join('|');
+  }
+
+  getSavedDisplayKey() {
+    try { return localStorage.getItem('award_ceremony_display') || ''; } catch { return ''; }
   }
 
   initializeThemes() {
@@ -247,10 +358,12 @@ class AwardCeremonyApp {
 
     this.renderCurrentSlide();
 
-    // 嘗試調用瀏覽器全螢幕
+    // 嘗試在使用者指定的螢幕進入全螢幕。
     const elem = document.documentElement;
     if (elem.requestFullscreen) {
-      elem.requestFullscreen().catch(err => {
+      const selectedScreen = this.getSelectedScreen();
+      const options = selectedScreen ? { screen: selectedScreen } : undefined;
+      elem.requestFullscreen(options).catch(err => {
         console.warn('Fullscreen request denied or not supported:', err);
       });
     }
