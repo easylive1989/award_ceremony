@@ -12,6 +12,7 @@ class AwardCeremonyApp {
     this.awards = [];
     this.presentationAwards = [];
     this.currentIndex = 0;
+    this.closePresentationAtEnd = false;
     this.teamNamesHidden = false;
     this.themeRevision = 0;
     this.screenDetails = null;
@@ -393,12 +394,13 @@ class AwardCeremonyApp {
       return;
     }
 
-    this.launchPresentation([award]);
+    this.launchPresentation([award], true);
   }
 
-  launchPresentation(awards) {
+  launchPresentation(awards, closeAtEnd = false) {
     this.presentationAwards = awards.map(award => ({ ...award }));
     this.currentIndex = 0;
+    this.closePresentationAtEnd = closeAtEnd;
     this.setupContainer.inert = true;
     this.stageOverlay.classList.remove('hidden');
     this.stageOverlay.focus({ preventScroll: true });
@@ -438,6 +440,8 @@ class AwardCeremonyApp {
     if (this.currentIndex < this.presentationAwards.length - 1) {
       this.currentIndex++;
       this.renderCurrentSlide();
+    } else if (this.closePresentationAtEnd) {
+      this.exitPresentation();
     } else {
       // 最後一組之後回到第一組
       this.currentIndex = 0;
@@ -446,6 +450,9 @@ class AwardCeremonyApp {
   }
 
   prevSlide() {
+    // 單獨播放沒有上一組，避免重新觸發同一個獎項。
+    if (this.closePresentationAtEnd && this.presentationAwards.length === 1) return;
+
     if (this.currentIndex > 0) {
       this.currentIndex--;
       this.renderCurrentSlide();
