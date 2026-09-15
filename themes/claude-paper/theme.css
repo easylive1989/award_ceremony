@@ -14,7 +14,9 @@
 [data-theme="claude-paper"] .paper-footer { position: absolute; bottom: 7%; width: 100%; font-size: .8cqw; text-align: center; letter-spacing: .28em; color: #39271f; }
 
 /* The envelope is layered paper geometry, with an independently hinged flap. */
-[data-theme="claude-paper"] .paper-envelope { position: absolute; left: 33%; top: 38%; width: 34cqw; height: 18cqw; z-index: 5; transform-origin: center bottom; transform: translateY(9cqw) scale(.55); opacity: 0; }
+[data-theme="claude-paper"] .paper-envelope,
+[data-theme="claude-paper"] .paper-envelope-front { position: absolute; left: 33%; top: 38%; width: 34cqw; height: 18cqw; z-index: 5; transform-origin: center bottom; transform: translateY(9cqw) scale(.55); opacity: 0; }
+[data-theme="claude-paper"] .paper-envelope-front { z-index: 7; }
 [data-theme="claude-paper"] .paper-shell { position: absolute; inset: 0; perspective: 900px; filter: drop-shadow(0 1.2cqw 1.5cqw #66503924); }
 [data-theme="claude-paper"] .paper-envelope-back { position: absolute; inset: 0; border-radius: .4cqw; border: 1px solid #c7b9a4; background: linear-gradient(150deg, #f2ebdc, #e8dfcb 45%, #ede4d2); }
 [data-theme="claude-paper"] .paper-envelope-lining { position: absolute; inset: .35cqw; background: repeating-linear-gradient(45deg, #d9775714 0 1px, transparent 1px 9px), linear-gradient(#e8d8c2, #f2e5d4); border: 1px solid #c9bba4; }
@@ -35,24 +37,31 @@
 [data-theme="claude-paper"] .paper-congrats { font-size: 1.2cqw; letter-spacing: .5em; color: #aa5c43; }
 [data-theme="claude-paper"] .paper-congrats span { display: block; font-size: .55cqw; letter-spacing: .32em; color: #8c8275; margin-top: .65cqw; }
 
-[data-theme="claude-paper"].paper-run .paper-envelope { animation: claudePaperEnvelope 4s both; }
+[data-theme="claude-paper"].paper-run .paper-envelope,
+[data-theme="claude-paper"].paper-run .paper-envelope-front { animation: claudePaperEnvelope 4s both; }
 [data-theme="claude-paper"].paper-run .paper-shell { animation: claudePaperShake 1.6s both; }
 [data-theme="claude-paper"].paper-run .paper-flap { animation: claudePaperFlap .8s 1.5s both; }
 [data-theme="claude-paper"].paper-run .paper-seal { animation: claudePaperSeal .45s 1.32s both; }
-[data-theme="claude-paper"].paper-run .paper-card { animation: claudePaperCard 1.65s 1.85s both; }
+[data-theme="claude-paper"].paper-run .paper-card { animation: claudePaperCard 2s 1.85s both; }
 [data-theme="claude-paper"].paper-run .paper-suspense { animation: claudePaperSuspense .5s 1.55s both; }
 [data-theme="claude-paper"].paper-paused * { animation-play-state: paused !important; }
 @keyframes claudePaperEnvelope {
-  0%, 47% { transform: translateY(0) scale(1); }
-  0%, 62% { opacity: 1; }
-  78% { transform: translateY(9.5cqw) scale(.53); }
-  87.5%, 100% { opacity: 0; }
-  100% { transform: translateY(9cqw) scale(.55); }
+  0%, 72% { transform: translateY(0) scale(1); opacity: 1; }
+  86% { transform: translateY(9cqw) scale(.55); opacity: .3; }
+  90%, 100% { transform: translateY(9cqw) scale(.55); opacity: 0; }
 }
 @keyframes claudePaperShake { 0%, 16%, 100% { transform: translateX(0) rotate(0); } 23%, 39%, 55%, 71%, 87% { transform: translateX(-.65cqw) rotate(-2.5deg); } 31%, 47%, 63%, 79%, 95% { transform: translateX(.65cqw) rotate(2.5deg); } }
 @keyframes claudePaperFlap { 0% { transform: rotateX(0deg); z-index: 7; } 49% { z-index: 7; } 50%, 100% { z-index: 1; } 100% { transform: rotateX(180deg); } }
 @keyframes claudePaperSeal { 0% { opacity: 1; transform: scale(1); } 65% { opacity: .8; transform: translateY(-1cqw) scale(1.2) rotate(15deg); } 100% { opacity: 0; transform: translateY(2cqw) scale(.6) rotate(35deg); } }
-@keyframes claudePaperCard { 0% { opacity: 0; transform: translateY(13cqw) scale(.37); filter: blur(3px); } 15% { opacity: 1; } 67% { opacity: 1; transform: translateY(-1.1cqw) scale(1.025); filter: blur(0); } 84% { transform: translateY(.3cqw) scale(.993); } 100% { opacity: 1; transform: none; filter: blur(0); } }
+/* Keep the same card behind the pocket until its bottom clears the opening. */
+@keyframes claudePaperCard {
+  0% { opacity: 0; transform: translateY(9.3cqw) scale(.37); z-index: 6; }
+  10% { opacity: 1; transform: translateY(9.3cqw) scale(.37); z-index: 6; }
+  50%, 55% { opacity: 1; transform: translateY(-9.6cqw) scale(.37); z-index: 6; }
+  56% { opacity: 1; transform: translateY(-9.6cqw) scale(.37); z-index: 8; }
+  87% { opacity: 1; transform: translateY(-.6cqw) scale(1.015); z-index: 8; }
+  100% { opacity: 1; transform: none; z-index: 8; }
+}
 @keyframes claudePaperSuspense { from { opacity: 1; } to { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
   [data-theme="claude-paper"] * { animation: none !important; }
@@ -63,7 +72,8 @@
 #stage:has([data-theme="claude-paper"]) { background: #bc7a5e; }
 
 /* Waiting is a distinct still frame, including when reduced motion is enabled. */
-[data-theme="claude-paper"].paper-waiting .paper-envelope { opacity: 1; transform: none; }
+[data-theme="claude-paper"].paper-waiting .paper-envelope,
+[data-theme="claude-paper"].paper-waiting .paper-envelope-front { opacity: 1; transform: none; }
 [data-theme="claude-paper"].paper-waiting .paper-flap { transform: rotateX(0deg); z-index: 7; }
 [data-theme="claude-paper"].paper-waiting .paper-seal { opacity: 1; }
 [data-theme="claude-paper"].paper-waiting .paper-card { opacity: 0; visibility: hidden; }

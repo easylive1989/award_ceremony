@@ -13,7 +13,9 @@
 [data-theme="black-gold-v2"] .v2-footer { position: absolute; bottom: 7%; width: 100%; font-size: .8cqw; text-align: center; letter-spacing: .28em; color: #bba579; }
 
 /* The envelope is layered paper geometry, with an independently hinged flap. */
-[data-theme="black-gold-v2"] .v2-envelope { position: absolute; left: 33%; top: 38%; width: 34cqw; height: 18cqw; z-index: 5; transform-origin: center bottom; transform: translateY(9cqw) scale(.55); opacity: 0; }
+[data-theme="black-gold-v2"] .v2-envelope,
+[data-theme="black-gold-v2"] .v2-envelope-front { position: absolute; left: 33%; top: 38%; width: 34cqw; height: 18cqw; z-index: 5; transform-origin: center bottom; transform: translateY(9cqw) scale(.55); opacity: 0; }
+[data-theme="black-gold-v2"] .v2-envelope-front { z-index: 7; }
 [data-theme="black-gold-v2"] .v2-shell { position: absolute; inset: 0; perspective: 900px; filter: drop-shadow(0 1.3cqw 1.5cqw #000a); }
 [data-theme="black-gold-v2"] .v2-envelope-back { position: absolute; inset: 0; border-radius: .4cqw; border: 1px solid #ccac63; background: linear-gradient(150deg, #6c4d22, #2d2515 45%, #8c6937); }
 [data-theme="black-gold-v2"] .v2-envelope-lining { position: absolute; inset: .35cqw; background: repeating-linear-gradient(45deg, #cbab6520 0 1px, transparent 1px 9px), linear-gradient(#1a160d, #5e4521); border: 1px solid #a98c48; }
@@ -26,7 +28,7 @@
 [data-theme="black-gold-v2"] .v2-seal { position: absolute; z-index: 8; top: 40%; left: 43.5%; width: 4.4cqw; height: 4.4cqw; border-radius: 50%; display: grid; place-items: center; border: .28cqw double #eccc84; outline: 1px solid #91703b; background: radial-gradient(circle at 30% 20%, #f3dda8, #cda557 52%, #81602c); color: #76541f; font-size: 2.3cqw; text-shadow: 0 1px #f9e5b4; box-shadow: 0 .3cqw .6cqw #0007; opacity: 0; }
 
 /* The card begins inside the envelope and becomes the final readable award. */
-[data-theme="black-gold-v2"] .v2-card { position: absolute; left: 12%; top: 24%; width: 76%; height: 43%; z-index: 6; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 2cqw 3cqw; text-align: center; border: 1px solid #e8c779a8; border-radius: .25cqw; background: linear-gradient(115deg, #1d1b10f5, #34301aee 45%, #1c1c12f5); box-shadow: 0 0 0 .5cqw #c9a3550a, 0 1.2cqw 4cqw #0008, inset 0 0 4cqw #e0b4540b; }
+[data-theme="black-gold-v2"] .v2-card { position: absolute; left: 12%; top: 24%; width: 76%; height: 43%; z-index: 6; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 2cqw 3cqw; text-align: center; border: 1px solid #e8c779a8; border-radius: .25cqw; background: linear-gradient(115deg, #1d1b10, #34301a 45%, #1c1c12); box-shadow: 0 0 0 .5cqw #c9a3550a, 0 1.2cqw 4cqw #0008, inset 0 0 4cqw #e0b4540b; }
 [data-theme="black-gold-v2"] .v2-card::before { content: ''; position: absolute; inset: .7cqw; border: 1px solid #dec07b2e; pointer-events: none; }
 [data-theme="black-gold-v2"] .v2-card > * { flex-shrink: 0; }
 [data-theme="black-gold-v2"] .v2-kicker { font-size: .72cqw; letter-spacing: .5em; color: #a99665; margin-bottom: 1cqw; }
@@ -34,25 +36,31 @@
 [data-theme="black-gold-v2"] .v2-congrats { font-size: 1.2cqw; letter-spacing: .5em; color: #f4dba3; }
 [data-theme="black-gold-v2"] .v2-congrats span { display: block; font-size: .55cqw; letter-spacing: .32em; color: #9e8e67; margin-top: .65cqw; }
 
-[data-theme="black-gold-v2"].v2-run .v2-envelope { animation: goldV2Envelope 4s both; }
+[data-theme="black-gold-v2"].v2-run .v2-envelope,
+[data-theme="black-gold-v2"].v2-run .v2-envelope-front { animation: goldV2Envelope 4s both; }
 [data-theme="black-gold-v2"].v2-run .v2-shell { animation: goldV2Shake 1.6s both; }
 [data-theme="black-gold-v2"].v2-run .v2-flap { animation: goldV2Flap .8s 1.5s both; }
 [data-theme="black-gold-v2"].v2-run .v2-seal { animation: goldV2Seal .45s 1.32s both; }
-[data-theme="black-gold-v2"].v2-run .v2-card { animation: goldV2Card 1.65s 1.85s both; }
+[data-theme="black-gold-v2"].v2-run .v2-card { animation: goldV2Card 2s 1.85s both; }
 [data-theme="black-gold-v2"].v2-run .v2-suspense { animation: goldV2Suspense .5s 1.55s both; }
 [data-theme="black-gold-v2"].v2-run .v2-team { animation: goldV2Shimmer 8s 3.6s ease-in-out infinite; }
 [data-theme="black-gold-v2"].v2-paused * { animation-play-state: paused !important; }
 @keyframes goldV2Envelope {
-  0%, 47% { transform: translateY(0) scale(1); }
-  0%, 62% { opacity: 1; }
-  78% { transform: translateY(9.5cqw) scale(.53); }
-  87.5%, 100% { opacity: 0; }
-  100% { transform: translateY(9cqw) scale(.55); }
+  0%, 72% { transform: translateY(0) scale(1); opacity: 1; }
+  86% { transform: translateY(9cqw) scale(.55); opacity: .3; }
+  90%, 100% { transform: translateY(9cqw) scale(.55); opacity: 0; }
 }
 @keyframes goldV2Shake { 0%, 16%, 100% { transform: translateX(0) rotate(0); } 23%, 39%, 55%, 71%, 87% { transform: translateX(-.65cqw) rotate(-2.5deg); } 31%, 47%, 63%, 79%, 95% { transform: translateX(.65cqw) rotate(2.5deg); } }
 @keyframes goldV2Flap { 0% { transform: rotateX(0deg); z-index: 7; } 49% { z-index: 7; } 50%, 100% { z-index: 1; } 100% { transform: rotateX(180deg); } }
 @keyframes goldV2Seal { 0% { opacity: 1; transform: scale(1); } 65% { opacity: .8; transform: translateY(-1cqw) scale(1.2) rotate(15deg); } 100% { opacity: 0; transform: translateY(2cqw) scale(.6) rotate(35deg); } }
-@keyframes goldV2Card { 0% { opacity: 0; transform: translateY(13cqw) scale(.37); filter: blur(3px); } 15% { opacity: 1; } 67% { opacity: 1; transform: translateY(-1.1cqw) scale(1.025); filter: blur(0); } 84% { transform: translateY(.3cqw) scale(.993); } 100% { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes goldV2Card {
+  0% { opacity: 0; transform: translateY(9.3cqw) scale(.37); z-index: 6; }
+  10% { opacity: 1; transform: translateY(9.3cqw) scale(.37); z-index: 6; }
+  50%, 55% { opacity: 1; transform: translateY(-9.6cqw) scale(.37); z-index: 6; }
+  56% { opacity: 1; transform: translateY(-9.6cqw) scale(.37); z-index: 8; }
+  87% { opacity: 1; transform: translateY(-.6cqw) scale(1.015); z-index: 8; }
+  100% { opacity: 1; transform: none; z-index: 8; }
+}
 @keyframes goldV2Suspense { from { opacity: 1; } to { opacity: 0; } }
 @keyframes goldV2Shimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 @media (prefers-reduced-motion: reduce) {
@@ -61,7 +69,8 @@
 }
 
 /* Waiting is a distinct still frame, including when reduced motion is enabled. */
-[data-theme="black-gold-v2"].v2-waiting .v2-envelope { opacity: 1; transform: none; }
+[data-theme="black-gold-v2"].v2-waiting .v2-envelope,
+[data-theme="black-gold-v2"].v2-waiting .v2-envelope-front { opacity: 1; transform: none; }
 [data-theme="black-gold-v2"].v2-waiting .v2-flap { transform: rotateX(0deg); z-index: 7; }
 [data-theme="black-gold-v2"].v2-waiting .v2-seal { opacity: 1; }
 [data-theme="black-gold-v2"].v2-waiting .v2-card { opacity: 0; visibility: hidden; }

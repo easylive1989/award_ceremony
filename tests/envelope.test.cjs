@@ -60,6 +60,13 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     assert.equal(await page.locator(`.${prefix}-envelope`).evaluate(el => Number(getComputedStyle(el).opacity)), 1);
     if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, `${themeId}-closed.png`) });
     await page.waitForTimeout(1700);
+    // The small card is still inside the opening and behind the opaque front pocket.
+    assert(await page.locator(`.${prefix}-card`).evaluate((card, prefix) => {
+      const front = card.parentElement.querySelector(`.${prefix}-envelope-front`);
+      const c = card.getBoundingClientRect(), f = front.getBoundingClientRect();
+      return c.width < f.width && c.bottom > f.top && c.bottom < f.bottom
+        && Number(getComputedStyle(card).zIndex) < Number(getComputedStyle(front).zIndex);
+    }, prefix));
     if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, `${themeId}-opening.png`) });
     await page.waitForTimeout(2200);
     assert(await page.locator(`.${prefix}-card`).evaluate(el => {
@@ -69,6 +76,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     assert.equal(await page.locator(`.${prefix}-card`).evaluate(el => Number(getComputedStyle(el).opacity)), 1);
     assert.equal(await page.locator(`.${prefix}-envelope`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     assert.equal(await page.locator(`.${prefix}-seal`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
+    assert.equal(await page.locator(`.${prefix}-envelope-front`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     if (themeId === 'claude-paper') {
       assert(await page.locator('.paper-podium').evaluate(el => {
         const podium = el.getBoundingClientRect(), stage = el.closest('.theme-surface').getBoundingClientRect();

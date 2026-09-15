@@ -10,6 +10,10 @@ window.AwardThemes.set('black-gold-v2', (host) => {
         <div class="v2-envelope-back"></div>
         <div class="v2-envelope-lining"></div>
         <div class="v2-flap"></div>
+      </div>
+    </div>
+    <div class="v2-envelope-front" aria-hidden="true">
+      <div class="v2-shell">
         <div class="v2-pocket"></div>
         <div class="v2-seal">✦</div>
       </div>
