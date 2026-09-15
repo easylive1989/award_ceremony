@@ -9,7 +9,9 @@ const DEFAULT_AWARDS = [
 class AwardCeremonyApp {
   constructor() {
     this.awards = [];
+    this.presentationAwards = [];
     this.currentIndex = 0;
+    this.teamNamesHidden = false;
     this.themeRevision = 0;
     this.screenDetails = null;
     this.availableScreens = [];
@@ -37,7 +39,6 @@ class AwardCeremonyApp {
     this.clearAllBtn = document.getElementById('clear-all-btn');
     this.startBtn = document.getElementById('start-btn');
     this.toggleAwardListBtn = document.getElementById('toggle-award-list-btn');
-    this.awardListContent = document.getElementById('award-list-content');
     this.formCard = document.querySelector('.form-card');
     this.displaySelect = document.getElementById('display-select');
     this.detectDisplaysBtn = document.getElementById('detect-displays-btn');
@@ -56,7 +57,7 @@ class AwardCeremonyApp {
     this.loadSampleBtn.addEventListener('click', () => this.loadSampleData());
     this.clearAllBtn.addEventListener('click', () => this.clearAll());
     this.startBtn.addEventListener('click', () => this.startPresentation());
-    this.toggleAwardListBtn.addEventListener('click', () => this.toggleAwardList());
+    this.toggleAwardListBtn.addEventListener('click', () => this.toggleTeamNames());
     this.detectDisplaysBtn.addEventListener('click', () => this.detectDisplays());
     this.displaySelect.addEventListener('change', () => this.selectDisplay());
 
@@ -93,15 +94,15 @@ class AwardCeremonyApp {
     });
   }
 
-  toggleAwardList() {
-    this.setAwardListCollapsed(!this.awardListContent.hidden);
+  toggleTeamNames() {
+    this.setTeamNamesHidden(!this.teamNamesHidden);
   }
 
-  setAwardListCollapsed(collapsed) {
-    this.awardListContent.hidden = collapsed;
-    this.formCard.classList.toggle('is-collapsed', collapsed);
-    this.toggleAwardListBtn.setAttribute('aria-expanded', String(!collapsed));
-    this.toggleAwardListBtn.textContent = collapsed ? '顯示名單' : '隱藏名單';
+  setTeamNamesHidden(hidden) {
+    this.teamNamesHidden = hidden;
+    this.formCard.classList.toggle('team-names-hidden', hidden);
+    this.toggleAwardListBtn.setAttribute('aria-expanded', String(!hidden));
+    this.toggleAwardListBtn.textContent = hidden ? '顯示隊伍名稱' : '隱藏隊伍名稱';
   }
 
   initializeDisplays() {
@@ -206,7 +207,7 @@ class AwardCeremonyApp {
 
   async changeTheme(id, initial = false) {
     const revision = ++this.themeRevision;
-    this.startBtn.disabled = true;
+    this.setPlaybackButtonsDisabled(true);
     this.themeStatus.textContent = '載入皮膚中…';
     try {
       const applied = await this.themeManager.select(id);
@@ -224,8 +225,15 @@ class AwardCeremonyApp {
       this.themeStatus.textContent = this.themeManager.current ? '皮膚載入失敗，已保留原本外觀。' : '皮膚載入失敗，請重新選擇。';
       console.error(error);
     } finally {
-      if (revision === this.themeRevision) this.startBtn.disabled = !this.themeManager.current;
+      if (revision === this.themeRevision) this.setPlaybackButtonsDisabled(!this.themeManager.current);
     }
+  }
+
+  setPlaybackButtonsDisabled(disabled) {
+    this.startBtn.disabled = disabled;
+    this.awardListEl.querySelectorAll('.play-award-btn').forEach(button => {
+      button.disabled = disabled;
+    });
   }
 
   loadState() {
@@ -307,17 +315,23 @@ class AwardCeremonyApp {
           <label>得獎組別 / 獎項</label>
           <input type="text" placeholder="例如：特優首獎" value="${this.escapeHtml(award.category)}">
         </div>
-        <div class="input-group">
+        <div class="input-group team-input-group">
           <label>獲獎隊伍 / 人員名稱</label>
           <input type="text" placeholder="例如：第 1 隊 (隊伍名稱)" value="${this.escapeHtml(award.team)}">
         </div>
-        <button class="del-btn" title="刪除此項目">🗑️</button>
+        <div class="item-actions">
+          <button class="btn btn-outline btn-compact play-award-btn" type="button" aria-label="單獨播放第 ${index + 1} 個獎項">▶ 單獨播放</button>
+          <button class="del-btn" type="button" title="刪除此項目" aria-label="刪除第 ${index + 1} 個獎項">🗑️</button>
+        </div>
       `;
 
       const inputs = row.querySelectorAll('input');
       const categoryInput = inputs[0];
       const teamInput = inputs[1];
+      const playBtn = row.querySelector('.play-award-btn');
       const delBtn = row.querySelector('.del-btn');
+
+      playBtn.disabled = !this.themeManager?.current;
 
       categoryInput.addEventListener('input', (e) => {
         this.updateItem(award.id, 'category', e.target.value);
@@ -325,6 +339,10 @@ class AwardCeremonyApp {
 
       teamInput.addEventListener('input', (e) => {
         this.updateItem(award.id, 'team', e.target.value);
+      });
+
+      playBtn.addEventListener('click', () => {
+        this.startSingleAward(award.id);
       });
 
       delBtn.addEventListener('click', () => {
@@ -350,6 +368,22 @@ class AwardCeremonyApp {
       return;
     }
 
+    this.launchPresentation(validAwards);
+  }
+
+  startSingleAward(id) {
+    if (!this.themeManager.current) return;
+    const award = this.awards.find(item => item.id === id);
+    if (!award || (award.category.trim() === '' && award.team.trim() === '')) {
+      alert('請先填寫此獎項或隊伍名稱！');
+      return;
+    }
+
+    this.launchPresentation([award]);
+  }
+
+  launchPresentation(awards) {
+    this.presentationAwards = awards.map(award => ({ ...award }));
     this.currentIndex = 0;
     this.setupContainer.inert = true;
     this.stageOverlay.classList.remove('hidden');
@@ -371,8 +405,7 @@ class AwardCeremonyApp {
   }
 
   renderCurrentSlide() {
-    const validAwards = this.getValidAwards();
-    const current = validAwards[this.currentIndex];
+    const current = this.presentationAwards[this.currentIndex];
 
     if (!this.stageOverlay.classList.contains('hidden')) this.music.start();
     this.themeManager.update(current);
@@ -388,8 +421,7 @@ class AwardCeremonyApp {
   }
 
   nextSlide() {
-    const validAwards = this.getValidAwards();
-    if (this.currentIndex < validAwards.length - 1) {
+    if (this.currentIndex < this.presentationAwards.length - 1) {
       this.currentIndex++;
       this.renderCurrentSlide();
     } else {
@@ -400,12 +432,11 @@ class AwardCeremonyApp {
   }
 
   prevSlide() {
-    const validAwards = this.getValidAwards();
     if (this.currentIndex > 0) {
       this.currentIndex--;
       this.renderCurrentSlide();
     } else {
-      this.currentIndex = validAwards.length - 1;
+      this.currentIndex = this.presentationAwards.length - 1;
       this.renderCurrentSlide();
     }
   }

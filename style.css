@@ -96,7 +96,6 @@ body {
 
 .card-title-row { display: flex; align-items: center; gap: 10px; }
 .btn-compact { padding: 5px 10px; font-size: .78rem; }
-.form-card.is-collapsed .card-header { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
 [hidden] { display: none !important; }
 
 .actions {
@@ -182,7 +181,7 @@ body {
 
 .award-item {
   display: grid;
-  grid-template-columns: 40px 1fr 1fr 40px;
+  grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
   background: rgba(255, 255, 255, 0.02);
@@ -191,6 +190,9 @@ body {
   border-radius: var(--radius-md);
   transition: border-color 0.2s;
 }
+
+.form-card.team-names-hidden .team-input-group { display: none; }
+.form-card.team-names-hidden .award-item { grid-template-columns: 40px minmax(0, 1fr) auto; }
 
 .award-item:hover {
   border-color: #58a6ff;
@@ -253,6 +255,15 @@ body {
   color: var(--danger);
 }
 
+.item-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.play-award-btn { white-space: nowrap; }
+
 .empty-state {
   text-align: center;
   padding: 40px;
@@ -298,9 +309,12 @@ body {
     grid-template-columns: 1fr;
     gap: 8px;
   }
+  .form-card.team-names-hidden .award-item { grid-template-columns: 1fr; }
   .item-index {
     display: none;
   }
+  .item-actions { justify-content: stretch; }
+  .play-award-btn { flex: 1; justify-content: center; }
   .form-footer {
     flex-direction: column;
     gap: 16px;
