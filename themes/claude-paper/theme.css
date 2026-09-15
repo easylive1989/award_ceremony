@@ -87,14 +87,14 @@
 [data-theme="claude-paper"] .paper-mascot { display: block; width: 100%; height: auto; filter: drop-shadow(0 .2cqw .12cqw #573c2c25); }
 [data-theme="claude-paper"] .paper-podium { position: absolute; left: 3.54cqw; bottom: 0; width: 10.2cqw; }
 [data-theme="claude-paper"] .paper-presenter { position: absolute; left: calc(50% + 4.44cqw); bottom: calc((min(100vh, 56.25vw) - 100vh) / 2); width: 4.2cqw; z-index: 5; pointer-events: none; transform: translateX(100vw); }
-[data-theme="claude-paper"] .paper-trophy { position: absolute; left: -.8cqw; bottom: 1.5cqw; width: 1.7cqw; height: 2.2cqw; overflow: visible; filter: drop-shadow(0 .1cqw .12cqw #573c2c30); }
+[data-theme="claude-paper"] .paper-trophy { position: absolute; left: -.8cqw; bottom: 1.5cqw; width: 1.7cqw; height: 2.2cqw; overflow: visible; filter: drop-shadow(0 .1cqw .12cqw #573c2c30); transform: translate3d(0, 0, 0); transform-origin: 50% 85%; will-change: transform; backface-visibility: hidden; }
 [data-theme="claude-paper"].paper-run .paper-delivery { animation: claudePodiumDelivery 3.2s .15s both; }
 [data-theme="claude-paper"].paper-run .paper-podium { animation: claudePodiumSetDown 3.6s .15s both; }
 [data-theme="claude-paper"].paper-run .paper-delivery .paper-helper-body { animation: claudeHelperWalk .24s .15s 14; }
 [data-theme="claude-paper"].paper-run .paper-recipient { animation: claudeRecipientJump .95s 3.75s both; }
 [data-theme="claude-paper"].paper-run .paper-presenter { animation: claudePresenterEnter 4.9s .15s both; }
 [data-theme="claude-paper"].paper-run .paper-presenter .paper-helper-body { animation: claudeHelperWalk .24s .15s 20; }
-[data-theme="claude-paper"].paper-run .paper-trophy { animation: claudeTrophyHandoff 1.2s 5.25s both; }
+[data-theme="claude-paper"].paper-run .paper-trophy { animation: claudeTrophyHandoff 1.2s 5.08s both; }
 @keyframes claudePodiumDelivery {
   from { transform: translateX(-100vw); }
   to { transform: translateX(0); }
@@ -121,9 +121,8 @@
   100% { transform: translateX(0); }
 }
 @keyframes claudeTrophyHandoff {
-  0%, 15% { transform: translate(0, 0) rotate(0); }
-  60% { transform: translate(-1cqw, -2.3cqw) rotate(-10deg); }
-  100% { transform: translate(-2.03cqw, -3.65cqw) rotate(0); }
+  0%, 8% { transform: translate3d(0, 0, 0) rotate(0deg); animation-timing-function: cubic-bezier(.4, 0, .2, 1); }
+  100% { transform: translate3d(-2.03cqw, -3.65cqw, 0) rotate(-2deg); }
 }
 @media (prefers-reduced-motion: reduce) {
   [data-theme="claude-paper"].paper-run .paper-delivery,
