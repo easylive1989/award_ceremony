@@ -332,8 +332,6 @@ body {
 #music-toggle { width: 44px; height: 44px; padding: 0; justify-content: center; font-size: 1.1rem; }
 #music-volume { width: 160px; max-width: 40vw; height: 44px; accent-color: var(--accent); cursor: pointer; }
 #music-volume:focus-visible, #music-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
-.presentation-help { color: var(--text-muted); font-size: .8rem; }
-.presentation-help { margin-bottom: 24px; }
 .music-status { color: var(--accent); font-size: .8rem; }
 .music-status:empty { display: none; }
 .display-settings { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; padding: 16px 20px; margin-bottom: 12px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); }

@@ -5,6 +5,7 @@ const DEFAULT_AWARDS = [
   { id: '3', category: '🎨 最佳使用者體驗獎', team: '靈感工坊設計組' },
   { id: '4', category: '🌟 評審團特別獎', team: '星火燎原專案團隊' }
 ];
+const AWARD_STORAGE_KEY = 'award_ceremony_data';
 
 class AwardCeremonyApp {
   constructor() {
@@ -237,21 +238,34 @@ class AwardCeremonyApp {
   }
 
   loadState() {
-    const saved = localStorage.getItem('award_ceremony_data');
-    if (saved) {
-      try {
-        this.awards = JSON.parse(saved);
-      } catch (e) {
-        this.awards = [...DEFAULT_AWARDS];
+    let savedAwards = null;
+
+    try {
+      const saved = localStorage.getItem(AWARD_STORAGE_KEY);
+      if (saved !== null) {
+        const parsed = JSON.parse(saved);
+        const isValid = Array.isArray(parsed) && parsed.every(award => (
+          award
+          && typeof award.id === 'string'
+          && typeof award.category === 'string'
+          && typeof award.team === 'string'
+        ));
+        if (isValid) savedAwards = parsed;
       }
-    } else {
-      this.awards = [...DEFAULT_AWARDS];
+    } catch (error) {
+      console.warn('Unable to restore the award list from local storage:', error);
     }
+
+    this.awards = savedAwards ?? DEFAULT_AWARDS.map(award => ({ ...award }));
     this.renderList();
   }
 
   saveState() {
-    localStorage.setItem('award_ceremony_data', JSON.stringify(this.awards));
+    try {
+      localStorage.setItem(AWARD_STORAGE_KEY, JSON.stringify(this.awards));
+    } catch (error) {
+      console.warn('Unable to save the award list to local storage:', error);
+    }
   }
 
   addAwardItem(category = '', team = '') {
@@ -320,7 +334,7 @@ class AwardCeremonyApp {
           <input type="text" placeholder="例如：第 1 隊 (隊伍名稱)" value="${this.escapeHtml(award.team)}">
         </div>
         <div class="item-actions">
-          <button class="btn btn-outline btn-compact play-award-btn" type="button" aria-label="單獨播放第 ${index + 1} 個獎項">▶ 單獨播放</button>
+          <button class="btn btn-primary btn-compact play-award-btn" type="button" aria-label="單獨播放第 ${index + 1} 個獎項">▶ 單獨播放</button>
           <button class="del-btn" type="button" title="刪除此項目" aria-label="刪除第 ${index + 1} 個獎項">🗑️</button>
         </div>
       `;
