@@ -4,6 +4,7 @@ window.AwardThemes.set('claude-paper', (host) => {
     <div class="paper-vignette" aria-hidden="true"></div>
     <div class="paper-header" data-award-category aria-live="polite" aria-atomic="true"></div>
     <div class="paper-suspense" aria-hidden="true">And the winner is…</div>
+    <div class="paper-envelope-glow" aria-hidden="true"></div>
     <div class="paper-envelope" aria-hidden="true">
       <div class="paper-shell">
         <div class="paper-envelope-back"></div>

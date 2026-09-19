@@ -62,6 +62,9 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
       assert.equal(await page.locator('.paper-seal').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(217, 119, 87)');
       assert.equal(await page.locator('.paper-vignette').evaluate(el => getComputedStyle(el).display), 'none');
       assert.notEqual(await page.locator('[data-theme="claude-paper"]').evaluate(el => getComputedStyle(el).backgroundImage), 'none');
+      assert.equal(await page.locator('.paper-envelope-glow').count(), 1);
+      assert(await page.locator('.paper-envelope-glow').evaluate(el => Number(getComputedStyle(el).zIndex))
+        < await page.locator('.paper-envelope').evaluate(el => Number(getComputedStyle(el).zIndex)));
     }
     const stored = await page.evaluate(() => localStorage.getItem('award_ceremony_data'));
     await startContinuousPresentation(page);
@@ -75,6 +78,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     assert.equal(await page.evaluate(() => app.themeManager.revealed), false);
     if (themeId === 'claude-paper') {
       assert(await page.locator('.paper-delivery').evaluate(el => el.getBoundingClientRect().right < 0));
+      assert(await page.locator('.paper-envelope-glow').evaluate(el => Number(getComputedStyle(el).opacity) > 0));
     }
     await page.locator('#stage').click({ position: { x: 800, y: 450 } });
     assert.equal(await page.evaluate(() => String(app.currentIndex + 1)), '1');
@@ -88,9 +92,12 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     if (themeId === 'claude-paper') {
       assert(await page.locator('.paper-header').evaluate(el => Number(getComputedStyle(el).zIndex))
         > await page.locator('.paper-envelope-front').evaluate(el => Number(getComputedStyle(el).zIndex)));
+      assert.match(await page.locator('.paper-envelope-glow').evaluate(el => getComputedStyle(el).animationName), /claudePaperGlowBurst/);
     }
     if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, `${themeId}-closed.png`) });
-    await page.waitForTimeout(1700);
+    await page.waitForTimeout(1250);
+    if (process.env.AWARD_SCREENSHOT_DIR && themeId === 'claude-paper') await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, `${themeId}-burst.png`) });
+    await page.waitForTimeout(450);
     // The small card is still inside the opening and behind the opaque front pocket.
     assert(await page.locator(`.${prefix}-card`).evaluate((card, prefix) => {
       const front = card.closest('.theme-surface').querySelector(`.${prefix}-envelope-front`);
@@ -110,6 +117,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     assert.equal(await page.locator(`.${prefix}-seal`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     assert.equal(await page.locator(`.${prefix}-envelope-front`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     if (themeId === 'claude-paper') {
+      assert.equal(await page.locator('.paper-envelope-glow').evaluate(el => Number(getComputedStyle(el).opacity)), 0);
       assert(await page.locator('.paper-podium').evaluate(el => {
         const podium = el.getBoundingClientRect(), stage = el.closest('.theme-surface').getBoundingClientRect();
         const card = el.closest('.theme-surface').querySelector('.paper-card').getBoundingClientRect();
