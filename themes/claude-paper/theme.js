@@ -72,7 +72,7 @@ window.AwardThemes.set('claude-paper', (host) => {
 
   function fitText() {
     if (disposed || !width || !height) return;
-    for (const [element, ratio, maxHeight] of [[category, .028, .10], [team, .078, .185]]) {
+    for (const [element, ratio, maxHeight] of [[category, .024, .10], [team, .065, .16]]) {
       let size = width * ratio;
       element.style.fontSize = `${size}px`;
       while (size > 1 && (element.scrollWidth > element.clientWidth + 1 || element.offsetHeight > height * maxHeight)) {
@@ -90,7 +90,7 @@ window.AwardThemes.set('claude-paper', (host) => {
     ctx.clearRect(0, 0, w, h);
     ctx.globalCompositeOperation = 'source-over';
     // Broad paper ribbons use only the CwC 2026 Claude palette.
-    const colors = ['250,249,245', '98,153,135', '120,140,93', '130,125,189', '203,202,219'];
+    const colors = ['217,119,87', '98,153,135', '120,140,93', '130,125,189', '203,202,219'];
     if (celebration > 0) {
       confetti.forEach((piece, index) => {
         const y = ((piece.y + time * .015 * piece.speed) % 1) * h;

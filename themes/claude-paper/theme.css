@@ -11,16 +11,16 @@
   --paper-heather: #cbcadb;
   color: var(--paper-slate);
   font-family: Poppins, 'Noto Sans TC', sans-serif;
-  background: var(--paper-clay);
+  background: var(--paper-ivory);
   perspective: 1200px;
   /* The bottom decoration can extend into letterboxing; the stage clips the screen edges. */
   overflow: visible;
 }
 [data-theme="claude-paper"] .paper-effects { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 [data-theme="claude-paper"] .paper-vignette { display: none; }
-[data-theme="claude-paper"] .paper-header { position: absolute; top: 6.5%; left: 6.5%; width: 87%; z-index: 20; min-height: 5.2cqw; padding: .35cqw 0 1.15cqw 1.9cqw; border-bottom: 1px solid var(--paper-gray-250); text-align: left; font: 600 2.8cqw/1.25 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: 0; color: var(--paper-slate); background: var(--paper-ivory); overflow-wrap: anywhere; text-wrap: balance; text-shadow: none; }
-[data-theme="claude-paper"] .paper-header::before { content: ''; position: absolute; left: 0; top: 1.05cqw; width: .85cqw; height: .85cqw; border-radius: 50%; background: var(--paper-clay); }
-[data-theme="claude-paper"] .paper-suspense { position: absolute; top: 27.5%; width: 100%; text-align: center; font: 500 1.35cqw/1.4 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: 0; color: #73726c; }
+[data-theme="claude-paper"] .paper-header { position: absolute; top: 6.5%; left: 18%; width: 64%; z-index: 20; min-height: 4.8cqw; padding: .25cqw 2cqw 1.05cqw; border-bottom: 1px solid var(--paper-gray-250); text-align: center; font: 600 2.4cqw/1.25 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: 0; color: var(--paper-slate); background: var(--paper-ivory); overflow-wrap: anywhere; text-wrap: balance; text-shadow: none; }
+[data-theme="claude-paper"] .paper-header::before { content: ''; position: absolute; left: 50%; bottom: -.12cqw; width: 4.2cqw; height: .24cqw; border-radius: 999px; background: var(--paper-clay); transform: translateX(-50%); }
+[data-theme="claude-paper"] .paper-suspense { position: absolute; top: 25%; width: 100%; text-align: center; font: 500 1.2cqw/1.4 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: 0; color: #73726c; }
 
 
 /* The envelope is layered paper geometry, with an independently hinged flap. */
@@ -39,11 +39,11 @@
 [data-theme="claude-paper"] .paper-seal { position: absolute; z-index: 8; top: 40%; left: 43.5%; width: 4.4cqw; height: 4.4cqw; border-radius: 50%; display: grid; place-items: center; border: .16cqw solid var(--paper-slate); background: var(--paper-clay); color: var(--paper-ivory); font-size: 2.3cqw; box-shadow: 0 .3cqw .7cqw rgba(20, 20, 19, .14); opacity: 0; }
 
 /* The card begins inside the envelope and becomes the final readable award. */
-[data-theme="claude-paper"] .paper-card { position: absolute; left: 10%; top: 24%; width: 80%; height: 43%; z-index: 6; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 2cqw 4cqw; text-align: center; border: 1px solid var(--paper-gray-250); border-radius: 1.35cqw; background: var(--paper-ivory); box-shadow: 0 1.1cqw 3cqw rgba(20, 20, 19, .11); }
-[data-theme="claude-paper"] .paper-card::before { content: ''; position: absolute; inset: .75cqw; border: 1px solid var(--paper-gray-150); border-radius: .85cqw; pointer-events: none; }
-[data-theme="claude-paper"] .paper-card > * { flex-shrink: 0; }
-[data-theme="claude-paper"] .paper-team { max-width: 100%; margin: .5cqw 0 1.35cqw; font: 600 7.8cqw/1.12 Lora, 'Noto Serif TC', serif; letter-spacing: 0; text-wrap: balance; overflow-wrap: anywhere; color: var(--paper-slate); }
-[data-theme="claude-paper"] .paper-congrats { position: relative; padding-top: 1.15cqw; font: 500 1.15cqw/1.4 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: .04em; color: #73726c; }
+[data-theme="claude-paper"] .paper-card { position: absolute; left: 14%; top: 27%; width: 72%; height: 40%; z-index: 6; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 2.4cqw 4.2cqw; text-align: center; border: 1px solid var(--paper-gray-250); border-radius: 1.2cqw; background: var(--paper-gray-150); box-shadow: 0 1.1cqw 3cqw rgba(20, 20, 19, .1); }
+[data-theme="claude-paper"] .paper-card::before { content: ''; position: absolute; inset: .75cqw; border: 1px solid var(--paper-gray-250); border-radius: .75cqw; background: var(--paper-ivory); pointer-events: none; }
+[data-theme="claude-paper"] .paper-card > * { position: relative; z-index: 1; flex-shrink: 0; }
+[data-theme="claude-paper"] .paper-team { max-width: 100%; margin: .4cqw 0 1.15cqw; font: 600 6.5cqw/1.12 Lora, 'Noto Serif TC', serif; letter-spacing: 0; text-wrap: balance; overflow-wrap: anywhere; color: var(--paper-slate); }
+[data-theme="claude-paper"] .paper-congrats { position: relative; padding-top: 1cqw; font: 500 1.05cqw/1.4 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: .03em; color: #73726c; }
 [data-theme="claude-paper"] .paper-congrats::before { content: ''; position: absolute; top: 0; left: 50%; width: 3.2cqw; height: .22cqw; border-radius: 999px; background: var(--paper-clay); transform: translateX(-50%); }
 
 [data-theme="claude-paper"].paper-run .paper-envelope,
@@ -69,8 +69,8 @@
   25%, 40% { opacity: 1; height: 60%; transform: translateY(-6.5cqw) scale(.37); z-index: 6; }
   55% { opacity: 1; height: 60%; transform: translateY(-15.5cqw) scale(.37); z-index: 6; }
   56% { opacity: 1; height: 60%; transform: translateY(-15.5cqw) scale(.37); z-index: 8; }
-  87% { opacity: 1; height: 43%; transform: translateY(-.6cqw) scale(1.015); z-index: 8; }
-  100% { opacity: 1; height: 43%; transform: none; z-index: 8; }
+  87% { opacity: 1; height: 40%; transform: translateY(-.6cqw) scale(1.015); z-index: 8; }
+  100% { opacity: 1; height: 40%; transform: none; z-index: 8; }
 }
 @keyframes claudePaperSuspense { from { opacity: 1; } to { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
@@ -79,7 +79,7 @@
 }
 
 [data-theme="claude-paper"] .paper-seal svg { width: 80%; height: 80%; }
-#stage:has([data-theme="claude-paper"]) { background: #d97757; }
+#stage:has([data-theme="claude-paper"]) { background: #faf9f5; }
 
 /* Waiting is a distinct still frame, including when reduced motion is enabled. */
 [data-theme="claude-paper"].paper-waiting .paper-envelope,

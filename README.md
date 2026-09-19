@@ -30,7 +30,7 @@
 | `themes/catalog.js` | 可選皮膚清單及預設皮膚 |
 | `themes/black-gold/` | 黑金榮耀的版面、CSS、Canvas 動畫 |
 | `themes/black-gold-v2/` | 無字信封抖動、開封彈出得獎卡片、金粉噴泉與光束特效 |
-| `themes/claude-paper/` | Claude 風格陶土橘背景、暖紙信封、襯線字與大片彩帶特效 |
+| `themes/claude-paper/` | Claude 風格 Ivory 背景、暖紙信封、襯線字與大片彩帶特效 |
 | `themes/neon/` | 霓虹光幕的獨立版面、CSS 動畫；可複製作為範本 |
 
 每款皮膚有自己的 DOM 結構，不必沿用黑金版的獎盃或文字排列。共用程式只傳入 `{ category, team }`，不查詢皮膚裡的元素。
@@ -41,7 +41,7 @@
 
 ## Claude
 
-在皮膚選單選擇「Claude」。沿用黑金 v2 的四秒信封揭曉流程與組別置頂；視覺遵循 CwC Extended 2026 簡報 guide，以 Clay（`#D97757`）為舞台背景、Ivory（`#FAF9F5`）為標題與得獎卡底色、Slate（`#141413`）為正文、Gray 150（`#F0EEE6`）為形狀、Gray 400（`#B0AEA5`）為線條，並使用 Mineral、Cactus、Plum、Heather 作為慶祝色。標題使用 Poppins，得獎隊伍使用 Lora；中文分別以 Noto Sans TC 與 Noto Serif TC 補足字形。版面採清楚的左對齊標題、固定邊界、大片留白、圓角形狀與細線 pictogram 語言。
+在皮膚選單選擇「Claude」。沿用黑金 v2 的四秒信封揭曉流程與組別置頂；視覺遵循 CwC Extended 2026 簡報 guide，以 Ivory（`#FAF9F5`）為舞台背景、Gray 150（`#F0EEE6`）為得獎卡框、Slate（`#141413`）為正文、Gray 400（`#B0AEA5`）為線條，並使用 Clay、Mineral、Cactus、Plum、Heather 作為慶祝色。標題使用 Poppins，得獎隊伍使用 Lora；中文分別以 Noto Sans TC 與 Noto Serif TC 補足字形。版面採置中的組別標題與得獎卡、大片留白、圓角形狀與細線 pictogram 語言。
 
 信紙從封口向上抽出時，較高的紙面下半部會被信封前袋折線遮住，半抽出時短暫停留，完全離開後才放大，信封隨後淡出。換頁先等待點擊才開始動畫，音樂仍在換頁時從頭播放。背景不含波紋或紙張雜訊。點擊揭曉時，螢幕最底部的兩隻小型 Claude 吉祥物（使用 `assets/images/clawd-base.png`）會一前一後將頒獎台搬到中央放下；同時第三隻 Clawd 從右側拿著獎盃進場。一位搬台角色跳上頒獎台，接過獎盃後停留合影。約 6.5 秒完成，每次揭曉播放一次，底部不顯示標語。換頁時重置，減少動態效果模式略過此裝飾動畫。信封僅保留 Claude 圖案封蠟，不放文字。頂部不加入角落標語或四角星。
 
