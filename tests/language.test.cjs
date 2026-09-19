@@ -31,6 +31,7 @@ test('language setting switches and remembers setup and stage copy', { timeout: 
     await page.locator('#theme-select').selectOption('claude-paper');
     await page.waitForFunction(() => window.app.themeManager.current?.id === 'claude-paper');
     await page.locator('.test-award-btn').first().click();
+    assert.equal(await page.locator('.paper-category-label').count(), 0);
     assert.equal(await page.locator('.paper-suspense').textContent(), 'And the winner is…');
     await page.locator('#stage').click();
     assert.equal(await page.locator('.paper-congrats').textContent(), 'Congratulations');

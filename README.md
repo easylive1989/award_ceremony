@@ -42,7 +42,7 @@
 
 ## Claude
 
-在皮膚選單選擇「Claude」。沿用黑金 v2 的四秒信封揭曉流程與組別置頂；視覺遵循 CwC Extended 2026 簡報 guide，以 Ivory（`#FAF9F5`）為主要舞台與閱讀區、Gray 150（`#F0EEE6`）為頂部色帶與得獎卡框。Slate（`#141413`）用於正文、Gray 400（`#B0AEA5`）用於線條，Clay、Mineral、Cactus、Plum、Heather 亦用於慶祝彩帶。標題使用 Poppins，得獎隊伍使用 Lora；中文分別以 Noto Sans TC 與 Noto Serif TC 補足字形。版面採置中的組別標題與得獎卡、大片留白、圓角形狀與細線 pictogram 語言。
+在皮膚選單選擇「Claude」。沿用黑金 v2 的四秒信封揭曉流程與組別置頂；視覺遵循 CwC Extended 2026 簡報 guide，以 Ivory（`#FAF9F5`）為主要舞台與閱讀區、Gray 150（`#F0EEE6`）為頂部色帶與得獎卡框。Slate（`#141413`）用於正文、Gray 400（`#B0AEA5`）用於線條，Clay、Mineral、Cactus、Plum、Heather 亦用於慶祝彩帶。標題使用 Poppins，得獎隊伍使用 Lora；中文分別以 Noto Sans TC 與 Noto Serif TC 補足字形。置中的組別名稱使用半透明 Ivory 底、Gray 400 細邊框與圓角框住，下緣以 Clay、Mineral、Plum 分段線條點綴；整體保留大片留白、圓角形狀與細線 pictogram 語言。
 
 信紙從封口向上抽出時，較高的紙面下半部會被信封前袋折線遮住，半抽出時短暫停留，完全離開後才放大，信封隨後淡出。換頁先等待點擊才開始動畫，音樂仍在換頁時從頭播放。背景不含波紋或紙張雜訊。點擊揭曉時，螢幕最底部的兩隻小型 Claude 吉祥物（使用 `assets/images/clawd-base.png`）會一前一後將頒獎台搬到中央放下；同時第三隻 Clawd 從右側拿著獎盃進場。一位搬台角色跳上頒獎台，接過獎盃後停留合影。約 6.5 秒完成，每次揭曉播放一次，底部不顯示標語。換頁時重置，減少動態效果模式略過此裝飾動畫。信封僅保留 Claude 圖案封蠟，不放文字。頂部不加入角落標語或四角星。
 
