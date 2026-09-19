@@ -21,7 +21,6 @@
 [data-theme="claude-paper"] .paper-effects { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; pointer-events: none; }
 [data-theme="claude-paper"] .paper-vignette { display: none; }
 [data-theme="claude-paper"] .paper-header { position: absolute; top: 4.8%; left: 50%; width: max-content; min-width: 28cqw; max-width: 64%; z-index: 20; min-height: 5.1cqw; padding: .5cqw 3.2cqw .68cqw; border: 1px solid var(--paper-gray-400); border-radius: 1.15cqw; text-align: center; font: 600 3cqw/1.2 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: 0; color: var(--paper-slate); background: rgba(250, 249, 245, .58); box-shadow: 0 .35cqw 1.2cqw rgba(20, 20, 19, .045), inset 0 0 0 .3cqw rgba(240, 238, 230, .55); overflow-wrap: anywhere; text-wrap: balance; text-shadow: none; transform: translateX(-50%); }
-[data-theme="claude-paper"] .paper-header::before { content: ''; position: absolute; left: 50%; bottom: -.12cqw; width: 6.4cqw; height: .24cqw; border-radius: 999px; background: linear-gradient(90deg, var(--paper-clay) 0 43%, transparent 43% 49%, var(--paper-mineral) 49% 70%, transparent 70% 76%, var(--paper-plum) 76% 100%); transform: translateX(-50%); }
 [data-theme="claude-paper"] .paper-suspense { position: absolute; top: 25%; width: 100%; text-align: center; font: 500 1.55cqw/1.35 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: 0; color: #73726c; }
 
 
