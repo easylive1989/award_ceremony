@@ -4,6 +4,16 @@ const { chromium } = require('playwright');
 const { pathToFileURL } = require('node:url');
 const path = require('node:path');
 
+async function startContinuousPresentation(page) {
+  await page.evaluate(() => {
+    document.querySelector('.play-award-btn').addEventListener('click', event => {
+      event.stopImmediatePropagation();
+      app.startPresentation();
+    }, { capture: true, once: true });
+  });
+  await page.locator('.play-award-btn').first().click();
+}
+
 test('setup audio preferences persist and music restarts on navigation', { timeout: 60000 }, async () => {
   const browser = await chromium.launch({ headless: true });
   try {
@@ -28,7 +38,7 @@ test('setup audio preferences persist and music restarts on navigation', { timeo
     assert(await page.locator('audio').evaluate(el => el.paused && el.muted));
     await page.locator('#music-toggle').click();
     assert(await page.locator('audio').evaluate(el => el.paused && !el.muted));
-    await page.locator('#start-btn').click();
+    await startContinuousPresentation(page);
     await page.waitForFunction(() => !!document.fullscreenElement);
     assert.equal(await page.locator('#stage button, #stage input, .stage-progress, .stage-controls').count(), 0);
     assert(await page.locator('#app').evaluate(el => el.inert));
@@ -86,7 +96,7 @@ test('setup audio preferences persist and music restarts on navigation', { timeo
       audio.originalPlay = audio.play;
       audio.play = () => Promise.reject(new DOMException('Test blocked playback', 'NotAllowedError'));
     });
-    await page.locator('#start-btn').click();
+    await startContinuousPresentation(page);
     await page.waitForFunction(() => !!document.fullscreenElement);
     await page.waitForFunction(() => document.getElementById('music-status').textContent.length > 0);
     await page.keyboard.press('ArrowRight');
@@ -94,7 +104,7 @@ test('setup audio preferences persist and music restarts on navigation', { timeo
     await page.keyboard.press('Escape');
     await page.waitForFunction(() => !document.fullscreenElement);
     await page.evaluate(() => { const audio = document.querySelector('audio'); audio.play = audio.originalPlay; });
-    await page.locator('#start-btn').click();
+    await startContinuousPresentation(page);
     await page.waitForFunction(() => !!document.fullscreenElement);
     await restarted();
     await page.keyboard.press('Escape');

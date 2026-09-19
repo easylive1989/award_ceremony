@@ -17,6 +17,7 @@ test('detects displays and requests fullscreen on the selected screen', { timeou
       window.__testScreens = screens;
       window.getScreenDetails = async () => ({ screens, currentScreen: screens[0], addEventListener() {} });
       Element.prototype.requestFullscreen = function (options) {
+        window.__fullscreenRequestCount = (window.__fullscreenRequestCount || 0) + 1;
         window.__fullscreenTarget = options?.screen || null;
         return Promise.resolve();
       };
@@ -33,6 +34,10 @@ test('detects displays and requests fullscreen on the selected screen', { timeou
     assert.equal(await page.locator('.award-item').first().locator('.input-group').first().isVisible(), true);
     assert.equal(await page.locator('.team-input-group').first().isVisible(), false);
     assert.equal(await page.locator('.play-award-btn').first().isVisible(), true);
+    assert.equal(await page.locator('.test-award-btn').first().isVisible(), true);
+    assert(await page.locator('.item-actions').first().evaluate(actions => (
+      actions.querySelector('.test-award-btn').nextElementSibling.matches('.del-btn')
+    )));
     assert.equal(await page.locator('#toggle-award-list-btn').getAttribute('aria-expanded'), 'false');
     assert.equal(await page.locator('#toggle-award-list-btn').textContent(), '顯示隊伍名稱');
     await page.locator('#toggle-award-list-btn').click();
@@ -54,6 +59,15 @@ test('detects displays and requests fullscreen on the selected screen', { timeou
     assert.equal(await page.evaluate(() => app.themeManager.revealed), true);
     await page.locator('#stage').click();
     assert.equal(await page.locator('#stage').isHidden(), true);
+    assert.equal(await page.evaluate(() => window.__fullscreenRequestCount), 1);
+
+    await page.locator('.test-award-btn').nth(1).click();
+    assert.equal(await page.locator('#stage').isVisible(), true);
+    assert.equal(await page.evaluate(() => window.__fullscreenRequestCount), 1);
+    assert.equal(await page.evaluate(() => document.fullscreenElement), null);
+    await page.keyboard.press('Escape');
+    assert.equal(await page.locator('#stage').isHidden(), true);
+    assert(await page.locator('.test-award-btn').nth(1).evaluate(el => el === document.activeElement));
     assert.match(await page.evaluate(() => localStorage.getItem('award_ceremony_display')), /^Projector\|1600\|0\|1920\|1080$/);
   } finally {
     await browser.close();

@@ -119,6 +119,16 @@ body {
   transition: all 0.2s ease;
 }
 
+.guide-icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  padding: 2px;
+  border-radius: 4px;
+  background: #faf9f5;
+}
+
 .btn-primary {
   background: var(--accent-gradient);
   color: #000;
@@ -250,6 +260,8 @@ body {
   transition: all 0.15s;
 }
 
+.del-btn .guide-icon { width: 25px; height: 25px; padding: 1px; }
+
 .del-btn:hover {
   background: rgba(239, 68, 68, 0.15);
   color: var(--danger);
@@ -262,7 +274,7 @@ body {
   gap: 6px;
 }
 
-.play-award-btn { white-space: nowrap; }
+.play-award-btn, .test-award-btn { white-space: nowrap; }
 
 .empty-state {
   text-align: center;
@@ -279,8 +291,6 @@ body {
   padding-top: 20px;
   border-top: 1px solid var(--border-color);
 }
-
-.presentation-launch { display: flex; justify-content: flex-end; padding-top: 20px; }
 
 .status-info {
   color: var(--text-muted);
@@ -314,7 +324,7 @@ body {
     display: none;
   }
   .item-actions { justify-content: stretch; }
-  .play-award-btn { flex: 1; justify-content: center; }
+  .play-award-btn, .test-award-btn { flex: 1; justify-content: center; }
   .form-footer {
     flex-direction: column;
     gap: 16px;
@@ -329,7 +339,11 @@ body {
 .music-settings { display: flex; align-items: center; gap: 12px; }
 .music-settings label { font-size: .9rem; }
 .music-controls { display: flex; align-items: center; gap: 12px; }
-#music-toggle { width: 44px; height: 44px; padding: 0; justify-content: center; font-size: 1.1rem; }
+#music-toggle { position: relative; width: 44px; height: 44px; padding: 0; justify-content: center; }
+#music-toggle .guide-icon { width: 28px; height: 28px; }
+#music-toggle.is-muted .guide-icon { opacity: .4; }
+#music-toggle.is-muted::after { content: ''; position: absolute; width: 28px; height: 2px; border-radius: 999px; background: var(--danger); transform: rotate(-45deg); }
+#music-toggle.is-failed .guide-icon { opacity: .45; }
 #music-volume { width: 160px; max-width: 40vw; height: 44px; accent-color: var(--accent); cursor: pointer; }
 #music-volume:focus-visible, #music-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .music-status { color: var(--accent); font-size: .8rem; }

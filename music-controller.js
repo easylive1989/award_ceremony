@@ -86,15 +86,16 @@ class AwardMusicController {
   showFailure() {
     this.failed = true;
     this.status.textContent = this.audio.error
-      ? '配樂無法載入；可繼續頒獎，或按 ♪ 重試。'
-      : '配樂未開始，請按 ♪ 播放。';
+      ? '配樂無法載入；可繼續頒獎，或按配樂按鈕重試。'
+      : '配樂未開始，請按配樂按鈕播放。';
     this.syncControls();
   }
 
   syncControls() {
     const silent = this.audio.muted || this.audio.volume === 0;
     const label = this.failed ? '重試播放配樂' : silent ? '開啟配樂聲音' : '靜音配樂';
-    this.toggle.textContent = this.failed ? '♪' : silent ? '🔇' : '🔊';
+    this.toggle.classList.toggle('is-muted', silent);
+    this.toggle.classList.toggle('is-failed', this.failed);
     this.toggle.title = label;
     this.toggle.setAttribute('aria-label', label);
     this.toggle.setAttribute('aria-pressed', String(silent));

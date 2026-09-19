@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>頒獎典禮播放系統</title>
-  <link rel="stylesheet" href="style.css?v=20260919-ivory-2">
+  <link rel="stylesheet" href="style.css?v=20260919-preview-2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;600;800&family=Noto+Serif+TC:wght@500;600&family=Outfit:wght@600;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
   <main id="app" class="setup-container">
     <header class="header">
       <div class="badge">Award Presentation System</div>
-      <h1>🏆 頒獎典禮名單設定</h1>
+      <h1>頒獎典禮名單設定</h1>
       <p class="subtitle">設定各得獎組別與獲獎隊伍名稱，支援全螢幕展示，每頁點擊開始揭曉，再點擊切換下一組</p>
     </header>
 
@@ -28,7 +28,7 @@
       <div class="music-settings">
         <label for="music-volume">配樂音量</label>
         <div class="music-controls" role="group" aria-label="配樂控制">
-          <button id="music-toggle" class="btn btn-outline" type="button" aria-label="靜音配樂" aria-pressed="false" title="靜音配樂">🔊</button>
+          <button id="music-toggle" class="btn btn-outline music-toggle" type="button" aria-label="靜音配樂" aria-pressed="false" title="靜音配樂"><img class="guide-icon" src="assets/icons/music.png" alt="" aria-hidden="true"></button>
           <input id="music-volume" type="range" min="0" max="100" step="1" value="35" aria-label="配樂音量" aria-valuetext="35%">
         </div>
         <div id="music-status" class="music-status" role="status" aria-live="polite"></div>
@@ -54,7 +54,7 @@
         </div>
         <div class="actions">
           <button id="add-item-btn" class="btn btn-secondary">
-            <span class="icon">➕</span> 新增得獎項目
+            <img class="guide-icon" src="assets/icons/add-item.png" alt="" aria-hidden="true">新增得獎項目
           </button>
           <button id="load-sample-btn" class="btn btn-outline">載入範例資料</button>
           <button id="clear-all-btn" class="btn btn-ghost text-danger">清空</button>
@@ -74,11 +74,6 @@
       </div>
     </section>
 
-    <div class="presentation-launch">
-      <button id="start-btn" class="btn btn-primary btn-large">
-        <span class="icon">▶</span> 開始全螢幕播放
-      </button>
-    </div>
   </main>
 
   <audio id="award-music" src="assets/audio/triomphe-eclatant.mp3" preload="metadata" loop></audio>
@@ -88,9 +83,9 @@
     <div id="theme-root" class="stage-viewport"></div>
   </div>
 
-  <script src="themes/catalog.js?v=20260919-ivory-2"></script>
-  <script src="theme-manager.js?v=20260919-ivory-2"></script>
-  <script src="music-controller.js?v=20260919-ivory-2"></script>
-  <script src="app.js?v=20260919-ivory-2"></script>
+  <script src="themes/catalog.js?v=20260919-preview-2"></script>
+  <script src="theme-manager.js?v=20260919-preview-2"></script>
+  <script src="music-controller.js?v=20260919-preview-2"></script>
+  <script src="app.js?v=20260919-preview-2"></script>
 </body>
 </html>

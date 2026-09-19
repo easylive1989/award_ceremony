@@ -18,6 +18,7 @@ class AwardCeremonyApp {
     this.presentationAwards = [];
     this.currentIndex = 0;
     this.closePresentationAtEnd = false;
+    this.presentationTrigger = null;
     this.teamNamesHidden = false;
     this.themeRevision = 0;
     this.screenDetails = null;
@@ -44,7 +45,6 @@ class AwardCeremonyApp {
     this.addItemBtn = document.getElementById('add-item-btn');
     this.loadSampleBtn = document.getElementById('load-sample-btn');
     this.clearAllBtn = document.getElementById('clear-all-btn');
-    this.startBtn = document.getElementById('start-btn');
     this.toggleAwardListBtn = document.getElementById('toggle-award-list-btn');
     this.formCard = document.querySelector('.form-card');
     this.displaySelect = document.getElementById('display-select');
@@ -63,7 +63,6 @@ class AwardCeremonyApp {
     this.addItemBtn.addEventListener('click', () => this.addAwardItem());
     this.loadSampleBtn.addEventListener('click', () => this.loadSampleData());
     this.clearAllBtn.addEventListener('click', () => this.clearAll());
-    this.startBtn.addEventListener('click', () => this.startPresentation());
     this.toggleAwardListBtn.addEventListener('click', () => this.toggleTeamNames());
     this.detectDisplaysBtn.addEventListener('click', () => this.detectDisplays());
     this.displaySelect.addEventListener('change', () => this.selectDisplay());
@@ -237,8 +236,7 @@ class AwardCeremonyApp {
   }
 
   setPlaybackButtonsDisabled(disabled) {
-    this.startBtn.disabled = disabled;
-    this.awardListEl.querySelectorAll('.play-award-btn').forEach(button => {
+    this.awardListEl.querySelectorAll('.play-award-btn, .test-award-btn').forEach(button => {
       button.disabled = disabled;
     });
   }
@@ -346,8 +344,9 @@ class AwardCeremonyApp {
           <input type="text" placeholder="例如：第 1 隊 (隊伍名稱)" value="${this.escapeHtml(award.team)}">
         </div>
         <div class="item-actions">
-          <button class="btn btn-primary btn-compact play-award-btn" type="button" aria-label="單獨播放第 ${index + 1} 個獎項">▶ 單獨播放</button>
-          <button class="del-btn" type="button" title="刪除此項目" aria-label="刪除第 ${index + 1} 個獎項">🗑️</button>
+          <button class="btn btn-primary btn-compact play-award-btn" type="button" aria-label="單獨播放第 ${index + 1} 個獎項"><img class="guide-icon" src="assets/icons/presentation.png" alt="" aria-hidden="true">單獨播放</button>
+          <button class="btn btn-outline btn-compact test-award-btn" type="button" aria-label="在網頁內測試第 ${index + 1} 個獎項"><img class="guide-icon" src="assets/icons/preview.png" alt="" aria-hidden="true">測試</button>
+          <button class="del-btn" type="button" title="刪除此項目" aria-label="刪除第 ${index + 1} 個獎項"><img class="guide-icon" src="assets/icons/remove.png" alt="" aria-hidden="true"></button>
         </div>
       `;
 
@@ -355,9 +354,11 @@ class AwardCeremonyApp {
       const categoryInput = inputs[0];
       const teamInput = inputs[1];
       const playBtn = row.querySelector('.play-award-btn');
+      const testBtn = row.querySelector('.test-award-btn');
       const delBtn = row.querySelector('.del-btn');
 
       playBtn.disabled = !this.themeManager?.current;
+      testBtn.disabled = !this.themeManager?.current;
 
       categoryInput.addEventListener('input', (e) => {
         this.updateItem(award.id, 'category', e.target.value);
@@ -368,7 +369,11 @@ class AwardCeremonyApp {
       });
 
       playBtn.addEventListener('click', () => {
-        this.startSingleAward(award.id);
+        this.startSingleAward(award.id, playBtn);
+      });
+
+      testBtn.addEventListener('click', () => {
+        this.testSingleAward(award.id, testBtn);
       });
 
       delBtn.addEventListener('click', () => {
@@ -397,7 +402,15 @@ class AwardCeremonyApp {
     this.launchPresentation(validAwards);
   }
 
-  startSingleAward(id) {
+  startSingleAward(id, trigger = null) {
+    this.startAward(id, true, trigger);
+  }
+
+  testSingleAward(id, trigger = null) {
+    this.startAward(id, false, trigger);
+  }
+
+  startAward(id, requestBrowserFullscreen, trigger) {
     if (!this.themeManager.current) return;
     const award = this.awards.find(item => item.id === id);
     if (!award || (award.category.trim() === '' && award.team.trim() === '')) {
@@ -405,13 +418,14 @@ class AwardCeremonyApp {
       return;
     }
 
-    this.launchPresentation([award], true);
+    this.launchPresentation([award], true, requestBrowserFullscreen, trigger);
   }
 
-  launchPresentation(awards, closeAtEnd = false) {
+  launchPresentation(awards, closeAtEnd = false, requestBrowserFullscreen = true, trigger = null) {
     this.presentationAwards = awards.map(award => ({ ...award }));
     this.currentIndex = 0;
     this.closePresentationAtEnd = closeAtEnd;
+    this.presentationTrigger = trigger;
     this.setupContainer.inert = true;
     this.stageOverlay.classList.remove('hidden');
     this.stageOverlay.focus({ preventScroll: true });
@@ -419,9 +433,9 @@ class AwardCeremonyApp {
 
     this.renderCurrentSlide();
 
-    // 嘗試在使用者指定的螢幕進入全螢幕。
+    // 正式播放可進入指定螢幕；測試只使用目前網頁內的覆蓋舞台。
     const elem = document.documentElement;
-    if (elem.requestFullscreen) {
+    if (requestBrowserFullscreen && elem.requestFullscreen) {
       const selectedScreen = this.getSelectedScreen();
       const options = selectedScreen ? { screen: selectedScreen } : undefined;
       elem.requestFullscreen(options).catch(err => {
@@ -474,11 +488,13 @@ class AwardCeremonyApp {
   }
 
   exitPresentation() {
+    const returnFocus = this.presentationTrigger;
+    this.presentationTrigger = null;
     this.music.stop();
     this.themeManager.setVisible(false);
     this.stageOverlay.classList.add('hidden');
     this.setupContainer.inert = false;
-    this.startBtn.focus({ preventScroll: true });
+    if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
     if (document.fullscreenElement) {
       document.exitFullscreen().catch(() => {});
     }

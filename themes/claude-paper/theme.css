@@ -11,14 +11,16 @@
   --paper-heather: #cbcadb;
   color: var(--paper-slate);
   font-family: Poppins, 'Noto Sans TC', sans-serif;
-  background: var(--paper-ivory);
+  background-color: var(--paper-ivory);
+  background-image:
+    linear-gradient(180deg, var(--paper-gray-150) 0 18%, var(--paper-ivory) 18% 100%);
   perspective: 1200px;
   /* The bottom decoration can extend into letterboxing; the stage clips the screen edges. */
   overflow: visible;
 }
-[data-theme="claude-paper"] .paper-effects { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+[data-theme="claude-paper"] .paper-effects { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; pointer-events: none; }
 [data-theme="claude-paper"] .paper-vignette { display: none; }
-[data-theme="claude-paper"] .paper-header { position: absolute; top: 6.5%; left: 18%; width: 64%; z-index: 20; min-height: 4.8cqw; padding: .25cqw 2cqw 1.05cqw; border-bottom: 1px solid var(--paper-gray-250); text-align: center; font: 600 2.4cqw/1.25 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: 0; color: var(--paper-slate); background: var(--paper-ivory); overflow-wrap: anywhere; text-wrap: balance; text-shadow: none; }
+[data-theme="claude-paper"] .paper-header { position: absolute; top: 6.5%; left: 18%; width: 64%; z-index: 20; min-height: 4.8cqw; padding: .25cqw 2cqw 1.05cqw; border-bottom: 1px solid var(--paper-gray-400); text-align: center; font: 600 2.4cqw/1.25 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: 0; color: var(--paper-slate); background: transparent; overflow-wrap: anywhere; text-wrap: balance; text-shadow: none; }
 [data-theme="claude-paper"] .paper-header::before { content: ''; position: absolute; left: 50%; bottom: -.12cqw; width: 4.2cqw; height: .24cqw; border-radius: 999px; background: var(--paper-clay); transform: translateX(-50%); }
 [data-theme="claude-paper"] .paper-suspense { position: absolute; top: 25%; width: 100%; text-align: center; font: 500 1.2cqw/1.4 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: 0; color: #73726c; }
 
@@ -79,7 +81,7 @@
 }
 
 [data-theme="claude-paper"] .paper-seal svg { width: 80%; height: 80%; }
-#stage:has([data-theme="claude-paper"]) { background: #faf9f5; }
+#stage:has([data-theme="claude-paper"]) { background: #f0eee6; }
 
 /* Waiting is a distinct still frame, including when reduced motion is enabled. */
 [data-theme="claude-paper"].paper-waiting .paper-envelope,

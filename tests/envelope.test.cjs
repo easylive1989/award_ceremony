@@ -4,6 +4,16 @@ const { chromium } = require('playwright');
 const { pathToFileURL } = require('node:url');
 const path = require('node:path');
 
+async function startContinuousPresentation(page) {
+  await page.evaluate(() => {
+    document.querySelector('.play-award-btn').addEventListener('click', event => {
+      event.stopImmediatePropagation();
+      app.startPresentation();
+    }, { capture: true, once: true });
+  });
+  await page.locator('.play-award-btn').first().click();
+}
+
 for (const [themeId, prefix] of [['black-gold-v2', 'v2'], ['claude-paper', 'paper']]) {
 test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }, async () => {
   const browser = await chromium.launch({ headless: true });
@@ -35,7 +45,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     await page.reload();
     await page.waitForFunction(() => window.app?.themeManager.current);
     await page.selectOption('#theme-select', themeId);
-    await page.waitForFunction(id => app.themeManager.current.id === id && !app.startBtn.disabled, themeId);
+    await page.waitForFunction(id => app.themeManager.current.id === id && !document.querySelector('.play-award-btn').disabled, themeId);
     if (themeId === 'claude-paper') {
       assert.equal(await page.locator('#theme-select option[value="claude-paper"]').textContent(), 'Claude');
       assert.equal(await page.locator('[data-theme="claude-paper"]').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(250, 249, 245)');
@@ -46,9 +56,10 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
       assert.equal(await page.locator('.paper-envelope-back').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(240, 238, 230)');
       assert.equal(await page.locator('.paper-seal').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(217, 119, 87)');
       assert.equal(await page.locator('.paper-vignette').evaluate(el => getComputedStyle(el).display), 'none');
+      assert.notEqual(await page.locator('[data-theme="claude-paper"]').evaluate(el => getComputedStyle(el).backgroundImage), 'none');
     }
     const stored = await page.evaluate(() => localStorage.getItem('award_ceremony_data'));
-    await page.locator('#start-btn').click();
+    await startContinuousPresentation(page);
     await page.waitForFunction(() => !!document.fullscreenElement);
       assert.equal(await page.locator('#stage button, #stage input, .stage-progress, .stage-controls').count(), 0);
     // Waiting longer than the complete animation must not reveal the winner.
@@ -152,7 +163,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.setViewportSize({ width: 390, height: 844 });
     await page.evaluate(() => { document.documentElement.requestFullscreen = () => Promise.reject(new Error('Test fallback')); });
-    await page.locator('#start-btn').click();
+    await startContinuousPresentation(page);
     await page.evaluate(() => app.themeManager.update({ category: '全國高中職跨領域創新永續設計競賽組', team: '<script>測試</script>這是一個非常長的隊伍名稱' }));
     assert.equal(await page.locator(`.${prefix}-card`).isVisible(), false);
     await page.locator('#stage').click({ position: { x: 180, y: 420 } });
