@@ -19,9 +19,8 @@ window.AwardThemes.set('claude-paper', (host) => {
     </div>
     <div class="paper-card-window">
     <div class="paper-card" aria-live="polite" aria-atomic="true">
-      <div class="paper-kicker">A moment worth celebrating.</div>
       <div class="paper-team" data-award-team></div>
-      <div class="paper-congrats">恭喜獲獎<span>CONGRATULATIONS</span></div>
+      <div class="paper-congrats">恭喜獲獎</div>
     </div>
     </div>
     <div class="paper-delivery" aria-hidden="true">
@@ -31,14 +30,14 @@ window.AwardThemes.set('claude-paper', (host) => {
         </div>
       </div>
       <svg class="paper-podium" viewBox="0 0 300 118" fill="none">
-        <ellipse cx="150" cy="107" rx="143" ry="8" fill="#573c2c" opacity=".16"/>
-        <path d="M14 53 38 38h224l24 15v49H14z" fill="#e4cfad" stroke="#6f5140" stroke-width="1.5"/>
-        <path d="M14 53h272v49H14z" fill="#eee1c9"/>
-        <path d="M14 53h272M18 101h264" stroke="#c1a582" stroke-width="2"/>
-        <path d="m99 19 14-10h74l14 10v83H99z" fill="#faf4e6" stroke="#c1a582" stroke-width="1.5"/>
-        <path d="M99 19h102l-14-10h-74z" fill="#fffaf0"/>
-        <path d="M107 95h86" stroke="#dbc8a9"/>
-        <path d="M138 39h24v10c0 10-5 16-12 16s-12-6-12-16V39Zm0 5h-7v7c0 7 4 10 10 11m21-18h7v7c0 7-4 10-10 11m-9 3v10m-9 4h18" stroke="#b66a49" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <ellipse cx="150" cy="107" rx="143" ry="8" fill="#141413" opacity=".12"/>
+        <path d="M14 53 38 38h224l24 15v49H14z" fill="#DEDCD1" stroke="#141413" stroke-width="1.5"/>
+        <path d="M14 53h272v49H14z" fill="#F0EEE6"/>
+        <path d="M14 53h272M18 101h264" stroke="#B0AEA5" stroke-width="2"/>
+        <path d="m99 19 14-10h74l14 10v83H99z" fill="#FAF9F5" stroke="#141413" stroke-width="1.5"/>
+        <path d="M99 19h102l-14-10h-74z" fill="#CBCADB"/>
+        <path d="M107 95h86" stroke="#B0AEA5"/>
+        <path d="M138 39h24v10c0 10-5 16-12 16s-12-6-12-16V39Zm0 5h-7v7c0 7 4 10 10 11m21-18h7v7c0 7-4 10-10 11m-9 3v10m-9 4h18" stroke="#D97757" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <div class="paper-helper paper-helper-front paper-recipient">
         <div class="paper-helper-body">
@@ -51,10 +50,10 @@ window.AwardThemes.set('claude-paper', (host) => {
         <img class="paper-mascot" src="assets/images/clawd-base.png" width="924" height="750" alt="" draggable="false">
       </div>
       <svg class="paper-trophy" viewBox="0 0 64 80" fill="none">
-        <path d="M18 10H46V30C46 43 40 51 32 51S18 43 18 30V10Z" fill="#f8d780" stroke="#775130" stroke-width="2.5"/>
-        <path d="M18 17H7V29C7 40 14 44 23 44M46 17H57V29C57 40 50 44 41 44" stroke="#f8d780" stroke-width="6" stroke-linejoin="round"/>
-        <path d="M32 51V64M23 64H41L45 72H19L23 64Z" stroke="#775130" stroke-width="3" fill="#f8d780"/>
-        <path d="m32 18 3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1Z" fill="#fff7dc"/>
+        <path d="M18 10H46V30C46 43 40 51 32 51S18 43 18 30V10Z" fill="#D97757" stroke="#141413" stroke-width="2.5"/>
+        <path d="M18 17H7V29C7 40 14 44 23 44M46 17H57V29C57 40 50 44 41 44" stroke="#D97757" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M32 51V64M23 64H41L45 72H19L23 64Z" stroke="#141413" stroke-width="3" fill="#D97757"/>
+        <path d="m32 18 3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1Z" fill="#FAF9F5"/>
       </svg>
     </div>
   `;
@@ -68,8 +67,7 @@ window.AwardThemes.set('claude-paper', (host) => {
   const REVEAL_AT = 1.85; // Matches the card's CSS delay; never advances the playlist.
   let seed = 31987;
   const random = () => ((seed = seed * 16807 % 2147483647) - 1) / 2147483646;
-  const dust = Array.from({ length: 130 }, () => ({ x: random(), y: random(), speed: .3 + random(), size: .5 + random() * 2, phase: random() * 6.28 }));
-  const confetti = Array.from({ length: 65 }, () => ({ x: random(), y: random(), phase: random() * 6.28, speed: .5 + random(), size: 9 + random() * 9 }));
+  const confetti = Array.from({ length: 54 }, () => ({ x: random(), y: random(), phase: random() * 6.28, speed: .5 + random(), size: 9 + random() * 9 }));
   const burst = Array.from({ length: 90 }, () => ({ angle: random() * Math.PI * 2, speed: .07 + random() * .3, delay: random() * .25, size: .4 + random() * 1.7 }));
 
   function fitText() {
@@ -84,14 +82,6 @@ window.AwardThemes.set('claude-paper', (host) => {
     }
   }
 
-  function wash(x, y, radius, alpha) {
-    const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
-    gradient.addColorStop(0, `rgba(250,230,200,${alpha})`);
-    gradient.addColorStop(1, 'rgba(250,230,200,0)');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
-  }
-
   function draw() {
     if (!ctx || !width || !height) return;
     const w = width, h = height, unit = w / 1600;
@@ -99,19 +89,8 @@ window.AwardThemes.set('claude-paper', (host) => {
     const celebration = reduced ? 1 : Math.min(1, Math.max(0, revealAge));
     ctx.clearRect(0, 0, w, h);
     ctx.globalCompositeOperation = 'source-over';
-    // Keep the terracotta background soft and free of contour lines.
-    wash(w * (.08 + Math.sin(time * .08) * .025), h * .76, w * .38, .10);
-    wash(w * .92, h * (.18 + Math.sin(time * .09) * .025), w * .33, .075);
-    for (const speck of dust) {
-      const x = speck.x * w + Math.sin(time * .14 + speck.phase) * 10 * unit;
-      const y = ((speck.y - time * .006 * speck.speed) % 1 + 1) % 1 * h;
-      ctx.fillStyle = `rgba(255,238,211,${.07 + (.5 + .5 * Math.sin(time * .3 + speck.phase)) * .12})`;
-      ctx.beginPath();
-      ctx.arc(x, y, speck.size * .65 * unit, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    // Broad paper ribbons tumble behind the award card.
-    const colors = ['255,244,220', '235,202,143', '185,204,156', '174,206,223'];
+    // Broad paper ribbons use only the CwC 2026 Claude palette.
+    const colors = ['217,119,87', '98,153,135', '120,140,93', '130,125,189', '203,202,219'];
     if (celebration > 0) {
       confetti.forEach((piece, index) => {
         const y = ((piece.y + time * .015 * piece.speed) % 1) * h;
@@ -121,7 +100,7 @@ window.AwardThemes.set('claude-paper', (host) => {
         ctx.translate(x, y);
         ctx.rotate(piece.phase + time * .3);
         ctx.scale(Math.cos(piece.phase + time * .5), 1);
-        ctx.fillStyle = `rgba(${colors[index % colors.length]},${celebration * .85})`;
+        ctx.fillStyle = `rgba(${colors[index % colors.length]},${celebration * .72})`;
         const breadth = piece.size * unit;
         const length = breadth * (index % 3 === 0 ? 4.2 : 2.4);
         ctx.beginPath();

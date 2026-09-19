@@ -36,6 +36,14 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     await page.waitForFunction(() => window.app?.themeManager.current);
     await page.selectOption('#theme-select', themeId);
     await page.waitForFunction(id => app.themeManager.current.id === id && !app.startBtn.disabled, themeId);
+    if (themeId === 'claude-paper') {
+      assert.equal(await page.locator('[data-theme="claude-paper"]').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(250, 249, 245)');
+      assert.match(await page.locator('.paper-header').evaluate(el => getComputedStyle(el).fontFamily), /Poppins/);
+      assert.match(await page.locator('.paper-team').evaluate(el => getComputedStyle(el).fontFamily), /Lora/);
+      assert.equal(await page.locator('.paper-envelope-back').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(240, 238, 230)');
+      assert.equal(await page.locator('.paper-seal').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(217, 119, 87)');
+      assert.equal(await page.locator('.paper-vignette').evaluate(el => getComputedStyle(el).display), 'none');
+    }
     const stored = await page.evaluate(() => localStorage.getItem('award_ceremony_data'));
     await page.locator('#start-btn').click();
     await page.waitForFunction(() => !!document.fullscreenElement);
@@ -58,6 +66,10 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     assert.equal(await page.locator(`.${prefix}-card`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     assert.equal(await page.locator(`.${prefix}-seal`).evaluate(el => Number(getComputedStyle(el).opacity)), 1);
     assert.equal(await page.locator(`.${prefix}-envelope`).evaluate(el => Number(getComputedStyle(el).opacity)), 1);
+    if (themeId === 'claude-paper') {
+      assert(await page.locator('.paper-header').evaluate(el => Number(getComputedStyle(el).zIndex))
+        > await page.locator('.paper-envelope-front').evaluate(el => Number(getComputedStyle(el).zIndex)));
+    }
     if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, `${themeId}-closed.png`) });
     await page.waitForTimeout(1700);
     // The small card is still inside the opening and behind the opaque front pocket.
