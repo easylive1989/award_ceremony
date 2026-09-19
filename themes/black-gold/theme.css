@@ -28,13 +28,15 @@
 [data-theme="black-gold"] .stage-frame::after { right: -1px; bottom: -1px; border-width: 0 1px 1px 0; }
 
 [data-theme="black-gold"] .stage-badge { position: absolute; top: 7%; left: 0; width: 100%; text-align: center; color: #d4bc89; font-size: 1cqw; letter-spacing: .5em; }
+[data-theme="black-gold"] .stage-badge span { display: block; margin-top: .45cqw; font-size: .5em; letter-spacing: .32em; color: #887951; }
 [data-theme="black-gold"] .stage-edition { position: absolute; left: 6%; top: 7%; color: #a69776; font-size: .68cqw; letter-spacing: .15em; }
 [data-theme="black-gold"] .stage-edition span { line-height: 2.4; color: #615d4b; }
 [data-theme="black-gold"] .stage-star { position: absolute; right: 6%; top: 7%; width: 1.5cqw; height: 1.5cqw; color: #d9b977; }
 [data-theme="black-gold"] .stage-ghost { position: absolute; top: 24%; width: 100%; text-align: center; font-family: Georgia, serif; font-size: 17cqw; letter-spacing: .055em; color: transparent; -webkit-text-stroke: 1px #e3c3760c; line-height: 1; }
 [data-theme="black-gold"] .stage-side { position: absolute; left: 5.8%; top: 45%; writing-mode: vertical-rl; font-size: .63cqw; letter-spacing: .3em; color: #8e7e61; }
 [data-theme="black-gold"] .stage-side-right { left: auto; right: 5.8%; transform: rotate(180deg); }
-[data-theme="black-gold"] .stage-footer { position: absolute; bottom: 7%; width: 100%; text-align: center; font-size: .75cqw; letter-spacing: .34em; color: #aa9571; }
+[data-theme="black-gold"] .stage-footer { position: absolute; bottom: 5.8%; width: 100%; display: flex; flex-direction: column; gap: .35cqw; text-align: center; font-size: .75cqw; letter-spacing: .34em; color: #aa9571; }
+[data-theme="black-gold"] .stage-footer span { font-size: .64em; letter-spacing: .26em; color: #776a50; }
 
 [data-theme="black-gold"] .presentation-box { position: absolute; inset: 17% 7% 15%; display: flex; align-items: center; flex-direction: column; justify-content: center; text-align: center; }
 [data-theme="black-gold"] .presentation-box > * { flex-shrink: 0; }

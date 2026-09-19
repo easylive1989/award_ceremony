@@ -2,7 +2,7 @@ window.AwardThemes.set('claude-paper', (host) => {
   host.innerHTML = `
     <canvas class="paper-effects" aria-hidden="true"></canvas>
     <div class="paper-vignette" aria-hidden="true"></div>
-    <div class="paper-header" data-award-category aria-live="polite" aria-atomic="true"></div>
+    <div class="paper-header" aria-live="polite" aria-atomic="true"><span class="paper-header-label">Group 組別</span><span class="paper-header-value" data-award-category></span></div>
     <div class="paper-suspense" aria-hidden="true">And the winner is…</div>
     <div class="paper-envelope-glow" aria-hidden="true"></div>
     <div class="paper-envelope" aria-hidden="true">
@@ -38,7 +38,7 @@ window.AwardThemes.set('claude-paper', (host) => {
         <path d="m99 19 14-10h74l14 10v83H99z" fill="#FAF9F5" stroke="#141413" stroke-width="1.5"/>
         <path d="M99 19h102l-14-10h-74z" fill="#CBCADB"/>
         <path d="M107 95h86" stroke="#B0AEA5"/>
-        <path d="M138 39h24v10c0 10-5 16-12 16s-12-6-12-16V39Zm0 5h-7v7c0 7 4 10 10 11m21-18h7v7c0 7-4 10-10 11m-9 3v10m-9 4h18" stroke="#D97757" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="150" y="76" text-anchor="middle" fill="#D97757" font-family="Poppins, Arial, sans-serif" font-size="48" font-weight="600">1</text>
       </svg>
       <div class="paper-helper paper-helper-front paper-recipient">
         <div class="paper-helper-body">
@@ -73,15 +73,14 @@ window.AwardThemes.set('claude-paper', (host) => {
   const confetti = Array.from({ length: 54 }, () => ({ x: random(), y: random(), phase: random() * 6.28, speed: .5 + random(), size: 9 + random() * 9 }));
   const burst = Array.from({ length: 90 }, () => ({ angle: random() * Math.PI * 2, speed: .07 + random() * .3, delay: random() * .25, size: .4 + random() * 1.7 }));
 
-  function applyLocale(locale) {
-    const english = locale === 'en';
-    suspense.textContent = english ? 'And the winner is…' : '得獎的是…';
-    congrats.textContent = english ? 'Congratulations' : '恭喜獲獎';
+  function applyBilingualCopy() {
+    suspense.innerHTML = '<span class="copy-zh">得獎的是…</span><span class="copy-en" lang="en">And the winner is…</span>';
+    congrats.innerHTML = '<span class="copy-zh">恭喜獲獎</span><span class="copy-en" lang="en">Congratulations</span>';
   }
 
   function fitText() {
     if (disposed || !width || !height) return;
-    for (const [element, ratio, maxHeight] of [[category, .03, .12], [team, .065, .16]]) {
+    for (const [element, ratio, maxHeight] of [[category, .04, .14], [team, .065, .16]]) {
       let size = width * ratio;
       element.style.fontSize = `${size}px`;
       while (size > 1 && (element.scrollWidth > element.clientWidth + 1 || element.offsetHeight > height * maxHeight)) {
@@ -182,7 +181,7 @@ window.AwardThemes.set('claude-paper', (host) => {
 
   return {
     prepare(award) {
-      applyLocale(award.locale);
+      applyBilingualCopy();
       category.textContent = award.category;
       team.textContent = award.team;
       elapsed = 0;
@@ -193,7 +192,7 @@ window.AwardThemes.set('claude-paper', (host) => {
       sync();
     },
     update(award) {
-      applyLocale(award.locale);
+      applyBilingualCopy();
       host.classList.remove('paper-waiting');
       category.textContent = award.category;
       team.textContent = award.team;

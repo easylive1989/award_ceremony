@@ -1,6 +1,6 @@
 // Add a local theme here. No changes to app.js or index.html are needed.
 window.AWARD_THEME_CATALOG = {
-  assetVersion: '20260919-envelope-glow-1',
+  assetVersion: '20260919-group-title-1',
   defaultId: 'black-gold',
   themes: [
     {

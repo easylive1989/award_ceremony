@@ -8,6 +8,7 @@
 [data-theme="neon"] .neon-content { position: absolute; inset: 22% 9% 21%; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
 [data-theme="neon"] .neon-content > * { flex-shrink: 0; }
 [data-theme="neon"] .neon-kicker { font-size: .85cqw; letter-spacing: .25em; color: #6fe1f4; margin-bottom: 2.2cqw; }
+[data-theme="neon"] .neon-kicker span { margin-left: 1.1cqw; color: #899bbc; font-size: .76em; letter-spacing: .18em; }
 [data-theme="neon"] .neon-category { max-width: 100%; font-size: 2.2cqw; line-height: 1.3; letter-spacing: .15em; color: #a3bde0; overflow-wrap: anywhere; }
 [data-theme="neon"] .neon-team { max-width: 100%; margin: 1.2cqw 0 1.8cqw; font-size: 9.5cqw; line-height: 1.1; font-weight: 700; letter-spacing: .015em; overflow-wrap: anywhere; text-wrap: balance; color: #edfbff; text-shadow: .04em .04em 0 #6b72b54a, 0 0 4cqw #5b8cc229; }
 [data-theme="neon"] .neon-rule { width: 8cqw; height: 2px; background: linear-gradient(90deg, #70e5f5, #b194ff); margin-bottom: 1.8cqw; }

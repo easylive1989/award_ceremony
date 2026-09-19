@@ -9,8 +9,10 @@
 [data-theme="black-gold-v2"] .v2-frame { position: absolute; inset: 4%; border: 1px solid #e6c77d35; pointer-events: none; }
 [data-theme="black-gold-v2"] .v2-frame::before { content: ''; position: absolute; inset: .5cqw; border: 1px solid #e6c77d12; }
 [data-theme="black-gold-v2"] .v2-header { position: absolute; top: 9%; left: 24%; width: 52%; z-index: 7; text-align: center; font-size: 2.8cqw; font-weight: 600; line-height: 1.25; letter-spacing: .12em; color: #f0d499; overflow-wrap: anywhere; text-wrap: balance; text-shadow: 0 0 1.5cqw #e6b45c22; }
-[data-theme="black-gold-v2"] .v2-suspense { position: absolute; top: 27%; width: 100%; text-align: center; font: 400 2.6cqw Georgia, serif; letter-spacing: .2em; color: #e6ce928f; }
-[data-theme="black-gold-v2"] .v2-footer { position: absolute; bottom: 7%; width: 100%; font-size: .8cqw; text-align: center; letter-spacing: .28em; color: #bba579; }
+[data-theme="black-gold-v2"] .v2-suspense { position: absolute; top: 25.5%; width: 100%; display: flex; flex-direction: column; gap: .35cqw; text-align: center; font: 400 2.6cqw Georgia, serif; letter-spacing: .2em; color: #e6ce928f; }
+[data-theme="black-gold-v2"] .v2-suspense small { font: 400 .72cqw/1.2 Arial, sans-serif; letter-spacing: .32em; color: #a99665; }
+[data-theme="black-gold-v2"] .v2-footer { position: absolute; bottom: 5.8%; width: 100%; display: flex; flex-direction: column; gap: .35cqw; font-size: .8cqw; text-align: center; letter-spacing: .28em; color: #bba579; }
+[data-theme="black-gold-v2"] .v2-footer span { font-size: .52cqw; letter-spacing: .24em; color: #857655; }
 
 /* The envelope is layered paper geometry, with an independently hinged flap. */
 [data-theme="black-gold-v2"] .v2-envelope,
@@ -32,6 +34,7 @@
 [data-theme="black-gold-v2"] .v2-card::before { content: ''; position: absolute; inset: .7cqw; border: 1px solid #dec07b2e; pointer-events: none; }
 [data-theme="black-gold-v2"] .v2-card > * { flex-shrink: 0; }
 [data-theme="black-gold-v2"] .v2-kicker { font-size: .72cqw; letter-spacing: .5em; color: #a99665; margin-bottom: 1cqw; }
+[data-theme="black-gold-v2"] .v2-kicker span { display: block; margin-top: .45cqw; font-size: .68em; letter-spacing: .32em; color: #7e704e; }
 [data-theme="black-gold-v2"] .v2-team { max-width: 100%; margin: .8cqw 0 1cqw; font-size: 7.8cqw; font-weight: 700; line-height: 1.15; letter-spacing: .06em; text-wrap: balance; overflow-wrap: anywhere; background: linear-gradient(110deg, #a87832, #f5d99d 25%, #fff5d4 43%, #c79440 59%, #ffe8b0 76%, #a77935); background-size: 160% 100%; background-clip: text; -webkit-background-clip: text; color: transparent; filter: drop-shadow(0 .2cqw .08cqw #0009); }
 [data-theme="black-gold-v2"] .v2-congrats { font-size: 1.2cqw; letter-spacing: .5em; color: #f4dba3; }
 [data-theme="black-gold-v2"] .v2-congrats span { display: block; font-size: .55cqw; letter-spacing: .32em; color: #9e8e67; margin-top: .65cqw; }

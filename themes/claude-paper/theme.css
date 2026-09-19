@@ -22,13 +22,16 @@
 }
 [data-theme="claude-paper"] .paper-effects { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; pointer-events: none; }
 [data-theme="claude-paper"] .paper-vignette { display: none; }
-[data-theme="claude-paper"] .paper-header { position: absolute; top: 4.8%; left: 50%; width: max-content; min-width: 28cqw; max-width: 64%; z-index: 20; min-height: 5.1cqw; padding: .5cqw 3.2cqw .68cqw; border: 1px solid var(--paper-gray-400); border-radius: 1.15cqw; text-align: center; font: 600 3cqw/1.2 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: 0; color: var(--paper-slate); background: rgba(250, 249, 245, .58); box-shadow: 0 .35cqw 1.2cqw rgba(20, 20, 19, .045), inset 0 0 0 .3cqw rgba(240, 238, 230, .55); overflow-wrap: anywhere; text-wrap: balance; text-shadow: none; transform: translateX(-50%); }
-[data-theme="claude-paper"] .paper-suspense { position: absolute; top: 25%; width: 100%; z-index: 4; text-align: center; font: 500 1.55cqw/1.35 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: 0; color: #73726c; }
+[data-theme="claude-paper"] .paper-header { position: absolute; top: 3.2%; left: 50%; width: max-content; min-width: 31cqw; max-width: 70%; z-index: 20; min-height: 7.65cqw; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .12cqw; padding: .55cqw 3.2cqw .72cqw; border: 1px solid var(--paper-gray-400); border-radius: 1.15cqw; text-align: center; color: var(--paper-slate); background: rgba(250, 249, 245, .58); box-shadow: 0 .35cqw 1.2cqw rgba(20, 20, 19, .045), inset 0 0 0 .3cqw rgba(240, 238, 230, .55); transform: translateX(-50%); }
+[data-theme="claude-paper"] .paper-header-label { font: 500 .72cqw/1.2 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: .1em; color: #73726c; text-transform: uppercase; }
+[data-theme="claude-paper"] .paper-header-value { max-width: 100%; font: 600 4cqw/1.04 Poppins, 'Noto Sans TC', sans-serif; overflow-wrap: anywhere; text-wrap: balance; }
+[data-theme="claude-paper"] .paper-suspense { position: absolute; top: 24%; width: 100%; z-index: 4; display: flex; flex-direction: column; align-items: center; gap: .18cqw; text-align: center; font: 500 1.55cqw/1.35 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: 0; color: #73726c; }
+[data-theme="claude-paper"] .paper-suspense .copy-en { color: #99968e; font-size: .58em; letter-spacing: .06em; }
 
 /* A pale ceremonial halo stays behind the envelope, then opens with the card. */
 [data-theme="claude-paper"] .paper-envelope-glow { position: absolute; left: 50%; top: 49%; width: 50cqw; height: 29cqw; z-index: 3; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(242, 223, 174, .68) 0 9%, rgba(217, 185, 110, .34) 28%, rgba(217, 185, 110, .12) 48%, transparent 72%); filter: blur(.22cqw); opacity: .42; pointer-events: none; transform: translate(-50%, -50%) scale(.88); transform-origin: center; }
-[data-theme="claude-paper"] .paper-envelope-glow::before { content: ''; position: absolute; inset: -22%; border-radius: 50%; background: repeating-conic-gradient(from 7deg, rgba(217, 185, 110, .28) 0 1deg, transparent 1deg 11deg); -webkit-mask: radial-gradient(ellipse at center, transparent 0 25%, #000 43%, transparent 72%); mask: radial-gradient(ellipse at center, transparent 0 25%, #000 43%, transparent 72%); opacity: .12; }
-[data-theme="claude-paper"] .paper-envelope-glow::after { content: ''; position: absolute; inset: 22%; border: .12cqw solid rgba(242, 223, 174, .5); border-radius: 50%; box-shadow: 0 0 1.4cqw rgba(217, 185, 110, .28), inset 0 0 1cqw rgba(242, 223, 174, .24); opacity: .36; }
+[data-theme="claude-paper"] .paper-envelope-glow::before { content: ''; position: absolute; inset: -36%; border-radius: 50%; background: repeating-conic-gradient(from 7deg, rgba(217, 185, 110, .17) 0 8deg, rgba(242, 223, 174, .13) 14deg 23deg, rgba(250, 249, 245, .11) 29deg 39deg, rgba(242, 223, 174, .1) 45deg 54deg); filter: blur(2.65cqw); -webkit-mask: radial-gradient(ellipse at center, transparent 0 18%, rgba(0, 0, 0, .42) 34%, rgba(0, 0, 0, .68) 49%, transparent 82%); mask: radial-gradient(ellipse at center, transparent 0 18%, rgba(0, 0, 0, .42) 34%, rgba(0, 0, 0, .68) 49%, transparent 82%); opacity: .1; }
+[data-theme="claude-paper"] .paper-envelope-glow::after { content: ''; position: absolute; inset: 22%; border: .09cqw solid rgba(242, 223, 174, .38); border-radius: 50%; box-shadow: 0 0 2.2cqw rgba(217, 185, 110, .2), inset 0 0 1.8cqw rgba(242, 223, 174, .18); filter: blur(.18cqw); opacity: .3; }
 
 
 /* The envelope is layered paper geometry, with an independently hinged flap. */
@@ -51,7 +54,8 @@
 [data-theme="claude-paper"] .paper-card::before { content: ''; position: absolute; inset: .75cqw; border: 1px solid var(--paper-gray-250); border-radius: .75cqw; background: var(--paper-ivory); pointer-events: none; }
 [data-theme="claude-paper"] .paper-card > * { position: relative; z-index: 1; flex-shrink: 0; }
 [data-theme="claude-paper"] .paper-team { max-width: 100%; margin: .4cqw 0 1.15cqw; font: 600 6.5cqw/1.12 Lora, 'Noto Serif TC', serif; letter-spacing: 0; text-wrap: balance; overflow-wrap: anywhere; color: var(--paper-slate); }
-[data-theme="claude-paper"] .paper-congrats { position: relative; padding-top: 1cqw; font: 500 1.05cqw/1.4 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: .03em; color: #73726c; }
+[data-theme="claude-paper"] .paper-congrats { position: relative; display: flex; flex-direction: column; align-items: center; gap: .34cqw; margin-top: 1.45cqw; padding-top: 1.4cqw; font: 500 1.65cqw/1.32 Poppins, 'Noto Sans TC', sans-serif; letter-spacing: .03em; color: #73726c; transform: translateY(.55cqw); }
+[data-theme="claude-paper"] .paper-congrats .copy-en { color: #99968e; font-size: .65em; letter-spacing: .08em; text-transform: uppercase; }
 [data-theme="claude-paper"] .paper-congrats::before { content: ''; position: absolute; top: 0; left: 50%; width: 3.2cqw; height: .22cqw; border-radius: 999px; background: var(--paper-clay); transform: translateX(-50%); }
 
 [data-theme="claude-paper"].paper-run .paper-envelope,
@@ -61,9 +65,9 @@
 [data-theme="claude-paper"].paper-run .paper-seal { animation: claudePaperSeal .45s 1.32s both; }
 [data-theme="claude-paper"].paper-run .paper-card { animation: claudePaperCard 2s 1.85s both; }
 [data-theme="claude-paper"].paper-run .paper-suspense { animation: claudePaperSuspense .5s 1.55s both; }
-[data-theme="claude-paper"].paper-run .paper-envelope-glow { animation: claudePaperGlowBurst 3.1s both; }
-[data-theme="claude-paper"].paper-run .paper-envelope-glow::before { animation: claudePaperGlowRays 3.1s both; }
-[data-theme="claude-paper"].paper-run .paper-envelope-glow::after { animation: claudePaperGlowRing 3.1s both; }
+[data-theme="claude-paper"].paper-run .paper-envelope-glow { animation: claudePaperGlowBurst 3.45s both; }
+[data-theme="claude-paper"].paper-run .paper-envelope-glow::before { animation: claudePaperGlowRays 3.45s ease-out both; }
+[data-theme="claude-paper"].paper-run .paper-envelope-glow::after { animation: claudePaperGlowRing 3.45s ease-out both; }
 [data-theme="claude-paper"].paper-paused * { animation-play-state: paused !important; }
 @keyframes claudePaperEnvelope {
   0%, 75% { transform: translateY(0) scale(1); opacity: 1; }
@@ -75,21 +79,21 @@
 @keyframes claudePaperSeal { 0% { opacity: 1; transform: scale(1); } 65% { opacity: .8; transform: translateY(-1cqw) scale(1.2) rotate(15deg); } 100% { opacity: 0; transform: translateY(2cqw) scale(.6) rotate(35deg); } }
 @keyframes claudePaperGlowBurst {
   0%, 48% { opacity: .42; transform: translate(-50%, -50%) scale(.88); }
-  57% { opacity: .68; transform: translate(-50%, -50%) scale(1); }
-  62% { opacity: 1; transform: translate(-50%, -50%) scale(1.48); }
-  72% { opacity: .4; transform: translate(-50%, -50%) scale(2.18); }
+  57% { opacity: .58; transform: translate(-50%, -50%) scale(1); }
+  64% { opacity: .72; transform: translate(-50%, -50%) scale(1.42); }
+  76% { opacity: .28; transform: translate(-50%, -50%) scale(2.08); }
   100% { opacity: 0; transform: translate(-50%, -50%) scale(2.75); }
 }
 @keyframes claudePaperGlowRays {
-  0%, 55% { opacity: .08; transform: rotate(0deg) scale(.75); }
-  62% { opacity: .48; transform: rotate(5deg) scale(1.18); }
-  76% { opacity: .13; transform: rotate(9deg) scale(1.72); }
-  100% { opacity: 0; transform: rotate(13deg) scale(2.05); }
+  0%, 55% { opacity: .05; transform: rotate(0deg) scale(.76); }
+  66% { opacity: .26; transform: rotate(2deg) scale(1.14); }
+  84% { opacity: .09; transform: rotate(5deg) scale(1.68); }
+  100% { opacity: 0; transform: rotate(7deg) scale(2); }
 }
 @keyframes claudePaperGlowRing {
-  0%, 55% { opacity: .28; transform: scale(.8); }
-  62% { opacity: .85; transform: scale(1.1); }
-  80% { opacity: .1; transform: scale(2.05); }
+  0%, 55% { opacity: .22; transform: scale(.82); }
+  66% { opacity: .52; transform: scale(1.08); }
+  84% { opacity: .08; transform: scale(1.9); }
   100% { opacity: 0; transform: scale(2.5); }
 }
 /* Keep the same card behind the pocket until its bottom clears the opening. */

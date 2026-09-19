@@ -2,12 +2,11 @@
 window.AwardThemes = new Map();
 
 class AwardThemeManager {
-  constructor(root, catalog, locale = 'zh') {
+  constructor(root, catalog) {
     this.root = root;
     this.catalog = catalog;
     this.current = null;
     this.award = { category: '得獎組別', team: '獲獎隊伍' };
-    this.locale = locale === 'en' ? 'en' : 'zh';
     this.visible = false;
     this.revealed = false;
     this.revision = 0;
@@ -15,7 +14,7 @@ class AwardThemeManager {
   }
 
   payload() {
-    return { ...this.award, locale: this.locale };
+    return { ...this.award, locale: 'bilingual' };
   }
 
   assetUrl(path) {
@@ -102,21 +101,13 @@ class AwardThemeManager {
 
   update(award) {
     this.award = {
-      category: award.category || (this.locale === 'en' ? 'Award category' : '得獎獎項'),
-      team: award.team || (this.locale === 'en' ? 'Winning team' : '獲獎隊伍'),
+      category: award.category || '得獎獎項 / Award category',
+      team: award.team || '獲獎隊伍 / Winning team',
     };
     this.revealed = false;
     const instance = this.current?.instance;
     if (instance?.prepare) instance.prepare(this.payload());
     else instance?.update(this.payload());
-  }
-
-  setLocale(locale) {
-    this.locale = locale === 'en' ? 'en' : 'zh';
-    const instance = this.current?.instance;
-    if (!instance) return;
-    if (this.revealed || !instance.prepare) instance.update(this.payload());
-    else instance.prepare(this.payload());
   }
 
   reveal() {

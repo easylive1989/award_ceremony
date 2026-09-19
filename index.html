@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>頒獎典禮播放系統</title>
-  <link rel="stylesheet" href="style.css?v=20260919-envelope-glow-1">
+  <link rel="stylesheet" href="style.css?v=20260919-group-title-1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;600;800&family=Noto+Serif+TC:wght@500;600&family=Outfit:wght@600;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -13,24 +13,16 @@
   <!-- 設定管理後台 / 輸入介面 -->
   <main id="app" class="setup-container">
     <header class="header">
-      <div class="badge" data-i18n="badge">Award Presentation System</div>
+      <div class="badge" data-i18n="badge">頒獎典禮播放系統</div>
       <h1 data-i18n="heading">頒獎典禮名單設定</h1>
-      <p class="subtitle" data-i18n="subtitle">設定各得獎組別與獲獎隊伍名稱，支援全螢幕展示，每頁點擊開始揭曉，再點擊切換下一組</p>
+      <p class="subtitle" data-i18n="subtitle">設定得獎組別與獲獎隊伍，點擊一次揭曉，再點擊切換下一組。</p>
     </header>
 
-    <section class="appearance-settings" aria-label="舞台外觀、語言與配樂" data-i18n-aria-label="appearanceRegion">
+    <section class="appearance-settings" aria-label="舞台外觀與配樂" data-i18n-aria-label="appearanceRegion">
       <div class="theme-settings">
         <label for="theme-select" data-i18n="themeLabel">舞台皮膚</label>
         <select id="theme-select" aria-describedby="theme-status"></select>
         <span id="theme-status" role="status" aria-live="polite">載入皮膚中…</span>
-      </div>
-
-      <div class="language-settings">
-        <label for="language-select" data-i18n="languageLabel">畫面語言</label>
-        <select id="language-select">
-          <option value="zh">中文</option>
-          <option value="en">English</option>
-        </select>
       </div>
 
       <div class="music-settings">
@@ -91,9 +83,9 @@
     <div id="theme-root" class="stage-viewport"></div>
   </div>
 
-  <script src="themes/catalog.js?v=20260919-envelope-glow-1"></script>
-  <script src="theme-manager.js?v=20260919-envelope-glow-1"></script>
-  <script src="music-controller.js?v=20260919-envelope-glow-1"></script>
-  <script src="app.js?v=20260919-envelope-glow-1"></script>
+  <script src="themes/catalog.js?v=20260919-group-title-1"></script>
+  <script src="theme-manager.js?v=20260919-group-title-1"></script>
+  <script src="music-controller.js?v=20260919-group-title-1"></script>
+  <script src="app.js?v=20260919-group-title-1"></script>
 </body>
 </html>

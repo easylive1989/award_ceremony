@@ -47,15 +47,14 @@ window.AwardThemes.set('black-gold', (host) => {
   let reduced = motionPreference.matches;
   let w = 0, h = 0, time = 0, previous = 0, burstAt = 0, frameId = null;
 
-  function applyLocale(locale) {
-    const english = locale === 'en';
-    edition.innerHTML = english ? 'THE MOMENT<br><span>OF EXCELLENCE</span>' : '榮 耀<br><span>時 刻</span>';
-    badge.textContent = english ? 'THE WINNING MOMENT' : '榮 耀 時 刻';
-    ghost.textContent = english ? 'WINNER' : '得獎';
-    sides.forEach(side => { side.textContent = english ? 'CELEBRATING EXCELLENCE' : '卓 越 榮 耀'; });
-    awardMessage.textContent = english ? 'Congratulations' : '恭喜獲獎';
-    congratulations.textContent = english ? 'CONGRATULATIONS' : '恭 喜';
-    footer.textContent = english ? 'EVERY PASSION DESERVES TO SHINE' : '每 一 份 熱 愛 ・ 都 值 得 閃 耀';
+  function applyBilingualCopy() {
+    edition.innerHTML = 'THE MOMENT<br><span>OF EXCELLENCE</span>';
+    badge.innerHTML = '榮 耀 時 刻<span lang="en">THE WINNING MOMENT</span>';
+    ghost.textContent = 'WINNER';
+    sides.forEach(side => { side.textContent = 'CELEBRATING EXCELLENCE'; });
+    awardMessage.textContent = '恭喜獲獎';
+    congratulations.textContent = 'CONGRATULATIONS';
+    footer.innerHTML = '每一份熱愛，都值得閃耀<span lang="en">EVERY PASSION DESERVES TO SHINE</span>';
   }
 
   function isVisible() {
@@ -145,7 +144,7 @@ const line=ctx.createLinearGradient(w*.17,0,w*.83,0);line.addColorStop(0,'#d8ad5
 
   return {
     prepare(award) {
-      applyLocale(award.locale);
+      applyBilingualCopy();
       category.textContent = award.category;
       team.textContent = award.team;
       presentation.classList.remove('stage-enter');
@@ -153,7 +152,7 @@ const line=ctx.createLinearGradient(w*.17,0,w*.83,0);line.addColorStop(0,'#d8ad5
       fitText();
     },
     update(award) {
-      applyLocale(award.locale);
+      applyBilingualCopy();
       host.classList.remove('gold-waiting');
       category.style.animation = 'none';
       team.style.animation = 'none';

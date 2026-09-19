@@ -54,9 +54,10 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
       assert.notEqual(await page.locator('.paper-header').evaluate(el => getComputedStyle(el).borderTopWidth), '0px');
       assert(await page.locator('.paper-header').evaluate(el => parseFloat(getComputedStyle(el).borderRadius) > 0));
       assert.equal(await page.locator('.paper-header').evaluate(el => getComputedStyle(el, '::before').content), 'none');
-      assert(await page.locator('.paper-header').evaluate(el => parseFloat(getComputedStyle(el).fontSize) >= 48));
+      assert.equal(await page.locator('.paper-header-label').textContent(), 'Group 組別');
+      assert(await page.locator('.paper-header-value').evaluate(el => parseFloat(getComputedStyle(el).fontSize) >= 48));
       assert(await page.locator('.paper-suspense').evaluate(el => parseFloat(getComputedStyle(el).fontSize) >= 24));
-      assert.match(await page.locator('.paper-header').evaluate(el => getComputedStyle(el).fontFamily), /Poppins/);
+      assert.match(await page.locator('.paper-header-value').evaluate(el => getComputedStyle(el).fontFamily), /Poppins/);
       assert.match(await page.locator('.paper-team').evaluate(el => getComputedStyle(el).fontFamily), /Lora/);
       assert.equal(await page.locator('.paper-envelope-back').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(240, 238, 230)');
       assert.equal(await page.locator('.paper-seal').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(217, 119, 87)');
@@ -83,7 +84,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     await page.locator('#stage').click({ position: { x: 800, y: 450 } });
     assert.equal(await page.evaluate(() => String(app.currentIndex + 1)), '1');
     await page.waitForTimeout(600);
-    assert.equal(await page.locator(`.${prefix}-header[data-award-category]`).textContent(), 'Delight');
+    assert.equal(await page.locator('[data-award-category]').textContent(), 'Delight');
     assert.equal(await page.locator(`.${prefix}-card [data-award-category]`).count(), 0);
     assert(await page.locator(`.${prefix}-header`).isVisible());
     assert.equal(await page.locator(`.${prefix}-card`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
@@ -125,7 +126,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
       }));
     }
     assert.equal(await page.locator('[data-award-team]').textContent(), 'ABc');
-    assert.equal(await page.locator(`.${prefix}-header`).textContent(), 'Delight');
+    assert.equal(await page.locator('[data-award-category]').textContent(), 'Delight');
     assert(await page.locator(`.${prefix}-header`).isVisible());
     if (process.env.AWARD_SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.AWARD_SCREENSHOT_DIR, `${themeId}-revealed.png`) });
     assert.equal(await page.evaluate(() => pendingFrames.size), 1);
@@ -146,7 +147,7 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     await page.locator('audio').evaluate(el => { el.currentTime = 15; });
     await page.locator('#stage').click({ position: { x: 800, y: 450 } });
     assert.equal(await page.locator('[data-award-team]').textContent(), '星際探索隊');
-    assert.equal(await page.locator(`.${prefix}-header`).textContent(), '創新設計組');
+    assert.equal(await page.locator('[data-award-category]').textContent(), '創新設計組');
     assert(await page.locator(`.${prefix}-header`).isVisible());
     assert.equal(await page.locator(`.${prefix}-card`).evaluate(el => Number(getComputedStyle(el).opacity)), 0);
     assert(await page.locator('audio').evaluate(el => el.currentTime < 2));

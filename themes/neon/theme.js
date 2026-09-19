@@ -21,12 +21,11 @@ window.AwardThemes.set('neon', (host) => {
   const bottomline = host.querySelector('.neon-bottomline');
   let disposed = false;
 
-  function applyLocale(locale) {
-    const english = locale === 'en';
-    topline.innerHTML = english ? 'THE NEXT BRILLIANT THING <span>AWARDS</span>' : '下一個閃耀時刻 <span>頒獎典禮</span>';
-    kicker.textContent = english ? '✦ EXCELLENCE RECOGNIZED' : '✦ 卓越獲肯定';
-    congratulations.innerHTML = english ? 'Congratulations <span>CONGRATULATIONS</span>' : '恭喜獲獎 <span>恭 喜</span>';
-    bottomline.innerHTML = english ? 'BE BOLD. SHINE BRIGHT. <span>EVERY PASSION DESERVES TO SHINE.</span>' : '勇敢發光 <span>每一份熱愛，都值得閃耀。</span>';
+  function applyBilingualCopy() {
+    topline.innerHTML = '下一個閃耀時刻 <span lang="en">THE NEXT BRILLIANT THING / AWARDS</span>';
+    kicker.innerHTML = '✦ 卓越獲肯定 <span lang="en">EXCELLENCE RECOGNIZED</span>';
+    congratulations.innerHTML = '恭喜獲獎 <span lang="en">CONGRATULATIONS</span>';
+    bottomline.innerHTML = '勇敢發光 <span lang="en">BE BOLD. SHINE BRIGHT.</span>';
   }
 
   function fit() {
@@ -49,7 +48,7 @@ window.AwardThemes.set('neon', (host) => {
 
   return {
     prepare(award) {
-      applyLocale(award.locale);
+      applyBilingualCopy();
       category.textContent = award.category;
       team.textContent = award.team;
       host.classList.remove('neon-enter');
@@ -57,7 +56,7 @@ window.AwardThemes.set('neon', (host) => {
       fit();
     },
     update(award) {
-      applyLocale(award.locale);
+      applyBilingualCopy();
       host.classList.remove('neon-waiting');
       category.textContent = award.category;
       team.textContent = award.team;

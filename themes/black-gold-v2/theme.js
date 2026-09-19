@@ -45,12 +45,11 @@ window.AwardThemes.set('black-gold-v2', (host) => {
   const confetti = Array.from({ length: 110 }, () => ({ x: random(), y: random(), phase: random() * 6.28, speed: .5 + random(), size: 2 + random() * 5 }));
   const burst = Array.from({ length: 210 }, () => ({ angle: random() * Math.PI * 2, speed: .07 + random() * .3, delay: random() * .25, size: .4 + random() * 1.7 }));
 
-  function applyLocale(locale) {
-    const english = locale === 'en';
-    suspense.textContent = english ? 'And the winner is…' : '得獎的是…';
-    kicker.textContent = english ? '✦  THE WINNING MOMENT  ✦' : '✦  榮 耀 時 刻  ✦';
-    congrats.innerHTML = english ? 'Congratulations<span>CONGRATULATIONS</span>' : '恭喜獲獎<span>恭 喜</span>';
-    footer.textContent = english ? 'EVERY PASSION DESERVES TO SHINE' : '每 一 份 熱 愛 ・ 都 值 得 閃 耀';
+  function applyBilingualCopy() {
+    suspense.innerHTML = '<span>得獎的是…</span><small lang="en">And the winner is…</small>';
+    kicker.innerHTML = '✦ 榮 耀 時 刻 ✦<span lang="en">THE WINNING MOMENT</span>';
+    congrats.innerHTML = '恭喜獲獎<span lang="en">CONGRATULATIONS</span>';
+    footer.innerHTML = '每一份熱愛，都值得閃耀<span lang="en">EVERY PASSION DESERVES TO SHINE</span>';
   }
 
   function fitText() {
@@ -227,7 +226,7 @@ window.AwardThemes.set('black-gold-v2', (host) => {
 
   return {
     prepare(award) {
-      applyLocale(award.locale);
+      applyBilingualCopy();
       category.textContent = award.category;
       team.textContent = award.team;
       elapsed = 0;
@@ -238,7 +237,7 @@ window.AwardThemes.set('black-gold-v2', (host) => {
       sync();
     },
     update(award) {
-      applyLocale(award.locale);
+      applyBilingualCopy();
       host.classList.remove('v2-waiting');
       category.textContent = award.category;
       team.textContent = award.team;
