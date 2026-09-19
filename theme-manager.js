@@ -13,12 +13,19 @@ class AwardThemeManager {
     this.scripts = new Map();
   }
 
+  assetUrl(path) {
+    if (!this.catalog.assetVersion) return path;
+    const url = new URL(path, document.baseURI);
+    url.searchParams.set('v', this.catalog.assetVersion);
+    return url.href;
+  }
+
   loadScript(theme) {
     if (window.AwardThemes.has(theme.id)) return Promise.resolve();
     if (this.scripts.has(theme.id)) return this.scripts.get(theme.id);
     const promise = new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = theme.script;
+      script.src = this.assetUrl(theme.script);
       script.onload = () => {
         script.remove();
         if (typeof window.AwardThemes.get(theme.id) === 'function') resolve();
@@ -45,7 +52,7 @@ class AwardThemeManager {
 
     const stylesheet = document.createElement('link');
     stylesheet.rel = 'stylesheet';
-    stylesheet.href = theme.stylesheet;
+    stylesheet.href = this.assetUrl(theme.stylesheet);
     stylesheet.media = 'not all';
     stylesheet.dataset.awardThemeStyle = id;
     const styleReady = new Promise((resolve, reject) => {

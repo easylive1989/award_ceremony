@@ -83,6 +83,7 @@ test('themes preserve manual presentation and clean up when replaced', { timeout
     await page.reload();
     await page.waitForFunction(() => window.app?.themeManager.current?.id === 'neon');
     assert.equal(await page.locator('#theme-select').inputValue(), 'neon');
+    assert.match(await page.evaluate(() => app.themeManager.current.stylesheet.href), /[?&]v=20260919-clay-1(?:&|$)/);
 
     // Failed assets keep the previous working theme and leave playback available.
     await page.evaluate(async () => {
