@@ -72,7 +72,7 @@ window.AwardThemes.set('claude-paper', (host) => {
 
   function fitText() {
     if (disposed || !width || !height) return;
-    for (const [element, ratio, maxHeight] of [[category, .024, .10], [team, .065, .16]]) {
+    for (const [element, ratio, maxHeight] of [[category, .03, .12], [team, .065, .16]]) {
       let size = width * ratio;
       element.style.fontSize = `${size}px`;
       while (size > 1 && (element.scrollWidth > element.clientWidth + 1 || element.offsetHeight > height * maxHeight)) {

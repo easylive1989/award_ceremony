@@ -50,7 +50,8 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
       assert.equal(await page.locator('#theme-select option[value="claude-paper"]').textContent(), 'Claude');
       assert.equal(await page.locator('[data-theme="claude-paper"]').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(250, 249, 245)');
       assert.equal(await page.locator('.paper-header').evaluate(el => getComputedStyle(el).textAlign), 'center');
-      assert(await page.locator('.paper-header').evaluate(el => parseFloat(getComputedStyle(el).fontSize) > 20));
+      assert(await page.locator('.paper-header').evaluate(el => parseFloat(getComputedStyle(el).fontSize) >= 48));
+      assert(await page.locator('.paper-suspense').evaluate(el => parseFloat(getComputedStyle(el).fontSize) >= 24));
       assert.match(await page.locator('.paper-header').evaluate(el => getComputedStyle(el).fontFamily), /Poppins/);
       assert.match(await page.locator('.paper-team').evaluate(el => getComputedStyle(el).fontFamily), /Lora/);
       assert.equal(await page.locator('.paper-envelope-back').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(240, 238, 230)');
