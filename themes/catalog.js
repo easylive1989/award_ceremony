@@ -16,7 +16,7 @@ window.AWARD_THEME_CATALOG = {
     },
     {
       id: 'claude-paper',
-      name: 'Claude CwC 2026',
+      name: 'Claude',
       stylesheet: 'themes/claude-paper/theme.css',
       script: 'themes/claude-paper/theme.js',
     },

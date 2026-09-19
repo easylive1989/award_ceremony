@@ -1,5 +1,10 @@
 // 預設/範例資料
 const DEFAULT_AWARDS = [
+  { id: '1', category: 'Delight', team: '' },
+  { id: '2', category: 'Everyday', team: '' },
+  { id: '3', category: 'Breadkthrough', team: '' }
+];
+const LEGACY_DEFAULT_AWARDS = [
   { id: '1', category: '🏆 特優首獎', team: '極客探險隊' },
   { id: '2', category: '💡 最佳技術創新獎', team: '量子演算法實驗室' },
   { id: '3', category: '🎨 最佳使用者體驗獎', team: '靈感工坊設計組' },
@@ -240,6 +245,7 @@ class AwardCeremonyApp {
 
   loadState() {
     let savedAwards = null;
+    let migratedLegacyDefaults = false;
 
     try {
       const saved = localStorage.getItem(AWARD_STORAGE_KEY);
@@ -251,13 +257,18 @@ class AwardCeremonyApp {
           && typeof award.category === 'string'
           && typeof award.team === 'string'
         ));
-        if (isValid) savedAwards = parsed;
+        if (isValid) {
+          const isLegacyDefault = JSON.stringify(parsed) === JSON.stringify(LEGACY_DEFAULT_AWARDS);
+          savedAwards = isLegacyDefault ? DEFAULT_AWARDS.map(award => ({ ...award })) : parsed;
+          migratedLegacyDefaults = isLegacyDefault;
+        }
       }
     } catch (error) {
       console.warn('Unable to restore the award list from local storage:', error);
     }
 
     this.awards = savedAwards ?? DEFAULT_AWARDS.map(award => ({ ...award }));
+    if (migratedLegacyDefaults) this.saveState();
     this.renderList();
   }
 

@@ -90,7 +90,7 @@ window.AwardThemes.set('claude-paper', (host) => {
     ctx.clearRect(0, 0, w, h);
     ctx.globalCompositeOperation = 'source-over';
     // Broad paper ribbons use only the CwC 2026 Claude palette.
-    const colors = ['217,119,87', '98,153,135', '120,140,93', '130,125,189', '203,202,219'];
+    const colors = ['250,249,245', '98,153,135', '120,140,93', '130,125,189', '203,202,219'];
     if (celebration > 0) {
       confetti.forEach((piece, index) => {
         const y = ((piece.y + time * .015 * piece.speed) % 1) * h;

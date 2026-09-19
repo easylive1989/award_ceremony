@@ -13,6 +13,30 @@ test('award list persists after reloading the page', { timeout: 30000 }, async (
 
     await page.goto(url);
     await page.waitForFunction(() => window.app?.themeManager.current);
+    assert.deepEqual(
+      await page.evaluate(() => window.app.awards.map(({ category, team }) => ({ category, team }))),
+      [
+        { category: 'Delight', team: '' },
+        { category: 'Everyday', team: '' },
+        { category: 'Breadkthrough', team: '' },
+      ]
+    );
+    await page.evaluate(() => localStorage.setItem('award_ceremony_data', JSON.stringify([
+      { id: '1', category: '🏆 特優首獎', team: '極客探險隊' },
+      { id: '2', category: '💡 最佳技術創新獎', team: '量子演算法實驗室' },
+      { id: '3', category: '🎨 最佳使用者體驗獎', team: '靈感工坊設計組' },
+      { id: '4', category: '🌟 評審團特別獎', team: '星火燎原專案團隊' },
+    ])));
+    await page.reload();
+    await page.waitForFunction(() => window.app?.themeManager.current);
+    assert.deepEqual(
+      JSON.parse(await page.evaluate(() => localStorage.getItem('award_ceremony_data'))).map(({ category, team }) => ({ category, team })),
+      [
+        { category: 'Delight', team: '' },
+        { category: 'Everyday', team: '' },
+        { category: 'Breadkthrough', team: '' },
+      ]
+    );
     await page.locator('.award-item').first().locator('input').nth(0).fill('年度創意獎');
     await page.locator('.award-item').first().locator('input').nth(1).fill('Local Storage 隊');
     await page.locator('#add-item-btn').click();

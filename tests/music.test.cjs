@@ -62,10 +62,10 @@ test('setup audio preferences persist and music restarts on navigation', { timeo
     await restarted();
     assert.equal(await page.evaluate(() => app.currentIndex), 0);
     await page.keyboard.press('ArrowLeft');
-    assert.equal(await page.evaluate(() => app.currentIndex), 3);
+    assert.equal(await page.evaluate(() => app.currentIndex), 2);
     await seek();
     await page.keyboard.press('Space');
-    assert.equal(await page.evaluate(() => app.currentIndex), 3);
+    assert.equal(await page.evaluate(() => app.currentIndex), 2);
     assert(await page.locator('audio').evaluate(el => el.currentTime >= 12));
     await page.keyboard.press('Space');
     await restarted();

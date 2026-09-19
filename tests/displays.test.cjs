@@ -46,7 +46,10 @@ test('detects displays and requests fullscreen on the selected screen', { timeou
     await page.locator('.play-award-btn').nth(1).click();
     assert.equal(await page.evaluate(() => window.__fullscreenTarget === window.__testScreens[1]), true);
     assert.equal(await page.evaluate(() => app.presentationAwards.length), 1);
-    assert.equal(await page.locator('[data-award-team]').textContent(), '量子演算法實驗室');
+    assert.deepEqual(await page.evaluate(() => ({
+      category: app.presentationAwards[0].category,
+      team: app.presentationAwards[0].team,
+    })), { category: 'Everyday', team: '' });
     await page.locator('#stage').click();
     assert.equal(await page.evaluate(() => app.themeManager.revealed), true);
     await page.locator('#stage').click();
