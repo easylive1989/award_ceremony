@@ -2,15 +2,20 @@
 window.AwardThemes = new Map();
 
 class AwardThemeManager {
-  constructor(root, catalog) {
+  constructor(root, catalog, locale = 'zh') {
     this.root = root;
     this.catalog = catalog;
     this.current = null;
     this.award = { category: '得獎組別', team: '獲獎隊伍' };
+    this.locale = locale === 'en' ? 'en' : 'zh';
     this.visible = false;
     this.revealed = false;
     this.revision = 0;
     this.scripts = new Map();
+  }
+
+  payload() {
+    return { ...this.award, locale: this.locale };
   }
 
   assetUrl(path) {
@@ -76,8 +81,8 @@ class AwardThemeManager {
       for (const method of ['update', 'setVisible', 'destroy']) {
         if (typeof instance?.[method] !== 'function') throw new Error(`皮膚缺少 ${method}：${id}`);
       }
-      if (this.revealed || !instance.prepare) instance.update({ ...this.award });
-      else instance.prepare({ ...this.award });
+      if (this.revealed || !instance.prepare) instance.update(this.payload());
+      else instance.prepare(this.payload());
       instance.setVisible(this.visible);
       const previous = this.current;
       this.root.replaceChildren(host);
@@ -97,19 +102,27 @@ class AwardThemeManager {
 
   update(award) {
     this.award = {
-      category: award.category || '得獎獎項',
-      team: award.team || '獲獎隊伍',
+      category: award.category || (this.locale === 'en' ? 'Award category' : '得獎獎項'),
+      team: award.team || (this.locale === 'en' ? 'Winning team' : '獲獎隊伍'),
     };
     this.revealed = false;
     const instance = this.current?.instance;
-    if (instance?.prepare) instance.prepare({ ...this.award });
-    else instance?.update({ ...this.award });
+    if (instance?.prepare) instance.prepare(this.payload());
+    else instance?.update(this.payload());
+  }
+
+  setLocale(locale) {
+    this.locale = locale === 'en' ? 'en' : 'zh';
+    const instance = this.current?.instance;
+    if (!instance) return;
+    if (this.revealed || !instance.prepare) instance.update(this.payload());
+    else instance.prepare(this.payload());
   }
 
   reveal() {
     if (this.revealed || !this.visible || !this.current) return;
     this.revealed = true;
-    this.current.instance.update({ ...this.award });
+    this.current.instance.update(this.payload());
   }
 
   setVisible(visible) {

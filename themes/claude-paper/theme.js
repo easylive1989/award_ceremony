@@ -61,6 +61,8 @@ window.AwardThemes.set('claude-paper', (host) => {
   const ctx = canvas.getContext('2d');
   const category = host.querySelector('[data-award-category]');
   const team = host.querySelector('[data-award-team]');
+  const suspense = host.querySelector('.paper-suspense');
+  const congrats = host.querySelector('.paper-congrats');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   let visible = false, disposed = false, reduced = motion.matches;
   let width = 0, height = 0, time = 0, elapsed = 0, previous = null, frameId = null;
@@ -69,6 +71,12 @@ window.AwardThemes.set('claude-paper', (host) => {
   const random = () => ((seed = seed * 16807 % 2147483647) - 1) / 2147483646;
   const confetti = Array.from({ length: 54 }, () => ({ x: random(), y: random(), phase: random() * 6.28, speed: .5 + random(), size: 9 + random() * 9 }));
   const burst = Array.from({ length: 90 }, () => ({ angle: random() * Math.PI * 2, speed: .07 + random() * .3, delay: random() * .25, size: .4 + random() * 1.7 }));
+
+  function applyLocale(locale) {
+    const english = locale === 'en';
+    suspense.textContent = english ? 'And the winner is…' : '得獎的是…';
+    congrats.textContent = english ? 'Congratulations' : '恭喜獲獎';
+  }
 
   function fitText() {
     if (disposed || !width || !height) return;
@@ -173,6 +181,7 @@ window.AwardThemes.set('claude-paper', (host) => {
 
   return {
     prepare(award) {
+      applyLocale(award.locale);
       category.textContent = award.category;
       team.textContent = award.team;
       elapsed = 0;
@@ -183,6 +192,7 @@ window.AwardThemes.set('claude-paper', (host) => {
       sync();
     },
     update(award) {
+      applyLocale(award.locale);
       host.classList.remove('paper-waiting');
       category.textContent = award.category;
       team.textContent = award.team;

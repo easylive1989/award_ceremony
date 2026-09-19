@@ -11,9 +11,46 @@ const LEGACY_DEFAULT_AWARDS = [
   { id: '4', category: '🌟 評審團特別獎', team: '星火燎原專案團隊' }
 ];
 const AWARD_STORAGE_KEY = 'award_ceremony_data';
+const LOCALE_STORAGE_KEY = 'award_ceremony_locale';
+
+const UI_COPY = {
+  zh: {
+    documentTitle: '頒獎典禮播放系統', badge: 'Award Presentation System', heading: '頒獎典禮名單設定',
+    subtitle: '設定各得獎組別與獲獎隊伍名稱，支援全螢幕展示，每頁點擊開始揭曉，再點擊切換下一組',
+    appearanceRegion: '舞台外觀、語言與配樂', themeLabel: '舞台皮膚', languageLabel: '畫面語言', musicLabel: '配樂音量', musicControls: '配樂控制',
+    displayRegion: '播放螢幕設定', displayLabel: '播放螢幕', displayControls: '播放螢幕控制', currentDisplay: '目前所在螢幕', detectDisplays: '偵測螢幕',
+    displayHelp: '初次偵測時，瀏覽器會詢問多螢幕管理權限。', listTitle: '名單清單', addAward: '新增得獎項目', loadSample: '載入範例資料', clearAll: '清空',
+    awardCountPrefix: '目前共有', awardCountSuffix: '個得獎項目', stageLabel: '得獎展示舞台', showTeams: '顯示隊伍名稱', hideTeams: '隱藏隊伍名稱',
+    themeLoading: '載入皮膚中…', themeReady: '播放前可切換外觀', themeFailedKept: '皮膚載入失敗，已保留原本外觀。', themeFailedChoose: '皮膚載入失敗，請重新選擇。',
+    displayPrompt: '按「偵測螢幕」選擇外接螢幕或投影機。', displayUnsupportedTitle: '此瀏覽器不支援多螢幕選擇', displayUnsupported: '此瀏覽器不支援指定螢幕，將在目前所在螢幕播放。',
+    displayDetecting: '正在偵測螢幕…', displayDenied: '未取得多螢幕權限，將在目前所在螢幕播放。', displayFailed: '無法偵測螢幕，將在目前所在螢幕播放。',
+    displayDetected: '已偵測到 {count} 個螢幕，播放時會在所選螢幕進入全螢幕。', displaySingle: '目前只偵測到一個螢幕。', currentMarker: '目前使用', primaryMarker: '主螢幕', screenName: '螢幕 {number}',
+    emptyList: '尚無得獎名單，請點選上方「新增得獎項目」或「載入範例資料」', categoryLabel: '得獎組別 / 獎項', categoryPlaceholder: '例如：特優首獎',
+    teamLabel: '獲獎隊伍 / 人員名稱', teamPlaceholder: '例如：第 1 隊（隊伍名稱）', playOne: '單獨播放', testOne: '測試', playOneAria: '單獨播放第 {number} 個獎項', testOneAria: '在網頁內測試第 {number} 個獎項', deleteTitle: '刪除此項目', deleteAria: '刪除第 {number} 個獎項',
+    clearConfirm: '確定要清空所有得獎名單嗎？', missingAwards: '請至少填寫一組完整的得獎組別或隊伍名稱！', missingAward: '請先填寫此獎項或隊伍名稱！',
+    musicRetry: '重試播放配樂', musicUnmute: '開啟配樂聲音', musicMute: '靜音配樂', musicLoadFailed: '配樂無法載入；可繼續頒獎，或按配樂按鈕重試。', musicStartFailed: '配樂未開始，請按配樂按鈕播放。',
+  },
+  en: {
+    documentTitle: 'Award Ceremony Presentation', badge: 'Award Presentation System', heading: 'Award Ceremony Setup',
+    subtitle: 'Enter each award category and winning team, then click once to reveal and again to move to the next award.',
+    appearanceRegion: 'Stage theme, language, and music', themeLabel: 'Stage theme', languageLabel: 'Language', musicLabel: 'Music volume', musicControls: 'Music controls',
+    displayRegion: 'Presentation display settings', displayLabel: 'Presentation display', displayControls: 'Presentation display controls', currentDisplay: 'Current display', detectDisplays: 'Detect displays',
+    displayHelp: 'Your browser may ask for multi-display permission the first time.', listTitle: 'Award list', addAward: 'Add award', loadSample: 'Load sample', clearAll: 'Clear',
+    awardCountPrefix: 'Total', awardCountSuffix: 'award items', stageLabel: 'Award presentation stage', showTeams: 'Show team names', hideTeams: 'Hide team names',
+    themeLoading: 'Loading theme…', themeReady: 'You can switch themes before presenting', themeFailedKept: 'The theme could not load. The previous theme is still active.', themeFailedChoose: 'The theme could not load. Please choose another theme.',
+    displayPrompt: 'Select “Detect displays” to use an external display or projector.', displayUnsupportedTitle: 'This browser does not support display selection', displayUnsupported: 'This browser cannot select a display. Presentation will use the current display.',
+    displayDetecting: 'Detecting displays…', displayDenied: 'Display permission was not granted. Presentation will use the current display.', displayFailed: 'Displays could not be detected. Presentation will use the current display.',
+    displayDetected: '{count} displays detected. Presentation will open fullscreen on the selected display.', displaySingle: 'Only one display is currently available.', currentMarker: 'current', primaryMarker: 'primary', screenName: 'Display {number}',
+    emptyList: 'No awards yet. Select “Add award” or “Load sample” above.', categoryLabel: 'Award category', categoryPlaceholder: 'e.g. Excellence Award',
+    teamLabel: 'Winning team / person', teamPlaceholder: 'e.g. Team 1', playOne: 'Present', testOne: 'Test', playOneAria: 'Present award {number}', testOneAria: 'Test award {number} in this page', deleteTitle: 'Delete this item', deleteAria: 'Delete award {number}',
+    clearConfirm: 'Clear the entire award list?', missingAwards: 'Enter at least one award category or team name.', missingAward: 'Enter an award category or team name first.',
+    musicRetry: 'Retry music', musicUnmute: 'Turn music on', musicMute: 'Mute music', musicLoadFailed: 'The music could not load. You can continue or use the music button to retry.', musicStartFailed: 'The music did not start. Use the music button to play it.',
+  },
+};
 
 class AwardCeremonyApp {
   constructor() {
+    this.locale = this.loadLocale();
     this.awards = [];
     this.presentationAwards = [];
     this.currentIndex = 0;
@@ -29,12 +66,14 @@ class AwardCeremonyApp {
       document.getElementById('award-music'),
       document.getElementById('music-toggle'),
       document.getElementById('music-volume'),
-      document.getElementById('music-status')
+      document.getElementById('music-status'),
+      key => this.t(key)
     );
     this.bindEvents();
+    this.applyStaticLocale();
     this.initializeDisplays();
     this.loadState();
-    this.themeManager = new AwardThemeManager(document.getElementById('theme-root'), window.AWARD_THEME_CATALOG);
+    this.themeManager = new AwardThemeManager(document.getElementById('theme-root'), window.AWARD_THEME_CATALOG, this.locale);
     this.initializeThemes();
   }
 
@@ -50,6 +89,7 @@ class AwardCeremonyApp {
     this.displaySelect = document.getElementById('display-select');
     this.detectDisplaysBtn = document.getElementById('detect-displays-btn');
     this.displayStatus = document.getElementById('display-status');
+    this.languageSelect = document.getElementById('language-select');
 
     this.setupContainer = document.getElementById('app');
 
@@ -66,6 +106,7 @@ class AwardCeremonyApp {
     this.toggleAwardListBtn.addEventListener('click', () => this.toggleTeamNames());
     this.detectDisplaysBtn.addEventListener('click', () => this.detectDisplays());
     this.displaySelect.addEventListener('change', () => this.selectDisplay());
+    this.languageSelect.addEventListener('change', () => this.setLocale(this.languageSelect.value));
 
     this.themeSelect.addEventListener('change', () => this.changeTheme(this.themeSelect.value));
 
@@ -100,6 +141,55 @@ class AwardCeremonyApp {
     });
   }
 
+  loadLocale() {
+    try { return localStorage.getItem(LOCALE_STORAGE_KEY) === 'en' ? 'en' : 'zh'; }
+    catch { return 'zh'; }
+  }
+
+  t(key, values = {}) {
+    const template = UI_COPY[this.locale]?.[key] ?? UI_COPY.zh[key] ?? key;
+    return Object.entries(values).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, String(value)), template);
+  }
+
+  applyStaticLocale() {
+    document.documentElement.lang = this.locale === 'en' ? 'en' : 'zh-TW';
+    document.title = this.t('documentTitle');
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+      element.textContent = this.t(element.dataset.i18n);
+    });
+    document.querySelectorAll('[data-i18n-aria-label]').forEach(element => {
+      element.setAttribute('aria-label', this.t(element.dataset.i18nAriaLabel));
+    });
+    this.languageSelect.value = this.locale;
+    this.themeStatus.textContent = this.themeManager?.current ? this.t('themeReady') : this.t('themeLoading');
+    this.music?.syncControls();
+    this.setTeamNamesHidden(this.teamNamesHidden);
+  }
+
+  setLocale(locale) {
+    this.locale = locale === 'en' ? 'en' : 'zh';
+    try { localStorage.setItem(LOCALE_STORAGE_KEY, this.locale); } catch { /* Language storage is optional. */ }
+    this.applyStaticLocale();
+    this.refreshThemeOptions();
+    this.renderList();
+    if (this.screenDetails) this.renderDisplayOptions();
+    else this.initializeDisplays();
+    this.themeManager?.setLocale(this.locale);
+  }
+
+  themeName(theme) {
+    return this.locale === 'en' ? (theme.nameEn || theme.name) : theme.name;
+  }
+
+  refreshThemeOptions() {
+    const selected = this.themeSelect.value;
+    for (const option of this.themeSelect.options) {
+      const theme = window.AWARD_THEME_CATALOG.themes.find(item => item.id === option.value);
+      if (theme) option.textContent = this.themeName(theme);
+    }
+    this.themeSelect.value = selected;
+  }
+
   toggleTeamNames() {
     this.setTeamNamesHidden(!this.teamNamesHidden);
   }
@@ -108,25 +198,27 @@ class AwardCeremonyApp {
     this.teamNamesHidden = hidden;
     this.formCard.classList.toggle('team-names-hidden', hidden);
     this.toggleAwardListBtn.setAttribute('aria-expanded', String(!hidden));
-    this.toggleAwardListBtn.textContent = hidden ? '顯示隊伍名稱' : '隱藏隊伍名稱';
+    this.toggleAwardListBtn.textContent = hidden ? this.t('showTeams') : this.t('hideTeams');
   }
 
   initializeDisplays() {
     if ('getScreenDetails' in window) {
-      this.displayStatus.textContent = '按「偵測螢幕」選擇外接螢幕或投影機。';
+      this.detectDisplaysBtn.disabled = false;
+      this.detectDisplaysBtn.title = '';
+      this.displayStatus.textContent = this.t('displayPrompt');
       return;
     }
 
     this.detectDisplaysBtn.disabled = true;
-    this.detectDisplaysBtn.title = '此瀏覽器不支援多螢幕選擇';
-    this.displayStatus.textContent = '此瀏覽器不支援指定螢幕，將在目前所在螢幕播放。';
+    this.detectDisplaysBtn.title = this.t('displayUnsupportedTitle');
+    this.displayStatus.textContent = this.t('displayUnsupported');
   }
 
   async detectDisplays() {
     if (!('getScreenDetails' in window)) return;
 
     this.detectDisplaysBtn.disabled = true;
-    this.displayStatus.textContent = '正在偵測螢幕…';
+    this.displayStatus.textContent = this.t('displayDetecting');
     try {
       const details = await window.getScreenDetails();
       if (this.screenDetails !== details) {
@@ -140,11 +232,11 @@ class AwardCeremonyApp {
       this.renderDisplayOptions();
     } catch (error) {
       this.availableScreens = [];
-      this.displaySelect.innerHTML = '<option value="current">目前所在螢幕</option>';
+      this.displaySelect.replaceChildren(new Option(this.t('currentDisplay'), 'current'));
       this.displaySelect.disabled = true;
       this.displayStatus.textContent = error?.name === 'NotAllowedError'
-        ? '未取得多螢幕權限，將在目前所在螢幕播放。'
-        : '無法偵測螢幕，將在目前所在螢幕播放。';
+        ? this.t('displayDenied')
+        : this.t('displayFailed');
       console.warn('Screen detection denied or unavailable:', error);
     } finally {
       this.detectDisplaysBtn.disabled = false;
@@ -161,11 +253,13 @@ class AwardCeremonyApp {
     this.displaySelect.innerHTML = '';
     screens.forEach((screen, index) => {
       const markers = [];
-      if (screen === this.screenDetails.currentScreen) markers.push('目前使用');
-      if (screen.isPrimary) markers.push('主螢幕');
-      const name = screen.label || `螢幕 ${index + 1}`;
+      if (screen === this.screenDetails.currentScreen) markers.push(this.t('currentMarker'));
+      if (screen.isPrimary) markers.push(this.t('primaryMarker'));
+      const name = screen.label || this.t('screenName', { number: index + 1 });
       const resolution = screen.width && screen.height ? ` · ${screen.width}×${screen.height}` : '';
-      const suffix = markers.length ? `（${markers.join('、')}）` : '';
+      const suffix = markers.length
+        ? this.locale === 'en' ? ` (${markers.join(', ')})` : `（${markers.join('、')}）`
+        : '';
       this.displaySelect.add(new Option(`${name}${resolution}${suffix}`, String(index)));
     });
 
@@ -175,8 +269,8 @@ class AwardCeremonyApp {
     this.displaySelect.disabled = screens.length < 2;
     this.selectDisplay();
     this.displayStatus.textContent = screens.length > 1
-      ? `已偵測到 ${screens.length} 個螢幕，播放時會在所選螢幕進入全螢幕。`
-      : '目前只偵測到一個螢幕。';
+      ? this.t('displayDetected', { count: screens.length })
+      : this.t('displaySingle');
   }
 
   selectDisplay() {
@@ -202,7 +296,7 @@ class AwardCeremonyApp {
   initializeThemes() {
     const catalog = window.AWARD_THEME_CATALOG;
     for (const theme of catalog.themes) {
-      this.themeSelect.add(new Option(theme.name, theme.id));
+      this.themeSelect.add(new Option(this.themeName(theme), theme.id));
     }
     let saved;
     try { saved = localStorage.getItem('award_ceremony_theme'); } catch { /* Theme storage is optional. */ }
@@ -214,12 +308,12 @@ class AwardCeremonyApp {
   async changeTheme(id, initial = false) {
     const revision = ++this.themeRevision;
     this.setPlaybackButtonsDisabled(true);
-    this.themeStatus.textContent = '載入皮膚中…';
+    this.themeStatus.textContent = this.t('themeLoading');
     try {
       const applied = await this.themeManager.select(id);
       if (!applied || revision !== this.themeRevision) return;
       this.themeSelect.value = this.themeManager.current.id;
-      this.themeStatus.textContent = '播放前可切換外觀';
+      this.themeStatus.textContent = this.t('themeReady');
       try { localStorage.setItem('award_ceremony_theme', this.themeManager.current.id); } catch { /* Keep the selected theme for this session. */ }
     } catch (error) {
       if (revision !== this.themeRevision) return;
@@ -228,7 +322,7 @@ class AwardCeremonyApp {
         return;
       }
       this.themeSelect.value = this.themeManager.current?.id || id;
-      this.themeStatus.textContent = this.themeManager.current ? '皮膚載入失敗，已保留原本外觀。' : '皮膚載入失敗，請重新選擇。';
+      this.themeStatus.textContent = this.themeManager.current ? this.t('themeFailedKept') : this.t('themeFailedChoose');
       console.error(error);
     } finally {
       if (revision === this.themeRevision) this.setPlaybackButtonsDisabled(!this.themeManager.current);
@@ -311,7 +405,7 @@ class AwardCeremonyApp {
 
   clearAll() {
     if (this.awards.length === 0) return;
-    if (confirm('確定要清空所有得獎名單嗎？')) {
+    if (confirm(this.t('clearConfirm'))) {
       this.awards = [];
       this.saveState();
       this.renderList();
@@ -325,7 +419,7 @@ class AwardCeremonyApp {
     if (this.awards.length === 0) {
       const emptyNotice = document.createElement('div');
       emptyNotice.className = 'empty-state';
-      emptyNotice.innerHTML = '尚無得獎名單，請點選上方「新增得獎項目」或「載入範例資料」';
+      emptyNotice.textContent = this.t('emptyList');
       this.awardListEl.appendChild(emptyNotice);
       return;
     }
@@ -336,17 +430,17 @@ class AwardCeremonyApp {
       row.innerHTML = `
         <div class="item-index">#${index + 1}</div>
         <div class="input-group">
-          <label>得獎組別 / 獎項</label>
-          <input type="text" placeholder="例如：特優首獎" value="${this.escapeHtml(award.category)}">
+          <label>${this.t('categoryLabel')}</label>
+          <input type="text" placeholder="${this.escapeHtml(this.t('categoryPlaceholder'))}" value="${this.escapeHtml(award.category)}">
         </div>
         <div class="input-group team-input-group">
-          <label>獲獎隊伍 / 人員名稱</label>
-          <input type="text" placeholder="例如：第 1 隊 (隊伍名稱)" value="${this.escapeHtml(award.team)}">
+          <label>${this.t('teamLabel')}</label>
+          <input type="text" placeholder="${this.escapeHtml(this.t('teamPlaceholder'))}" value="${this.escapeHtml(award.team)}">
         </div>
         <div class="item-actions">
-          <button class="btn btn-primary btn-compact play-award-btn" type="button" aria-label="單獨播放第 ${index + 1} 個獎項"><img class="guide-icon" src="assets/icons/presentation.png" alt="" aria-hidden="true">單獨播放</button>
-          <button class="btn btn-outline btn-compact test-award-btn" type="button" aria-label="在網頁內測試第 ${index + 1} 個獎項"><img class="guide-icon" src="assets/icons/preview.png" alt="" aria-hidden="true">測試</button>
-          <button class="del-btn" type="button" title="刪除此項目" aria-label="刪除第 ${index + 1} 個獎項"><img class="guide-icon" src="assets/icons/remove.png" alt="" aria-hidden="true"></button>
+          <button class="btn btn-primary btn-compact play-award-btn" type="button" aria-label="${this.t('playOneAria', { number: index + 1 })}"><img class="guide-icon" src="assets/icons/presentation.png" alt="" aria-hidden="true">${this.t('playOne')}</button>
+          <button class="btn btn-outline btn-compact test-award-btn" type="button" aria-label="${this.t('testOneAria', { number: index + 1 })}"><img class="guide-icon" src="assets/icons/preview.png" alt="" aria-hidden="true">${this.t('testOne')}</button>
+          <button class="del-btn" type="button" title="${this.t('deleteTitle')}" aria-label="${this.t('deleteAria', { number: index + 1 })}"><img class="guide-icon" src="assets/icons/remove.png" alt="" aria-hidden="true"></button>
         </div>
       `;
 
@@ -395,7 +489,7 @@ class AwardCeremonyApp {
     if (!this.themeManager.current) return;
     const validAwards = this.getValidAwards();
     if (validAwards.length === 0) {
-      alert('請至少填寫一組完整的得獎組別或隊伍名稱！');
+      alert(this.t('missingAwards'));
       return;
     }
 
@@ -414,7 +508,7 @@ class AwardCeremonyApp {
     if (!this.themeManager.current) return;
     const award = this.awards.find(item => item.id === id);
     if (!award || (award.category.trim() === '' && award.team.trim() === '')) {
-      alert('請先填寫此獎項或隊伍名稱！');
+      alert(this.t('missingAward'));
       return;
     }
 

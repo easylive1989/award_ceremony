@@ -15,7 +15,19 @@ window.AwardThemes.set('neon', (host) => {
   `;
   const category = host.querySelector('[data-award-category]');
   const team = host.querySelector('[data-award-team]');
+  const topline = host.querySelector('.neon-topline');
+  const kicker = host.querySelector('.neon-kicker');
+  const congratulations = host.querySelector('.neon-congratulations');
+  const bottomline = host.querySelector('.neon-bottomline');
   let disposed = false;
+
+  function applyLocale(locale) {
+    const english = locale === 'en';
+    topline.innerHTML = english ? 'THE NEXT BRILLIANT THING <span>AWARDS</span>' : '下一個閃耀時刻 <span>頒獎典禮</span>';
+    kicker.textContent = english ? '✦ EXCELLENCE RECOGNIZED' : '✦ 卓越獲肯定';
+    congratulations.innerHTML = english ? 'Congratulations <span>CONGRATULATIONS</span>' : '恭喜獲獎 <span>恭 喜</span>';
+    bottomline.innerHTML = english ? 'BE BOLD. SHINE BRIGHT. <span>EVERY PASSION DESERVES TO SHINE.</span>' : '勇敢發光 <span>每一份熱愛，都值得閃耀。</span>';
+  }
 
   function fit() {
     if (disposed || !host.clientWidth) return;
@@ -37,6 +49,7 @@ window.AwardThemes.set('neon', (host) => {
 
   return {
     prepare(award) {
+      applyLocale(award.locale);
       category.textContent = award.category;
       team.textContent = award.team;
       host.classList.remove('neon-enter');
@@ -44,6 +57,7 @@ window.AwardThemes.set('neon', (host) => {
       fit();
     },
     update(award) {
+      applyLocale(award.locale);
       host.classList.remove('neon-waiting');
       category.textContent = award.category;
       team.textContent = award.team;

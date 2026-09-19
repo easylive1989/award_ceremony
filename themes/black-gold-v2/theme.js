@@ -31,6 +31,10 @@ window.AwardThemes.set('black-gold-v2', (host) => {
   const ctx = canvas.getContext('2d');
   const category = host.querySelector('[data-award-category]');
   const team = host.querySelector('[data-award-team]');
+  const suspense = host.querySelector('.v2-suspense');
+  const kicker = host.querySelector('.v2-kicker');
+  const congrats = host.querySelector('.v2-congrats');
+  const footer = host.querySelector('.v2-footer');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   let visible = false, disposed = false, reduced = motion.matches;
   let width = 0, height = 0, time = 0, elapsed = 0, previous = null, frameId = null;
@@ -40,6 +44,14 @@ window.AwardThemes.set('black-gold-v2', (host) => {
   const dust = Array.from({ length: 320 }, () => ({ x: random(), y: random(), speed: .3 + random(), size: .5 + random() * 2, phase: random() * 6.28 }));
   const confetti = Array.from({ length: 110 }, () => ({ x: random(), y: random(), phase: random() * 6.28, speed: .5 + random(), size: 2 + random() * 5 }));
   const burst = Array.from({ length: 210 }, () => ({ angle: random() * Math.PI * 2, speed: .07 + random() * .3, delay: random() * .25, size: .4 + random() * 1.7 }));
+
+  function applyLocale(locale) {
+    const english = locale === 'en';
+    suspense.textContent = english ? 'And the winner is…' : '得獎的是…';
+    kicker.textContent = english ? '✦  THE WINNING MOMENT  ✦' : '✦  榮 耀 時 刻  ✦';
+    congrats.innerHTML = english ? 'Congratulations<span>CONGRATULATIONS</span>' : '恭喜獲獎<span>恭 喜</span>';
+    footer.textContent = english ? 'EVERY PASSION DESERVES TO SHINE' : '每 一 份 熱 愛 ・ 都 值 得 閃 耀';
+  }
 
   function fitText() {
     if (disposed || !width || !height) return;
@@ -215,6 +227,7 @@ window.AwardThemes.set('black-gold-v2', (host) => {
 
   return {
     prepare(award) {
+      applyLocale(award.locale);
       category.textContent = award.category;
       team.textContent = award.team;
       elapsed = 0;
@@ -225,6 +238,7 @@ window.AwardThemes.set('black-gold-v2', (host) => {
       sync();
     },
     update(award) {
+      applyLocale(award.locale);
       host.classList.remove('v2-waiting');
       category.textContent = award.category;
       team.textContent = award.team;

@@ -1,10 +1,11 @@
 // One shared audio element: restart on each slide, continue across theme changes.
 class AwardMusicController {
-  constructor(audio, toggle, volume, status) {
+  constructor(audio, toggle, volume, status, translate = key => key) {
     this.audio = audio;
     this.toggle = toggle;
     this.volume = volume;
     this.status = status;
+    this.translate = translate;
     this.active = false;
     this.failed = false;
     this.revision = 0;
@@ -86,14 +87,14 @@ class AwardMusicController {
   showFailure() {
     this.failed = true;
     this.status.textContent = this.audio.error
-      ? '配樂無法載入；可繼續頒獎，或按配樂按鈕重試。'
-      : '配樂未開始，請按配樂按鈕播放。';
+      ? this.translate('musicLoadFailed')
+      : this.translate('musicStartFailed');
     this.syncControls();
   }
 
   syncControls() {
     const silent = this.audio.muted || this.audio.volume === 0;
-    const label = this.failed ? '重試播放配樂' : silent ? '開啟配樂聲音' : '靜音配樂';
+    const label = this.failed ? this.translate('musicRetry') : silent ? this.translate('musicUnmute') : this.translate('musicMute');
     this.toggle.classList.toggle('is-muted', silent);
     this.toggle.classList.toggle('is-failed', this.failed);
     this.toggle.title = label;
