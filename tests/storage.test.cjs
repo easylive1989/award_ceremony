@@ -39,6 +39,7 @@ test('award list persists after reloading the page', { timeout: 30000 }, async (
     );
     await page.locator('.award-item').first().locator('input').nth(0).fill('年度創意獎');
     await page.locator('.award-item').first().locator('input').nth(1).fill('Local Storage 隊');
+    await page.locator('.award-theme-select').first().selectOption('claude-paper');
     await page.locator('#add-item-btn').click();
     await page.locator('.award-item').last().locator('input').nth(0).fill('最佳人氣獎');
     await page.locator('.award-item').last().locator('input').nth(1).fill('重新整理也在隊');
@@ -58,6 +59,7 @@ test('award list persists after reloading the page', { timeout: 30000 }, async (
     );
     assert.equal(await page.locator('.award-item').first().locator('input').nth(0).inputValue(), '年度創意獎');
     assert.equal(await page.locator('.award-item').last().locator('input').nth(1).inputValue(), '重新整理也在隊');
+    assert.equal(await page.locator('.award-theme-select').first().inputValue(), 'claude-paper');
   } finally {
     await browser.close();
   }

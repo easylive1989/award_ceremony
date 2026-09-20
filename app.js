@@ -17,17 +17,17 @@ const UI_COPY = {
   badge: '頒獎典禮播放系統',
   heading: '頒獎典禮名單設定',
   subtitle: '設定得獎組別與獲獎隊伍，點擊一次揭曉，再點擊切換下一組。',
-  appearanceRegion: '舞台外觀與配樂', themeLabel: '舞台皮膚', musicLabel: '配樂音量', musicControls: '配樂控制',
+  appearanceRegion: '配樂設定', themeLabel: '舞台外觀', musicLabel: '配樂音量', musicControls: '配樂控制',
   displayRegion: '播放螢幕設定', displayLabel: '播放螢幕', displayControls: '播放螢幕控制', currentDisplay: '目前所在螢幕', detectDisplays: '偵測螢幕',
   displayHelp: '初次偵測時，瀏覽器會詢問多螢幕管理權限。',
   listTitle: '名單清單', addAward: '新增得獎項目', loadSample: '載入範例資料', clearAll: '清空',
   awardCountPrefix: '目前共有', awardCountSuffix: '個得獎項目', stageLabel: '得獎展示舞台', showTeams: '顯示隊伍名稱', hideTeams: '隱藏隊伍名稱',
-  themeLoading: '載入皮膚中…', themeReady: '播放前可切換外觀', themeFailedKept: '皮膚載入失敗，已保留原本外觀。', themeFailedChoose: '皮膚載入失敗，請重新選擇。',
+  themeFailedChoose: '舞台外觀載入失敗，請重新選擇。',
   displayPrompt: '按「偵測螢幕」選擇外接螢幕或投影機。', displayUnsupportedTitle: '此瀏覽器不支援多螢幕選擇', displayUnsupported: '此瀏覽器不支援指定螢幕，將在目前螢幕播放。',
   displayDetecting: '正在偵測螢幕…', displayDenied: '未取得多螢幕權限，將在目前螢幕播放。', displayFailed: '無法偵測螢幕，將在目前螢幕播放。',
   displayDetected: '已偵測到 {count} 個螢幕。', displaySingle: '目前只偵測到一個螢幕。', currentMarker: '目前使用', primaryMarker: '主螢幕', screenName: '螢幕 {number}',
   emptyList: '尚無得獎名單，請新增項目或載入範例資料。', categoryLabel: '得獎組別 / 獎項', categoryPlaceholder: '例如：Delight',
-  teamLabel: '獲獎隊伍 / 人員名稱', teamPlaceholder: '例如：第 1 隊', playOne: '單獨播放', testOne: '測試', playOneAria: '單獨播放第 {number} 個獎項', testOneAria: '在網頁內測試第 {number} 個獎項', deleteTitle: '刪除此項目', deleteAria: '刪除第 {number} 個獎項',
+  teamLabel: '獲獎隊伍', teamPlaceholder: '例如：第 1 隊', themeAria: '第 {number} 個獎項的舞台外觀', playOne: '單獨播放', testOne: '測試', playOneAria: '單獨播放第 {number} 個獎項', testOneAria: '在網頁內測試第 {number} 個獎項', deleteTitle: '刪除此項目', deleteAria: '刪除第 {number} 個獎項',
   clearConfirm: '確定要清空所有得獎名單嗎？', missingAwards: '請至少填寫一組完整資料。', missingAward: '請先填寫此獎項或隊伍名稱。',
   musicRetry: '重試播放配樂', musicUnmute: '開啟配樂', musicMute: '靜音配樂', musicLoadFailed: '配樂無法載入；仍可繼續頒獎。', musicStartFailed: '配樂未開始，請按配樂按鈕。',
 };
@@ -41,6 +41,8 @@ class AwardCeremonyApp {
     this.presentationTrigger = null;
     this.teamNamesHidden = false;
     this.themeRevision = 0;
+    this.slideRevision = 0;
+    this.slideLoading = false;
     this.screenDetails = null;
     this.availableScreens = [];
 
@@ -77,8 +79,6 @@ class AwardCeremonyApp {
 
     // 舞台 / 全螢幕 DOM
     this.stageOverlay = document.getElementById('stage');
-    this.themeSelect = document.getElementById('theme-select');
-    this.themeStatus = document.getElementById('theme-status');
   }
 
   bindEvents() {
@@ -88,8 +88,6 @@ class AwardCeremonyApp {
     this.toggleAwardListBtn.addEventListener('click', () => this.toggleTeamNames());
     this.detectDisplaysBtn.addEventListener('click', () => this.detectDisplays());
     this.displaySelect.addEventListener('change', () => this.selectDisplay());
-
-    this.themeSelect.addEventListener('change', () => this.changeTheme(this.themeSelect.value));
 
     // 每頁先等待點擊揭曉，再次點擊才換頁。
     this.stageOverlay.addEventListener('click', () => {
@@ -136,7 +134,6 @@ class AwardCeremonyApp {
     document.querySelectorAll('[data-i18n-aria-label]').forEach(element => {
       element.setAttribute('aria-label', this.t(element.dataset.i18nAriaLabel));
     });
-    this.themeStatus.textContent = this.themeManager?.current ? this.t('themeReady') : this.t('themeLoading');
     this.music?.syncControls();
     this.setTeamNamesHidden(this.teamNamesHidden);
   }
@@ -248,35 +245,35 @@ class AwardCeremonyApp {
 
   initializeThemes() {
     const catalog = window.AWARD_THEME_CATALOG;
-    for (const theme of catalog.themes) {
-      this.themeSelect.add(new Option(this.themeName(theme), theme.id));
-    }
-    let saved;
-    try { saved = localStorage.getItem('award_ceremony_theme'); } catch { /* Theme storage is optional. */ }
-    const id = catalog.themes.some(theme => theme.id === saved) ? saved : catalog.defaultId;
-    this.themeSelect.value = id;
+    const id = this.normalizeThemeId(this.awards[0]?.themeId || catalog.defaultId);
     this.changeTheme(id, true);
+  }
+
+  normalizeThemeId(id) {
+    const catalog = window.AWARD_THEME_CATALOG;
+    return catalog.themes.some(theme => theme.id === id) ? id : catalog.defaultId;
+  }
+
+  getLegacyThemeId() {
+    let saved;
+    try { saved = localStorage.getItem('award_ceremony_theme'); } catch { /* Legacy preference is optional. */ }
+    return this.normalizeThemeId(saved);
   }
 
   async changeTheme(id, initial = false) {
     const revision = ++this.themeRevision;
     this.setPlaybackButtonsDisabled(true);
-    this.themeStatus.textContent = this.t('themeLoading');
     try {
       const applied = await this.themeManager.select(id);
-      if (!applied || revision !== this.themeRevision) return;
-      this.themeSelect.value = this.themeManager.current.id;
-      this.themeStatus.textContent = this.t('themeReady');
-      try { localStorage.setItem('award_ceremony_theme', this.themeManager.current.id); } catch { /* Keep the selected theme for this session. */ }
+      if (!applied || revision !== this.themeRevision) return false;
+      return true;
     } catch (error) {
-      if (revision !== this.themeRevision) return;
+      if (revision !== this.themeRevision) return false;
       if (initial && id !== window.AWARD_THEME_CATALOG.defaultId) {
-        await this.changeTheme(window.AWARD_THEME_CATALOG.defaultId);
-        return;
+        return this.changeTheme(window.AWARD_THEME_CATALOG.defaultId);
       }
-      this.themeSelect.value = this.themeManager.current?.id || id;
-      this.themeStatus.textContent = this.themeManager.current ? this.t('themeFailedKept') : this.t('themeFailedChoose');
       console.error(error);
+      return false;
     } finally {
       if (revision === this.themeRevision) this.setPlaybackButtonsDisabled(!this.themeManager.current);
     }
@@ -303,16 +300,21 @@ class AwardCeremonyApp {
           && typeof award.team === 'string'
         ));
         if (isValid) {
-          const isLegacyDefault = JSON.stringify(parsed) === JSON.stringify(LEGACY_DEFAULT_AWARDS);
-          savedAwards = isLegacyDefault ? DEFAULT_AWARDS.map(award => ({ ...award })) : parsed;
-          migratedLegacyDefaults = isLegacyDefault;
+          const comparable = parsed.map(({ id, category, team }) => ({ id, category, team }));
+          const isLegacyDefault = JSON.stringify(comparable) === JSON.stringify(LEGACY_DEFAULT_AWARDS);
+          const legacyThemeId = this.getLegacyThemeId();
+          savedAwards = (isLegacyDefault ? DEFAULT_AWARDS : parsed).map(award => ({
+            ...award,
+            themeId: this.normalizeThemeId(award.themeId || legacyThemeId),
+          }));
+          migratedLegacyDefaults = isLegacyDefault || parsed.some(award => !award.themeId || award.themeId !== this.normalizeThemeId(award.themeId));
         }
       }
     } catch (error) {
       console.warn('Unable to restore the award list from local storage:', error);
     }
 
-    this.awards = savedAwards ?? DEFAULT_AWARDS.map(award => ({ ...award }));
+    this.awards = savedAwards ?? DEFAULT_AWARDS.map(award => ({ ...award, themeId: this.getLegacyThemeId() }));
     if (migratedLegacyDefaults) this.saveState();
     this.renderList();
   }
@@ -329,7 +331,8 @@ class AwardCeremonyApp {
     const item = {
       id: Date.now().toString() + Math.random().toString(36).substring(2, 5),
       category: category,
-      team: team
+      team: team,
+      themeId: window.AWARD_THEME_CATALOG.defaultId,
     };
     this.awards.push(item);
     this.saveState();
@@ -351,7 +354,7 @@ class AwardCeremonyApp {
   }
 
   loadSampleData() {
-    this.awards = JSON.parse(JSON.stringify(DEFAULT_AWARDS));
+    this.awards = DEFAULT_AWARDS.map(award => ({ ...award, themeId: window.AWARD_THEME_CATALOG.defaultId }));
     this.saveState();
     this.renderList();
   }
@@ -378,10 +381,10 @@ class AwardCeremonyApp {
     }
 
     this.awards.forEach((award, index) => {
+      award.themeId = this.normalizeThemeId(award.themeId);
       const row = document.createElement('div');
       row.className = 'award-item';
       row.innerHTML = `
-        <div class="item-index">#${index + 1}</div>
         <div class="input-group">
           <label>${this.t('categoryLabel')}</label>
           <input type="text" placeholder="${this.escapeHtml(this.t('categoryPlaceholder'))}" value="${this.escapeHtml(award.category)}">
@@ -389,6 +392,10 @@ class AwardCeremonyApp {
         <div class="input-group team-input-group">
           <label>${this.t('teamLabel')}</label>
           <input type="text" placeholder="${this.escapeHtml(this.t('teamPlaceholder'))}" value="${this.escapeHtml(award.team)}">
+        </div>
+        <div class="input-group theme-input-group">
+          <label>${this.t('themeLabel')}</label>
+          <select class="award-theme-select" aria-label="${this.t('themeAria', { number: index + 1 })}"></select>
         </div>
         <div class="item-actions">
           <button class="btn btn-primary btn-compact play-award-btn" type="button" aria-label="${this.t('playOneAria', { number: index + 1 })}"><img class="guide-icon" src="assets/icons/presentation.png" alt="" aria-hidden="true">${this.t('playOne')}</button>
@@ -403,6 +410,12 @@ class AwardCeremonyApp {
       const playBtn = row.querySelector('.play-award-btn');
       const testBtn = row.querySelector('.test-award-btn');
       const delBtn = row.querySelector('.del-btn');
+      const themeSelect = row.querySelector('.award-theme-select');
+
+      for (const theme of window.AWARD_THEME_CATALOG.themes) {
+        themeSelect.add(new Option(this.themeName(theme), theme.id));
+      }
+      themeSelect.value = award.themeId;
 
       playBtn.disabled = !this.themeManager?.current;
       testBtn.disabled = !this.themeManager?.current;
@@ -413,6 +426,10 @@ class AwardCeremonyApp {
 
       teamInput.addEventListener('input', (e) => {
         this.updateItem(award.id, 'team', e.target.value);
+      });
+
+      themeSelect.addEventListener('change', (e) => {
+        this.updateItem(award.id, 'themeId', this.normalizeThemeId(e.target.value));
       });
 
       playBtn.addEventListener('click', () => {
@@ -439,7 +456,6 @@ class AwardCeremonyApp {
   }
 
   startPresentation() {
-    if (!this.themeManager.current) return;
     const validAwards = this.getValidAwards();
     if (validAwards.length === 0) {
       alert(this.t('missingAwards'));
@@ -458,7 +474,6 @@ class AwardCeremonyApp {
   }
 
   startAward(id, requestBrowserFullscreen, trigger) {
-    if (!this.themeManager.current) return;
     const award = this.awards.find(item => item.id === id);
     if (!award || (award.category.trim() === '' && award.team.trim() === '')) {
       alert(this.t('missingAward'));
@@ -475,10 +490,10 @@ class AwardCeremonyApp {
     this.presentationTrigger = trigger;
     this.setupContainer.inert = true;
     this.stageOverlay.classList.remove('hidden');
+    this.stageOverlay.classList.add('is-loading');
+    this.stageOverlay.setAttribute('aria-busy', 'true');
     this.stageOverlay.focus({ preventScroll: true });
-    this.themeManager.setVisible(true);
-
-    this.renderCurrentSlide();
+    this.themeManager.setVisible(false);
 
     // 正式播放可進入指定螢幕；測試只使用目前網頁內的覆蓋舞台。
     const elem = document.documentElement;
@@ -490,17 +505,36 @@ class AwardCeremonyApp {
       });
     }
 
+    this.renderCurrentSlide();
+
   }
 
-  renderCurrentSlide() {
+  async renderCurrentSlide() {
     const current = this.presentationAwards[this.currentIndex];
-
-    if (!this.stageOverlay.classList.contains('hidden')) this.music.start();
+    const revision = ++this.slideRevision;
+    this.slideLoading = true;
+    this.stageOverlay.classList.add('is-loading');
+    this.stageOverlay.setAttribute('aria-busy', 'true');
+    this.themeManager.setVisible(false);
+    const ready = await this.changeTheme(this.normalizeThemeId(current.themeId));
+    if (revision !== this.slideRevision || this.stageOverlay.classList.contains('hidden')) return;
+    if (!ready) {
+      this.slideLoading = false;
+      this.exitPresentation();
+      alert(this.t('themeFailedChoose'));
+      return;
+    }
     this.themeManager.update(current);
+    this.themeManager.setVisible(true);
+    this.stageOverlay.classList.remove('is-loading');
+    this.stageOverlay.setAttribute('aria-busy', 'false');
+    this.slideLoading = false;
+    this.music.start();
   }
 
   advancePresentation() {
     if (this.stageOverlay.classList.contains('hidden')) return;
+    if (this.slideLoading) return;
     if (!this.themeManager.revealed) {
       this.themeManager.reveal();
     } else {
@@ -509,6 +543,7 @@ class AwardCeremonyApp {
   }
 
   nextSlide() {
+    if (this.slideLoading) return;
     if (this.currentIndex < this.presentationAwards.length - 1) {
       this.currentIndex++;
       this.renderCurrentSlide();
@@ -522,6 +557,7 @@ class AwardCeremonyApp {
   }
 
   prevSlide() {
+    if (this.slideLoading) return;
     // 單獨播放沒有上一組，避免重新觸發同一個獎項。
     if (this.closePresentationAtEnd && this.presentationAwards.length === 1) return;
 
@@ -538,7 +574,11 @@ class AwardCeremonyApp {
     const returnFocus = this.presentationTrigger;
     this.presentationTrigger = null;
     this.music.stop();
+    this.slideRevision++;
+    this.slideLoading = false;
     this.themeManager.setVisible(false);
+    this.stageOverlay.classList.remove('is-loading');
+    this.stageOverlay.setAttribute('aria-busy', 'false');
     this.stageOverlay.classList.add('hidden');
     this.setupContainer.inert = false;
     if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });

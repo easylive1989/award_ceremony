@@ -44,10 +44,11 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
     });
     await page.reload();
     await page.waitForFunction(() => window.app?.themeManager.current);
-    await page.selectOption('#theme-select', themeId);
+    for (const select of await page.locator('.award-theme-select').all()) await select.selectOption(themeId);
+    await page.evaluate(id => app.changeTheme(id), themeId);
     await page.waitForFunction(id => app.themeManager.current.id === id && !document.querySelector('.play-award-btn').disabled, themeId);
     if (themeId === 'claude-paper') {
-      assert.equal(await page.locator('#theme-select option[value="claude-paper"]').textContent(), 'Claude');
+      assert.equal(await page.locator('.award-theme-select').first().locator('option[value="claude-paper"]').textContent(), 'Claude');
       assert.equal(await page.locator('[data-theme="claude-paper"]').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(250, 249, 245)');
       assert.equal(await page.locator('.paper-header').evaluate(el => getComputedStyle(el).textAlign), 'center');
       assert.equal(await page.locator('.paper-category-label').count(), 0);

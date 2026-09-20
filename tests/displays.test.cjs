@@ -26,7 +26,10 @@ test('detects displays and requests fullscreen on the selected screen', { timeou
     await page.goto(pathToFileURL(path.resolve(__dirname, '../index.html')).href);
     await page.waitForFunction(() => window.app?.themeManager.current);
     assert.equal(await page.locator('.form-card #start-btn').count(), 0);
-    assert.equal(await page.locator('.appearance-settings > .theme-settings + .music-settings').count(), 1);
+    assert.equal(await page.locator('.appearance-settings > .music-settings').count(), 1);
+    assert.equal(await page.locator('#theme-select').count(), 0);
+    assert.equal(await page.locator('.award-theme-select').count(), 3);
+    assert.equal(await page.locator('.item-index').count(), 0);
     assert.equal(await page.locator('.language-settings').count(), 0);
     assert.equal(await page.locator('.music-settings').evaluate(el => getComputedStyle(el).borderTopWidth), '0px');
     await page.locator('#toggle-award-list-btn').click();
@@ -50,6 +53,7 @@ test('detects displays and requests fullscreen on the selected screen', { timeou
     assert.match(await page.locator('#display-select option').nth(1).textContent(), /Projector · 1920×1080/);
     await page.selectOption('#display-select', '1');
     await page.locator('.play-award-btn').nth(1).click();
+    await page.waitForFunction(() => document.getElementById('stage').getAttribute('aria-busy') === 'false');
     assert.equal(await page.evaluate(() => window.__fullscreenTarget === window.__testScreens[1]), true);
     assert.equal(await page.evaluate(() => app.presentationAwards.length), 1);
     assert.deepEqual(await page.evaluate(() => ({
@@ -63,6 +67,7 @@ test('detects displays and requests fullscreen on the selected screen', { timeou
     assert.equal(await page.evaluate(() => window.__fullscreenRequestCount), 1);
 
     await page.locator('.test-award-btn').nth(1).click();
+    await page.waitForFunction(() => document.getElementById('stage').getAttribute('aria-busy') === 'false');
     assert.equal(await page.locator('#stage').isVisible(), true);
     assert.equal(await page.evaluate(() => window.__fullscreenRequestCount), 1);
     assert.equal(await page.evaluate(() => document.fullscreenElement), null);
