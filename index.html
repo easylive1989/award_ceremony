@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>頒獎典禮播放系統</title>
-  <link rel="stylesheet" href="style.css?v=20260920-per-award-theme-1">
+  <link rel="stylesheet" href="style.css?v=20260920-claude-final-4">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;600;800&family=Noto+Serif+TC:wght@500;600&family=Outfit:wght@600;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -18,7 +18,21 @@
       <p class="subtitle" data-i18n="subtitle">設定得獎組別與獲獎隊伍，點擊一次揭曉，再點擊切換下一組。</p>
     </header>
 
-    <section class="appearance-settings" aria-label="配樂設定" data-i18n-aria-label="appearanceRegion">
+    <section class="display-settings" aria-label="播放螢幕設定" data-i18n-aria-label="displayRegion">
+      <div class="display-main">
+        <div class="display-row">
+          <label for="display-select" data-i18n="displayLabel">播放螢幕</label>
+          <div class="display-controls" role="group" aria-label="播放螢幕控制" data-i18n-aria-label="displayControls">
+            <select id="display-select" aria-describedby="display-status" disabled>
+              <option value="current" data-i18n="currentDisplay">目前所在螢幕</option>
+            </select>
+            <button id="detect-displays-btn" class="btn btn-outline" type="button" data-i18n="detectDisplays">偵測螢幕</button>
+          </div>
+          <span id="display-status" class="display-status" role="status" aria-live="polite"></span>
+        </div>
+        <span class="display-help" data-i18n="displayHelp">初次偵測時，瀏覽器會詢問多螢幕管理權限。</span>
+      </div>
+
       <div class="music-settings">
         <label for="music-volume" data-i18n="musicLabel">配樂音量</label>
         <div class="music-controls" role="group" aria-label="配樂控制" data-i18n-aria-label="musicControls">
@@ -27,18 +41,6 @@
         </div>
         <div id="music-status" class="music-status" role="status" aria-live="polite"></div>
       </div>
-    </section>
-
-    <section class="display-settings" aria-label="播放螢幕設定" data-i18n-aria-label="displayRegion">
-      <label for="display-select" data-i18n="displayLabel">播放螢幕</label>
-      <div class="display-controls" role="group" aria-label="播放螢幕控制" data-i18n-aria-label="displayControls">
-        <select id="display-select" aria-describedby="display-status" disabled>
-          <option value="current" data-i18n="currentDisplay">目前所在螢幕</option>
-        </select>
-        <button id="detect-displays-btn" class="btn btn-outline" type="button" data-i18n="detectDisplays">偵測螢幕</button>
-      </div>
-      <span id="display-status" class="display-status" role="status" aria-live="polite"></span>
-      <span class="display-help" data-i18n="displayHelp">初次偵測時，瀏覽器會詢問多螢幕管理權限。</span>
     </section>
     <section class="card form-card">
       <div class="card-header">
@@ -77,9 +79,9 @@
     <div id="theme-root" class="stage-viewport"></div>
   </div>
 
-  <script src="themes/catalog.js?v=20260920-per-award-theme-1"></script>
-  <script src="theme-manager.js?v=20260920-per-award-theme-1"></script>
-  <script src="music-controller.js?v=20260920-per-award-theme-1"></script>
-  <script src="app.js?v=20260920-per-award-theme-1"></script>
+  <script src="themes/catalog.js?v=20260920-claude-final-4"></script>
+  <script src="theme-manager.js?v=20260920-claude-final-4"></script>
+  <script src="music-controller.js?v=20260920-claude-final-4"></script>
+  <script src="app.js?v=20260920-claude-final-4"></script>
 </body>
 </html>

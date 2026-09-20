@@ -39,6 +39,7 @@ test('setup stays Chinese while stage presents Chinese and English together', { 
     assert.match(await page.locator('.play-award-btn').first().textContent(), /單獨播放/);
     assert.equal(await page.locator('#theme-select').count(), 0);
     assert.equal(await page.locator('.award-theme-select').first().locator('option[value="black-gold"]').textContent(), '黑金榮耀');
+    assert.equal(await page.locator('.award-theme-select').first().locator('option[value="claude-final"]').textContent(), 'Claude Final');
     assert.equal(await page.locator('.theme-input-group').first().locator('label').textContent(), '舞台外觀');
     assert.equal(await page.evaluate(() => localStorage.getItem('award_ceremony_locale')), null);
 

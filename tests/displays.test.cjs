@@ -26,7 +26,8 @@ test('detects displays and requests fullscreen on the selected screen', { timeou
     await page.goto(pathToFileURL(path.resolve(__dirname, '../index.html')).href);
     await page.waitForFunction(() => window.app?.themeManager.current);
     assert.equal(await page.locator('.form-card #start-btn').count(), 0);
-    assert.equal(await page.locator('.appearance-settings > .music-settings').count(), 1);
+    assert.equal(await page.locator('.appearance-settings').count(), 0);
+    assert.equal(await page.locator('.display-settings > .music-settings').count(), 1);
     assert.equal(await page.locator('#theme-select').count(), 0);
     assert.equal(await page.locator('.award-theme-select').count(), 3);
     assert.equal(await page.locator('.item-index').count(), 0);

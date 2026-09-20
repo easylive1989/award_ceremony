@@ -93,7 +93,7 @@ test('each award keeps its own stage appearance and themes clean up when replace
     assert.equal(await page.evaluate(() => app.themeManager.current.id), 'neon');
     assert.equal(await page.locator('[data-award-theme-style]').count(), 1);
     assert.equal(await page.locator('.theme-surface').count(), 1);
-    assert.match(await page.evaluate(() => app.themeManager.current.stylesheet.href), /[?&]v=20260920-per-award-theme-1(?:&|$)/);
+    assert.match(await page.evaluate(() => app.themeManager.current.stylesheet.href), /[?&]v=20260920-claude-final-4(?:&|$)/);
 
     // Broken assets leave the current working appearance available.
     const applied = await page.evaluate(async () => {

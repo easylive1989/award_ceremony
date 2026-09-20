@@ -17,7 +17,7 @@ const UI_COPY = {
   badge: '頒獎典禮播放系統',
   heading: '頒獎典禮名單設定',
   subtitle: '設定得獎組別與獲獎隊伍，點擊一次揭曉，再點擊切換下一組。',
-  appearanceRegion: '配樂設定', themeLabel: '舞台外觀', musicLabel: '配樂音量', musicControls: '配樂控制',
+  themeLabel: '舞台外觀', musicLabel: '配樂音量', musicControls: '配樂控制',
   displayRegion: '播放螢幕設定', displayLabel: '播放螢幕', displayControls: '播放螢幕控制', currentDisplay: '目前所在螢幕', detectDisplays: '偵測螢幕',
   displayHelp: '初次偵測時，瀏覽器會詢問多螢幕管理權限。',
   listTitle: '名單清單', addAward: '新增得獎項目', loadSample: '載入範例資料', clearAll: '清空',

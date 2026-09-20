@@ -1,6 +1,6 @@
 // Add a local theme here. No changes to app.js or index.html are needed.
 window.AWARD_THEME_CATALOG = {
-  assetVersion: '20260920-per-award-theme-1',
+  assetVersion: '20260920-claude-final-4',
   defaultId: 'black-gold',
   themes: [
     {
@@ -23,6 +23,13 @@ window.AWARD_THEME_CATALOG = {
       nameEn: 'Claude',
       stylesheet: 'themes/claude-paper/theme.css',
       script: 'themes/claude-paper/theme.js',
+    },
+    {
+      id: 'claude-final',
+      name: 'Claude Final',
+      nameEn: 'Claude Final',
+      stylesheet: 'themes/claude-final/theme.css',
+      script: 'themes/claude-final/theme.js',
     },
     {
       id: 'neon',
