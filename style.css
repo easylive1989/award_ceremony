@@ -108,8 +108,17 @@ body:has(#stage:not(.hidden))::before { display: none; }
   font-weight: 600;
 }
 
-.card-title-row { display: flex; align-items: center; gap: 10px; }
-.btn-compact { padding: 5px 10px; font-size: .78rem; }
+.card-title-row { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
+.team-names-toggle { position: relative; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: var(--text-muted); font-size: .78rem; font-weight: 600; cursor: pointer; }
+.team-names-toggle input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.switch-track { width: 40px; height: 24px; flex: 0 0 auto; padding: 3px; border-radius: 999px; background: var(--text-muted); transition: background-color .2s ease; }
+.switch-track::before { content: ''; display: block; width: 18px; height: 18px; border-radius: 50%; background: var(--bg-surface); box-shadow: 0 1px 3px rgba(20, 20, 19, .2); transition: transform .2s ease; }
+.team-names-toggle input:checked + .switch-track { background: var(--accent-strong); }
+.team-names-toggle input:checked + .switch-track::before { transform: translateX(16px); }
+.team-names-toggle input:focus-visible + .switch-track { outline: 3px solid var(--accent); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .switch-track, .switch-track::before { transition: none; }
+}
 [hidden] { display: none !important; }
 
 .actions {
@@ -381,6 +390,7 @@ body:has(#stage:not(.hidden))::before { display: none; }
 #display-select:disabled { color: var(--text-muted); opacity: .75; }
 #display-select:focus-visible, #detect-displays-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .display-status { color: var(--accent-strong); font-size: .8rem; font-weight: 700; }
+.display-status:empty { display: none; }
 .display-help { display: block; margin-top: 10px; color: var(--text-muted); font-size: .8rem; }
 .stage-overlay:focus { outline: none; }
 

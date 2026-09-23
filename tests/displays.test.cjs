@@ -33,7 +33,10 @@ test('detects displays and requests fullscreen on the selected screen', { timeou
     assert.equal(await page.locator('.item-index').count(), 0);
     assert.equal(await page.locator('.language-settings').count(), 0);
     assert.equal(await page.locator('.music-settings').evaluate(el => getComputedStyle(el).borderTopWidth), '0px');
-    await page.locator('#toggle-award-list-btn').click();
+    const hideTeamsSwitch = page.getByRole('switch', { name: '隱藏隊伍名稱' });
+    assert.equal(await page.getByRole('heading', { name: '得獎名單', exact: true }).count(), 1);
+    assert.equal(await hideTeamsSwitch.isChecked(), false);
+    await page.locator('label[for="hide-team-names-switch"]').click();
     assert.equal(await page.locator('#award-list-content').isVisible(), true);
     assert.equal(await page.locator('.award-item').first().isVisible(), true);
     assert.equal(await page.locator('.award-item').first().locator('.input-group').first().isVisible(), true);
@@ -43,11 +46,12 @@ test('detects displays and requests fullscreen on the selected screen', { timeou
     assert(await page.locator('.item-actions').first().evaluate(actions => (
       actions.querySelector('.test-award-btn').nextElementSibling.matches('.del-btn')
     )));
-    assert.equal(await page.locator('#toggle-award-list-btn').getAttribute('aria-expanded'), 'false');
-    assert.equal(await page.locator('#toggle-award-list-btn').textContent(), '顯示隊伍名稱');
-    await page.locator('#toggle-award-list-btn').click();
+    assert.equal(await hideTeamsSwitch.isChecked(), true);
+    await hideTeamsSwitch.focus();
+    await page.keyboard.press('Space');
+    assert.equal(await hideTeamsSwitch.isChecked(), false);
     assert.equal(await page.locator('.team-input-group').first().isVisible(), true);
-    assert.match(await page.locator('#display-status').textContent(), /偵測螢幕/);
+    assert.equal(await page.locator('#display-status').textContent(), '');
     await page.locator('#detect-displays-btn').click();
     assert.equal(await page.locator('#display-select option').count(), 2);
     assert.match(await page.locator('#display-select option').nth(0).textContent(), /Built-in Display · 1600×900（目前使用、主螢幕）/);

@@ -45,8 +45,12 @@
     <section class="card form-card">
       <div class="card-header">
         <div class="card-title-row">
-          <h2 data-i18n="listTitle">名單清單</h2>
-          <button id="toggle-award-list-btn" class="btn btn-ghost btn-compact" type="button" aria-expanded="true" aria-controls="award-list">隱藏隊伍名稱</button>
+          <h2 data-i18n="listTitle">得獎名單</h2>
+          <label class="team-names-toggle" for="hide-team-names-switch">
+            <span data-i18n="hideTeams">隱藏隊伍名稱</span>
+            <input id="hide-team-names-switch" type="checkbox" role="switch" aria-controls="award-list">
+            <span class="switch-track" aria-hidden="true"></span>
+          </label>
         </div>
         <div class="actions">
           <button id="add-item-btn" class="btn btn-secondary">

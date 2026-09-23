@@ -20,10 +20,10 @@ const UI_COPY = {
   themeLabel: '舞台外觀', musicLabel: '配樂音量', musicControls: '配樂控制',
   displayRegion: '播放螢幕設定', displayLabel: '播放螢幕', displayControls: '播放螢幕控制', currentDisplay: '目前所在螢幕', detectDisplays: '偵測螢幕',
   displayHelp: '初次偵測時，瀏覽器會詢問多螢幕管理權限。',
-  listTitle: '名單清單', addAward: '新增得獎項目', loadSample: '載入範例資料', clearAll: '清空',
-  awardCountPrefix: '目前共有', awardCountSuffix: '個得獎項目', stageLabel: '得獎展示舞台', showTeams: '顯示隊伍名稱', hideTeams: '隱藏隊伍名稱',
+  listTitle: '得獎名單', addAward: '新增得獎項目', loadSample: '載入範例資料', clearAll: '清空',
+  awardCountPrefix: '目前共有', awardCountSuffix: '個得獎項目', stageLabel: '得獎展示舞台', hideTeams: '隱藏隊伍名稱',
   themeFailedChoose: '舞台外觀載入失敗，請重新選擇。',
-  displayPrompt: '按「偵測螢幕」選擇外接螢幕或投影機。', displayUnsupportedTitle: '此瀏覽器不支援多螢幕選擇', displayUnsupported: '此瀏覽器不支援指定螢幕，將在目前螢幕播放。',
+  displayUnsupportedTitle: '此瀏覽器不支援多螢幕選擇', displayUnsupported: '此瀏覽器不支援指定螢幕，將在目前螢幕播放。',
   displayDetecting: '正在偵測螢幕…', displayDenied: '未取得多螢幕權限，將在目前螢幕播放。', displayFailed: '無法偵測螢幕，將在目前螢幕播放。',
   displayDetected: '已偵測到 {count} 個螢幕。', displaySingle: '目前只偵測到一個螢幕。', currentMarker: '目前使用', primaryMarker: '主螢幕', screenName: '螢幕 {number}',
   emptyList: '尚無得獎名單，請新增項目或載入範例資料。', categoryLabel: '得獎組別 / 獎項', categoryPlaceholder: '例如：Delight',
@@ -69,7 +69,7 @@ class AwardCeremonyApp {
     this.addItemBtn = document.getElementById('add-item-btn');
     this.loadSampleBtn = document.getElementById('load-sample-btn');
     this.clearAllBtn = document.getElementById('clear-all-btn');
-    this.toggleAwardListBtn = document.getElementById('toggle-award-list-btn');
+    this.hideTeamNamesSwitch = document.getElementById('hide-team-names-switch');
     this.formCard = document.querySelector('.form-card');
     this.displaySelect = document.getElementById('display-select');
     this.detectDisplaysBtn = document.getElementById('detect-displays-btn');
@@ -85,7 +85,7 @@ class AwardCeremonyApp {
     this.addItemBtn.addEventListener('click', () => this.addAwardItem());
     this.loadSampleBtn.addEventListener('click', () => this.loadSampleData());
     this.clearAllBtn.addEventListener('click', () => this.clearAll());
-    this.toggleAwardListBtn.addEventListener('click', () => this.toggleTeamNames());
+    this.hideTeamNamesSwitch.addEventListener('change', () => this.setTeamNamesHidden(this.hideTeamNamesSwitch.checked));
     this.detectDisplaysBtn.addEventListener('click', () => this.detectDisplays());
     this.displaySelect.addEventListener('change', () => this.selectDisplay());
 
@@ -142,22 +142,17 @@ class AwardCeremonyApp {
     return theme.name;
   }
 
-  toggleTeamNames() {
-    this.setTeamNamesHidden(!this.teamNamesHidden);
-  }
-
   setTeamNamesHidden(hidden) {
     this.teamNamesHidden = hidden;
     this.formCard.classList.toggle('team-names-hidden', hidden);
-    this.toggleAwardListBtn.setAttribute('aria-expanded', String(!hidden));
-    this.toggleAwardListBtn.textContent = hidden ? this.t('showTeams') : this.t('hideTeams');
+    this.hideTeamNamesSwitch.checked = hidden;
   }
 
   initializeDisplays() {
     if ('getScreenDetails' in window) {
       this.detectDisplaysBtn.disabled = false;
       this.detectDisplaysBtn.title = '';
-      this.displayStatus.textContent = this.t('displayPrompt');
+      this.displayStatus.textContent = '';
       return;
     }
 
