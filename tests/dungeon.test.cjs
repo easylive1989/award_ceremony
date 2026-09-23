@@ -11,6 +11,15 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.route('https://fonts.googleapis.com/**', route => route.abort());
+    await page.addInitScript(() => {
+      const request = requestAnimationFrame.bind(window), cancel = cancelAnimationFrame.bind(window);
+      window.pendingFrames = new Set();
+      window.requestAnimationFrame = callback => {
+        const id = request(time => { pendingFrames.delete(id); callback(time); });
+        pendingFrames.add(id); return id;
+      };
+      window.cancelAnimationFrame = id => { pendingFrames.delete(id); cancel(id); };
+    });
     await page.goto(pathToFileURL(path.resolve(__dirname, '../index.html')).href);
     await page.waitForFunction(() => window.app?.themeManager.current);
     assert.equal(await page.evaluate(() => app.themeManager.catalog.defaultId), 'black-gold');
@@ -20,7 +29,10 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
     assert.equal(await page.locator('.award-theme-select').first().inputValue(), 'dungeon');
     await page.locator('.test-award-btn').first().click();
     await page.waitForFunction(() => app.themeManager.current.id === 'dungeon' && document.querySelector('#stage').getAttribute('aria-busy') === 'false');
-    await page.locator('.dt-chest img').evaluateAll(images => Promise.all(images.map(image => image.decode())));
+    await page.waitForFunction(() => document.querySelector('.dt-model')?.dataset.frameTime === '0');
+    assert.equal(await page.locator('.dt-no-webgl').count(), 0);
+    assert.equal(await page.locator('.dt-model-fallback').isVisible(), false);
+    assert.equal(await page.evaluate(() => pendingFrames.size), 0);
     assert.equal(await page.locator('.dt-scroll-flight').isVisible(), false);
     await page.waitForTimeout(4200);
     assert.equal(await page.locator('.dt-scroll-flight').isVisible(), false);
@@ -28,48 +40,47 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
     await page.keyboard.press('Space');
     await page.waitForTimeout(650);
     assert.equal(await page.locator('.dt-scroll-flight').isVisible(), false);
-    assert.equal(await page.locator('.dt-lid-hinge').evaluate(el => new DOMMatrix(getComputedStyle(el).transform).isIdentity), true);
-    const groundBox = await page.locator('.dt-ground').boundingBox();
-    const seek = time => page.locator('[data-theme="dungeon"]').evaluate((host, time) => {
-      host.getAnimations({ subtree: true }).forEach(animation => { animation.pause(); animation.currentTime = time; });
-    }, time);
-    // Ground decorations remain fixed even at the strongest point of the shake.
+    assert.equal(await page.locator('.dt-model').getAttribute('data-lid-angle'), '0');
+    const groundPosition = await page.locator('.dt-model').getAttribute('data-ground-position');
+    const seek = async time => {
+      await page.locator('[data-theme="dungeon"]').evaluate((host, time) => {
+        host.getAnimations({ subtree: true }).forEach(animation => { animation.pause(); animation.currentTime = time; });
+      }, time);
+      await page.waitForFunction(time => Math.abs(Number(document.querySelector('.dt-model').dataset.frameTime) - time / 1000) < .001, time);
+    };
+    // Ground meshes must not inherit the chest's shake or settle transform.
     await seek(870);
-    assert.deepEqual(await page.locator('.dt-ground').boundingBox(), groundBox);
-    assert.equal(await page.locator('.dt-ground').evaluate(el => getComputedStyle(el).transform), 'none');
-    assert.equal(await page.locator('.dt-ground').evaluate(el => getComputedStyle(el).opacity), '1');
-    assert.equal(await page.locator('.dt-ground .dt-chest-shake').count(), 0);
+    assert.equal(await page.locator('.dt-model').getAttribute('data-ground-position'), groundPosition);
     const hingeTransforms = [];
     for (const time of [1650, 1950, 2400]) {
       await seek(time);
-      hingeTransforms.push(await page.locator('.dt-lid-hinge').evaluate(el => getComputedStyle(el).transform));
-      assert.equal(await page.locator('.dt-lid-hinge').evaluate(el => getComputedStyle(el).opacity), '1');
+      hingeTransforms.push(Number(await page.locator('.dt-model').getAttribute('data-lid-angle')));
       assert(await page.locator('.dt-chest-light').evaluate(el => Number(getComputedStyle(el).opacity) > .1));
       assert(await page.locator('.dt-opening-glow').evaluate(el => Number(getComputedStyle(el).opacity) > .1));
     }
     assert.equal(new Set(hingeTransforms).size, 3, 'the hinge rotates through intermediate angles');
-    assert.equal(await page.locator('.dt-lid-hinge img').evaluateAll(images => images.every(el => getComputedStyle(el).backfaceVisibility === 'hidden' && getComputedStyle(el).opacity === '1')), true);
+    assert(hingeTransforms[0] > hingeTransforms[1] && hingeTransforms[1] > hingeTransforms[2], 'one mesh opens continuously around its hinge');
     await seek(3200);
     const halfExtracted = await page.locator('.dt-scroll-flight').boundingBox();
     assert(await page.locator('.dt-scroll-flight').evaluate(el => {
       const host = el.closest('.theme-surface');
-      const mouth = host.getBoundingClientRect().top + host.clientHeight * .6657;
+      const mouth = host.getBoundingClientRect().top + host.clientHeight * Number(host.querySelector('.dt-model').dataset.mouthY) / 100;
       const card = el.getBoundingClientRect();
       const window = el.parentElement;
       return card.top < mouth && card.bottom > mouth && card.width < host.clientWidth * .21
         && getComputedStyle(window).clipPath !== 'none'
-        && Number(getComputedStyle(window).zIndex) < Number(getComputedStyle(host.querySelector('.dt-chest-front')).zIndex);
+        && Number(getComputedStyle(window).zIndex) > Number(getComputedStyle(host.querySelector('.dt-chest')).zIndex);
     }));
     await seek(3800);
     const extracted = await page.locator('.dt-scroll-flight').boundingBox();
     assert(Math.abs(extracted.width - halfExtracted.width) < 1, 'keep the scroll small until it leaves the mouth');
     assert(await page.locator('.dt-scroll-flight').evaluate(el => {
       const host = el.closest('.theme-surface');
-      return el.getBoundingClientRect().bottom < host.getBoundingClientRect().top + host.clientHeight * .6657;
+      return el.getBoundingClientRect().bottom < host.getBoundingClientRect().top + host.clientHeight * Number(host.querySelector('.dt-model').dataset.mouthY) / 100;
     }));
     await seek(5100);
     assert((await page.locator('.dt-scroll-flight').boundingBox()).width > extracted.width * 2);
-    assert.deepEqual(await page.locator('.dt-ground').boundingBox(), groundBox);
+    assert.equal(await page.locator('.dt-model').getAttribute('data-ground-position'), groundPosition);
     assert.equal(await page.locator('.dt-scroll-flight').evaluate(el => getComputedStyle(el).opacity), '1');
     assert.equal(await page.locator('.dt-scroll-copy').evaluate(el => getComputedStyle(el).opacity), '1');
     assert(await page.locator('.dt-parchment').evaluate(el => {
@@ -78,10 +89,11 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
     }));
     assert(await page.locator('.dt-header').evaluate(el => el.getBoundingClientRect().bottom < document.querySelector('.dt-scroll').getBoundingClientRect().top));
     await seek(5700);
-    for (const selector of ['.dt-chest', '.dt-chest-front', '.dt-ground']) {
+    for (const selector of ['.dt-chest']) {
       assert.equal(await page.locator(selector).isVisible(), false);
     }
     assert.equal(await page.locator('.dt-scroll-flight').isVisible(), true);
+    assert.equal(await page.evaluate(() => pendingFrames.size), 0);
 
     // Preparing a new award mid-reveal cannot allow the previous animation to leak through.
     await page.evaluate(() => {
@@ -92,9 +104,8 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
     await page.evaluate(() => app.themeManager.update({ category: '最終獎項', team: '第三支隊伍' }));
     assert.equal(await page.locator('.dt-scroll-flight').isVisible(), false);
     assert.equal(await page.locator('[data-award-team]').textContent(), '第三支隊伍');
-    assert.equal(await page.locator('.dt-lid-hinge').evaluate(el => getComputedStyle(el).transform), 'none');
+    assert.equal(await page.locator('.dt-model').getAttribute('data-lid-angle'), '0');
     assert.equal(await page.locator('.dt-chest').isVisible(), true);
-    assert.equal(await page.locator('.dt-ground').isVisible(), true);
 
     await page.emulateMedia({ reducedMotion: 'reduce' });
     for (const viewport of [{ width: 390, height: 844 }, { width: 1920, height: 1080 }]) {
@@ -107,8 +118,6 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
       await page.evaluate(() => app.themeManager.reveal());
       assert.equal(await page.locator('.dt-scroll-copy').evaluate(el => getComputedStyle(el).opacity), '1');
       assert.equal(await page.locator('.dt-chest').isVisible(), false);
-      assert.equal(await page.locator('.dt-chest-front').isVisible(), false);
-      assert.equal(await page.locator('.dt-ground').isVisible(), false);
       assert.equal(await page.locator('[data-award-team] img').count(), 0);
       assert(await page.locator('[data-award-team]').evaluate(el => {
         const bounds = el.getBoundingClientRect();
@@ -130,10 +139,39 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
       await app.changeTheme('neon');
     });
     assert.equal(await page.locator('[data-theme="dungeon"]').count(), 0);
+    assert.equal(await page.evaluate(() => oldDungeon.querySelector('.dt-model').dataset.disposed), 'true');
+    assert.equal(await page.evaluate(() => pendingFrames.size), 0);
     assert.equal(await page.evaluate(() => oldDungeon.getAnimations({ subtree: true }).length), 0);
     assert.equal(await page.locator('[data-award-theme-style]').count(), 1);
     assert.deepEqual(errors, []);
   } finally {
     await browser.close();
   }
+});
+
+test('dungeon still reveals the award when WebGL is unavailable', { timeout: 30000 }, async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage({ reducedMotion: 'reduce' });
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.route('https://fonts.googleapis.com/**', route => route.abort());
+    await page.addInitScript(() => {
+      const getContext = HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext = function(type, ...args) {
+        return type.startsWith('webgl') ? null : getContext.call(this, type, ...args);
+      };
+    });
+    await page.goto(pathToFileURL(path.resolve(__dirname, '../index.html')).href);
+    await page.waitForFunction(() => window.app?.themeManager.current);
+    await page.locator('.award-theme-select').first().selectOption('dungeon');
+    await page.locator('.test-award-btn').first().click();
+    await page.waitForFunction(() => app.themeManager.current.id === 'dungeon');
+    assert.equal(await page.locator('.dt-model-fallback').isVisible(), true);
+    assert.equal(await page.locator('.dt-scroll-flight').isVisible(), false);
+    await page.keyboard.press('Space');
+    assert.equal(await page.locator('.dt-scroll-flight').isVisible(), true);
+    assert.equal(await page.locator('.dt-chest').isVisible(), false);
+    assert.deepEqual(errors, []);
+  } finally { await browser.close(); }
 });

@@ -1,6 +1,13 @@
 {
   "name": "award-ceremony",
   "private": true,
-  "scripts": { "test": "node --test tests/*.test.cjs" },
-  "devDependencies": { "playwright": "1.62.1" }
+  "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "build:dungeon": "node scripts/build-dungeon.cjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "playwright": "1.62.1",
+    "three": "0.186.0"
+  }
 }
