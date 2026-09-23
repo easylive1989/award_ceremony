@@ -109,13 +109,13 @@ window.AwardThemes.set('claude-final', (host) => {
   const burst = Array.from({ length: 90 }, () => ({ angle: random() * Math.PI * 2, speed: .07 + random() * .3, delay: random() * .25, size: .4 + random() * 1.7 }));
   // Stars and ribbons share the same Claude palette.
   const colors = ['217,119,87', '98,153,135', '120,140,93', '130,125,189', '203,202,219'];
-  const stars = Array.from({ length: 48 }, (_, index) => ({
-    origin: (random() - .5) * .08,
-    vx: (index % 2 ? 1 : -1) * (.14 + random() * .34),
+  const stars = Array.from({ length: 24 }, (_, index) => ({
+    origin: (index % 2 ? 1 : -1) * (.135 + random() * .015),
+    vx: (index % 2 ? 1 : -1) * (.1 + random() * .2),
     vy: .24 + random() * .2,
     delay: random() * .12,
     lifetime: 1.5 + random() * .6,
-    radius: 4 + random() * 5,
+    radius: 6 + random() * 5,
     rotation: random() * Math.PI * 2,
     spin: (random() - .5) * 7,
   }));
@@ -129,9 +129,9 @@ window.AwardThemes.set('claude-final', (host) => {
       if (age < 0 || age >= star.lifetime) return;
       const progress = age / star.lifetime;
       const travel = (1 - Math.exp(-1.6 * age)) / 1.6;
-      // Start inside the pocket; the front layer hides the stars until they emerge.
+      // Launch outward from both pocket corners, behind the envelope front.
       const x = width * (.5 + star.origin + star.vx * travel);
-      const y = height * .38 + width * (.065 - star.vy * travel + .035 * age * age);
+      const y = height * .38 + width * (.035 - star.vy * travel + .035 * age * age);
       const radius = star.radius * width / 1600 * (1 - .3 * progress);
       const fade = Math.min(1, age / .06) * Math.min(1, (1 - progress) / .4);
       starCtx.save();
