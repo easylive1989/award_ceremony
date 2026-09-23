@@ -32,6 +32,13 @@ window.AWARD_THEME_CATALOG = {
       script: 'themes/claude-final/theme.js',
     },
     {
+      id: 'dungeon',
+      name: '地下城寶藏',
+      nameEn: 'Dungeon Treasure',
+      stylesheet: 'themes/dungeon/theme.css',
+      script: 'themes/dungeon/theme.js',
+    },
+    {
       id: 'neon',
       name: '霓虹光幕',
       nameEn: 'Neon',

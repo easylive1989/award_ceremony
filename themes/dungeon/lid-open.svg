@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 430" fill="none">
+  <defs>
+    <linearGradient id="rim" x1="300" y1="55" x2="300" y2="180" gradientUnits="userSpaceOnUse"><stop stop-color="#f1d18b"/><stop offset=".4" stop-color="#ad7c31"/><stop offset="1" stop-color="#e9bb5d"/></linearGradient>
+    <linearGradient id="lining" x1="300" y1="60" x2="300" y2="190" gradientUnits="userSpaceOnUse"><stop stop-color="#18372e"/><stop offset="1" stop-color="#071810"/></linearGradient>
+  </defs>
+  <path d="M162 175L126 82Q123 47 162 43L438 24Q473 24 481 51L512 174Z" fill="#50341d" stroke="#352719" stroke-width="6"/>
+  <path d="M163 169L132 80Q130 52 164 49L438 31Q466 30 474 54L505 169Z" fill="url(#rim)" stroke="#e3be73" stroke-width="2"/>
+  <path d="M177 155L151 81Q146 67 170 64L433 45Q451 43 456 61L484 155Z" fill="url(#lining)" stroke="#6b4824" stroke-width="4"/>
+  <path d="M185 145L162 83Q158 78 174 76L430 56Q442 55 445 65L470 145Z" stroke="#be995154" stroke-width="2"/>
+  <path d="M278 97L309 71L344 93L323 124Z" stroke="#bc965a" stroke-width="2"/>
+  <path d="M296 97L309 85L325 96L316 109Z" fill="#a8874c"/>
+  <path d="M207 111Q231 87 251 108M375 98Q395 78 424 99" stroke="#a8874c" stroke-opacity=".7" stroke-width="2"/>
+  <path d="M182 167H211V181H186ZM451 166H480L485 181H455Z" fill="url(#rim)" stroke="#705325" stroke-width="2"/>
+</svg>
