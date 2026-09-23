@@ -20,13 +20,19 @@ window.AwardThemes.set('dungeon', (host) => {
     <div class="dt-rays" aria-hidden="true"></div>
     <div class="dt-chest" aria-hidden="true">
       <div class="dt-chest-shake">
-        <img class="dt-chest-open-lid" src="themes/dungeon/lid-open.svg" alt="" draggable="false">
         <img class="dt-chest-body" src="themes/dungeon/chest.svg" alt="" draggable="false">
+        <div class="dt-lid-hinge">
+          <img class="dt-lid-exterior" src="themes/dungeon/lid.svg" alt="" draggable="false">
+          <img class="dt-lid-interior" src="themes/dungeon/lid-open.svg" alt="" draggable="false">
+        </div>
+        <div class="dt-opening-glow"></div>
         <div class="dt-chest-light"></div>
-        <img class="dt-chest-lid" src="themes/dungeon/lid.svg" alt="" draggable="false">
       </div>
     </div>
+    <div class="dt-chest-front" aria-hidden="true"><div class="dt-chest-shake"><img src="themes/dungeon/chest-front.svg" alt="" draggable="false"></div></div>
+    <div class="dt-ground" aria-hidden="true"><img src="themes/dungeon/ground.svg" alt="" draggable="false"></div>
     <div class="dt-burst" aria-hidden="true">${sparks}</div>
+    <div class="dt-scroll-window">
     <div class="dt-scroll-flight">
       <section class="dt-scroll" aria-live="polite" aria-atomic="true">
         <div class="dt-parchment">
@@ -44,6 +50,7 @@ window.AwardThemes.set('dungeon', (host) => {
         <div class="dt-roller dt-roller-top" aria-hidden="true"></div>
         <div class="dt-roller dt-roller-bottom" aria-hidden="true"></div>
       </section>
+    </div>
     </div>
     <div class="dt-footer">每一份勇氣，皆是珍寶<span lang="en">EVERY ACT OF COURAGE IS A TREASURE</span></div>
   `;

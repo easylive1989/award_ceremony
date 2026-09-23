@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 430" fill="none">
+  <defs>
+    <g id="coin"><ellipse rx="14" ry="6" fill="#85551c" stroke="#d09b3b" stroke-width="1.5"/><ellipse cy="-3" rx="14" ry="6" fill="#d3a448" stroke="#f6d783" stroke-width="1.5"/><ellipse cy="-3" rx="9" ry="3.5" stroke="#866023"/><path d="M-3-3h6" stroke="#f8dc84"/></g>
+  </defs>
+  <ellipse cx="298" cy="380" rx="229" ry="28" fill="#060c09" fill-opacity=".48"/>
+  <g><use href="#coin" x="477" y="376"/><use href="#coin" x="492" y="369"/><use href="#coin" x="461" y="391"/><use href="#coin" x="519" y="379"/><use href="#coin" x="503" y="390"/><use href="#coin" x="482" y="385"/><use href="#coin" x="490" y="378"/><use href="#coin" x="86" y="378"/><use href="#coin" x="69" y="391"/><use href="#coin" x="96" y="390"/><use href="#coin" x="108" y="402"/></g>
+  <path d="M532 352L544 344L559 350L564 363L545 378L528 365Z" fill="#417869" stroke="#99c1a0" stroke-width="1.5"/><path d="M532 352L549 357L559 350M549 357L545 378M549 357L528 365" stroke="#b6d7b0" stroke-opacity=".65"/>
+</svg>

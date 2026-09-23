@@ -1,14 +1,51 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 430" fill="none">
   <defs>
-    <linearGradient id="rim" x1="300" y1="55" x2="300" y2="180" gradientUnits="userSpaceOnUse"><stop stop-color="#f1d18b"/><stop offset=".4" stop-color="#ad7c31"/><stop offset="1" stop-color="#e9bb5d"/></linearGradient>
-    <linearGradient id="lining" x1="300" y1="60" x2="300" y2="190" gradientUnits="userSpaceOnUse"><stop stop-color="#18372e"/><stop offset="1" stop-color="#071810"/></linearGradient>
+    <linearGradient id="inside" x1="320" y1="35" x2="320" y2="175" gradientUnits="userSpaceOnUse"><stop stop-color="#352116"/><stop offset=".4" stop-color="#754627"/><stop offset="1" stop-color="#39271a"/></linearGradient>
+    <linearGradient id="shell" x1="487" y1="90" x2="563" y2="90" gradientUnits="userSpaceOnUse"><stop stop-color="#ae763b"/><stop offset=".5" stop-color="#7d4927"/><stop offset="1" stop-color="#412a1c"/></linearGradient>
+    <linearGradient id="gold" x1="300" y1="18" x2="340" y2="181" gradientUnits="userSpaceOnUse"><stop stop-color="#f7dc96"/><stop offset=".2" stop-color="#c29345"/><stop offset=".45" stop-color="#f0cc7a"/><stop offset=".7" stop-color="#9c6b2a"/><stop offset="1" stop-color="#e6b65a"/></linearGradient>
+    <clipPath id="side"><path d="M482 31C580 22 593 132 512 173Z"/></clipPath>
+    <clipPath id="inner"><path d="M151 47H467L490 156H175Z"/></clipPath>
+    <g id="stud"><circle r="4" fill="#76501f"/><circle cy="-1" r="2.7" fill="#fce4a6"/></g>
   </defs>
-  <path d="M162 175L126 82Q123 47 162 43L438 24Q473 24 481 51L512 174Z" fill="#50341d" stroke="#352719" stroke-width="6"/>
-  <path d="M163 169L132 80Q130 52 164 49L438 31Q466 30 474 54L505 169Z" fill="url(#rim)" stroke="#e3be73" stroke-width="2"/>
-  <path d="M177 155L151 81Q146 67 170 64L433 45Q451 43 456 61L484 155Z" fill="url(#lining)" stroke="#6b4824" stroke-width="4"/>
-  <path d="M185 145L162 83Q158 78 174 76L430 56Q442 55 445 65L470 145Z" stroke="#be995154" stroke-width="2"/>
-  <path d="M278 97L309 71L344 93L323 124Z" stroke="#bc965a" stroke-width="2"/>
-  <path d="M296 97L309 85L325 96L316 109Z" fill="#a8874c"/>
-  <path d="M207 111Q231 87 251 108M375 98Q395 78 424 99" stroke="#a8874c" stroke-opacity=".7" stroke-width="2"/>
-  <path d="M182 167H211V181H186ZM451 166H480L485 181H455Z" fill="url(#rim)" stroke="#705325" stroke-width="2"/>
+  <!-- A barrel lid hinged on the rear rim: the curved end cap now projects behind
+       the right side, rather than remaining an arch above the inner opening. -->
+  <g id="outer-shell">
+    <path d="M130 30L151 17H487Q498 17 506 37L482 43Z" fill="#86562b" stroke="#50351e" stroke-width="3"/>
+    <path d="M150 18H487M173 24H492" stroke="#d6a65b" stroke-width="2"/>
+    <path d="M189 29L208 17H224L207 30ZM410 30L424 17H440L428 32Z" fill="url(#gold)" stroke="#8c6228" stroke-width="1.5"/>
+    <!-- Foreshorten the side toward its sloping seam, keeping both hinge endpoints fixed. -->
+    <g id="lid-side" transform="matrix(.42 0 .122535 1 275.7614 0)">
+    <path d="M482 31C580 22 593 132 512 173Z" fill="url(#shell)" stroke="#38281a" stroke-width="5"/>
+    <g clip-path="url(#side)" stroke="#432b1a" stroke-width="3">
+      <path d="M503 26L534 173M520 26L551 165M537 34L566 151M552 51L576 132"/>
+      <path d="M508 38Q516 71 526 101T535 148M528 44Q533 70 543 100T551 142M546 56L559 115" stroke="#e5b06b" stroke-opacity=".3" stroke-width="1.5"/>
+    </g>
+    <path d="M484 31C580 22 593 132 512 173" stroke="url(#gold)" stroke-width="12"/>
+    <path d="M492 39C570 35 581 128 515 162" stroke="#f5d18b" stroke-opacity=".65" stroke-width="2"/>
+    <use href="#stud" x="514" y="34"/><use href="#stud" x="544" y="48"/>
+    <use href="#stud" x="559" y="72"/><use href="#stud" x="560" y="99"/>
+    <use href="#stud" x="550" y="128"/><use href="#stud" x="530" y="153"/>
+    </g>
+  </g>
+  <!-- The rectangular mouth of the open lid leans backwards. Top rail and both
+       hinges are level; the recess and bowed ribs describe the inside volume. -->
+  <path d="M129 28H483L515 175H160Z" fill="#54391f" stroke="#302218" stroke-width="5"/>
+  <path d="M132 30H481L512 172H161Z" fill="url(#gold)" stroke="#bc9046" stroke-width="2"/>
+  <path d="M149 45H468L493 158H174Z" fill="url(#inside)" stroke="#65411f" stroke-width="4"/>
+  <g clip-path="url(#inner)">
+    <path d="M148 68H480M152 91H486M157 116H491M165 140H496" stroke="#2d1e14" stroke-width="3"/>
+    <path d="M154 73Q254 68 340 73T484 73M159 98Q253 92 345 99T487 98M165 123Q260 117 349 124T491 122M172 146Q262 141 349 147T492 146" stroke="#d99b55" stroke-opacity=".24" stroke-width="2"/>
+    <path d="M178 43H191Q220 103 205 163H191Q204 107 178 43ZM439 43H453Q445 108 478 163H464Q432 108 439 43Z" fill="url(#gold)" stroke="#765123" stroke-width="2"/>
+    <path d="M162 48H459L479 145H183Z" stroke="#e2b363" stroke-opacity=".22" stroke-width="2"/>
+  </g>
+  <path d="M132 30H481M137 36H477M166 165H508" stroke="#ffe6a5" stroke-opacity=".75" stroke-width="2"/>
+  <path d="M304 30L304 16H326L331 30Z" fill="url(#gold)" stroke="#745022" stroke-width="2"/>
+  <path d="M310 18H320V25H310Z" fill="#39281b"/>
+  <use href="#stud" x="145" y="38"/><use href="#stud" x="209" y="38"/>
+  <use href="#stud" x="405" y="38"/><use href="#stud" x="470" y="38"/>
+  <use href="#stud" x="152" y="76"/><use href="#stud" x="160" y="113"/>
+  <use href="#stud" x="167" y="150"/><use href="#stud" x="487" y="76"/>
+  <use href="#stud" x="495" y="113"/><use href="#stud" x="503" y="150"/>
+  <path d="M182 165H211V181H186ZM461 165H490L486 181H461Z" fill="url(#gold)" stroke="#705325" stroke-width="2"/>
+  <path d="M190 169H204M468 169H483" stroke="#f8daa0" stroke-width="2"/>
 </svg>

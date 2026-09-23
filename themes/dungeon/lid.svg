@@ -3,8 +3,15 @@
     <linearGradient id="wood" x1="280" y1="75" x2="280" y2="223" gradientUnits="userSpaceOnUse"><stop stop-color="#3b261b"/><stop offset=".32" stop-color="#a96a36"/><stop offset=".63" stop-color="#794623"/><stop offset="1" stop-color="#44281a"/></linearGradient>
     <linearGradient id="gold" x1="260" y1="71" x2="285" y2="225" gradientUnits="userSpaceOnUse"><stop stop-color="#a57933"/><stop offset=".26" stop-color="#ffe5a0"/><stop offset=".47" stop-color="#c59138"/><stop offset=".73" stop-color="#966425"/><stop offset="1" stop-color="#f5ce74"/></linearGradient>
     <linearGradient id="side" x1="450" y1="120" x2="517" y2="167" gradientUnits="userSpaceOnUse"><stop stop-color="#cf9c49"/><stop offset=".3" stop-color="#634024"/><stop offset="1" stop-color="#36281b"/></linearGradient>
+    <linearGradient id="roof" x1="300" y1="25" x2="300" y2="150" gradientUnits="userSpaceOnUse"><stop stop-color="#bf8c4d"/><stop offset=".45" stop-color="#8f582e"/><stop offset="1" stop-color="#52311e"/></linearGradient>
     <g id="stud"><circle r="4" fill="#644520"/><circle cy="-1" r="2.5" fill="#ffe5a0"/></g>
   </defs>
+  <!-- The complete barrel roof joins the front arch to the rear arch. -->
+  <path d="M101 157C101 48 453 48 453 157L513 108C513-1 161-1 161 108Z" fill="url(#roof)" stroke="#79572a" stroke-width="4"/>
+  <path d="M172 93L230 46M186 87L244 40M245 77L302 29M266 75L323 27M320 80L377 32M342 84L399 36M380 99L437 51" stroke="#f1c175" stroke-opacity=".22" stroke-width="2"/>
+  <path d="M161 108C161-1 513-1 513 108" stroke="url(#gold)" stroke-width="10"/>
+  <path d="M151 106L211 57M215 79L275 30M289 76L349 27M361 88L421 39M417 113L477 64" stroke="#dfad61" stroke-opacity=".7" stroke-width="3"/>
+  <path d="M156 104L216 55M398 101L458 52" stroke="url(#gold)" stroke-width="20"/>
   <path d="M101 222V157C101 48 453 48 453 157V222Z" fill="url(#wood)" stroke="#322619" stroke-width="5"/>
   <path d="M453 222V157Q453 99 363 80L421 39Q512 65 512 114V173Z" fill="url(#side)" stroke="#79572a" stroke-width="4"/>
   <path d="M109 163H447M116 131H439M138 108H414M172 88H380M106 191H446" stroke="#442819" stroke-width="3"/>

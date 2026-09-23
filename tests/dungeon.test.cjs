@@ -28,11 +28,47 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
     await page.keyboard.press('Space');
     await page.waitForTimeout(650);
     assert.equal(await page.locator('.dt-scroll-flight').isVisible(), false);
-    assert.equal(await page.locator('.dt-chest-lid').evaluate(el => new DOMMatrix(getComputedStyle(el).transform).isIdentity), true);
-    await page.waitForTimeout(1800);
-    assert.equal(await page.locator('.dt-chest-lid').evaluate(el => new DOMMatrix(getComputedStyle(el).transform).isIdentity), false);
-    assert.equal(await page.locator('.dt-scroll-copy').evaluate(el => getComputedStyle(el).opacity), '0');
-    await page.waitForTimeout(1700);
+    assert.equal(await page.locator('.dt-lid-hinge').evaluate(el => new DOMMatrix(getComputedStyle(el).transform).isIdentity), true);
+    const groundBox = await page.locator('.dt-ground').boundingBox();
+    const seek = time => page.locator('[data-theme="dungeon"]').evaluate((host, time) => {
+      host.getAnimations({ subtree: true }).forEach(animation => { animation.pause(); animation.currentTime = time; });
+    }, time);
+    // Ground decorations remain fixed even at the strongest point of the shake.
+    await seek(870);
+    assert.deepEqual(await page.locator('.dt-ground').boundingBox(), groundBox);
+    assert.equal(await page.locator('.dt-ground').evaluate(el => el.getAnimations({ subtree: true }).length), 0);
+    assert.equal(await page.locator('.dt-ground .dt-chest-shake').count(), 0);
+    const hingeTransforms = [];
+    for (const time of [1650, 1950, 2400]) {
+      await seek(time);
+      hingeTransforms.push(await page.locator('.dt-lid-hinge').evaluate(el => getComputedStyle(el).transform));
+      assert.equal(await page.locator('.dt-lid-hinge').evaluate(el => getComputedStyle(el).opacity), '1');
+      assert(await page.locator('.dt-chest-light').evaluate(el => Number(getComputedStyle(el).opacity) > .1));
+      assert(await page.locator('.dt-opening-glow').evaluate(el => Number(getComputedStyle(el).opacity) > .1));
+    }
+    assert.equal(new Set(hingeTransforms).size, 3, 'the hinge rotates through intermediate angles');
+    assert.equal(await page.locator('.dt-lid-hinge img').evaluateAll(images => images.every(el => getComputedStyle(el).backfaceVisibility === 'hidden' && getComputedStyle(el).opacity === '1')), true);
+    await seek(3200);
+    const halfExtracted = await page.locator('.dt-scroll-flight').boundingBox();
+    assert(await page.locator('.dt-scroll-flight').evaluate(el => {
+      const host = el.closest('.theme-surface');
+      const mouth = host.getBoundingClientRect().top + host.clientHeight * .6657;
+      const card = el.getBoundingClientRect();
+      const window = el.parentElement;
+      return card.top < mouth && card.bottom > mouth && card.width < host.clientWidth * .21
+        && getComputedStyle(window).clipPath !== 'none'
+        && Number(getComputedStyle(window).zIndex) < Number(getComputedStyle(host.querySelector('.dt-chest-front')).zIndex);
+    }));
+    await seek(3800);
+    const extracted = await page.locator('.dt-scroll-flight').boundingBox();
+    assert(Math.abs(extracted.width - halfExtracted.width) < 1, 'keep the scroll small until it leaves the mouth');
+    assert(await page.locator('.dt-scroll-flight').evaluate(el => {
+      const host = el.closest('.theme-surface');
+      return el.getBoundingClientRect().bottom < host.getBoundingClientRect().top + host.clientHeight * .6657;
+    }));
+    await seek(5100);
+    assert((await page.locator('.dt-scroll-flight').boundingBox()).width > extracted.width * 2);
+    assert.deepEqual(await page.locator('.dt-ground').boundingBox(), groundBox);
     assert.equal(await page.locator('.dt-scroll-flight').evaluate(el => getComputedStyle(el).opacity), '1');
     assert.equal(await page.locator('.dt-scroll-copy').evaluate(el => getComputedStyle(el).opacity), '1');
     assert(await page.locator('.dt-parchment').evaluate(el => {
@@ -50,7 +86,7 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
     await page.evaluate(() => app.themeManager.update({ category: '最終獎項', team: '第三支隊伍' }));
     assert.equal(await page.locator('.dt-scroll-flight').isVisible(), false);
     assert.equal(await page.locator('[data-award-team]').textContent(), '第三支隊伍');
-    assert.equal(await page.locator('.dt-chest-lid').evaluate(el => getComputedStyle(el).transform), 'none');
+    assert.equal(await page.locator('.dt-lid-hinge').evaluate(el => getComputedStyle(el).transform), 'none');
 
     await page.emulateMedia({ reducedMotion: 'reduce' });
     for (const viewport of [{ width: 390, height: 844 }, { width: 1920, height: 1080 }]) {
