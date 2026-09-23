@@ -102,7 +102,7 @@ export function createChestModel(canvas) {
 
   // The shaft follows the lock's Z axis: approach, insert, then turn in place.
   const treasureKey = new THREE.Group(); chest.add(treasureKey);
-  const keyGold = keep(new THREE.MeshStandardMaterial({ color: 0xf2c66d, metalness: .72, roughness: .25, emissive: 0x6c3b08, emissiveIntensity: .15 }));
+  const keyGold = keep(new THREE.MeshStandardMaterial({ transparent: true, color: 0xf2c66d, metalness: .72, roughness: .25, emissive: 0x6c3b08, emissiveIntensity: .15 }));
   const shaft = mesh(new THREE.CylinderGeometry(.04, .04, .99, 16), keyGold, treasureKey, 0, 0, .495);
   shaft.rotation.x = Math.PI / 2;
   for (const [z, radius, length] of [[.32, .064, .045], [.4, .062, .035], [.86, .067, .08], [.95, .08, .045]]) {
@@ -300,17 +300,6 @@ export function createChestModel(canvas) {
   const shadowMaterial = keep(new THREE.MeshBasicMaterial({ map: keep(new THREE.CanvasTexture(shadowCanvas)), transparent: true, depthWrite: false }));
   const shadow = mesh(new THREE.PlaneGeometry(6, 3.8), shadowMaterial, ground, 0, -.06, 0); shadow.rotation.x = -Math.PI / 2;
 
-  // Coins and gems share the original materials; only chest meshes may fade.
-  const chestMaterials = new Map();
-  function fadingMaterial(material) {
-    if (!chestMaterials.has(material)) chestMaterials.set(material, keep(material.clone()));
-    return chestMaterials.get(material);
-  }
-  chest.traverse(object => {
-    if (!object.isMesh) return;
-    object.material = Array.isArray(object.material) ? object.material.map(fadingMaterial) : fadingMaterial(object.material);
-  });
-
   let disposed = false;
   function resize(width, height) {
     if (disposed || !width || !height) return;
@@ -330,24 +319,15 @@ export function createChestModel(canvas) {
     treasureKey.visible = t > 0;
     treasureKey.position.set((1 - approach) * 1.6, 1.3 + (1 - approach), 1.58 + (1 - approach) * 1.15 - insertion * .6);
     treasureKey.rotation.set(0, -1.1 * (1 - approach), -turn * Math.PI / 2);
-    const settle = smooth((t - 3.85) / 1.1);
-    chest.scale.setScalar(1 - settle * .25); chest.position.y = -settle * .2;
-    const opacity = 1 - smooth((t - 4.95) / .25);
-    chest.visible = opacity > 0;
-    chestMaterials.forEach(material => {
-      const isKey = material === chestMaterials.get(keyGold);
-      const transparent = opacity < 1 || isKey;
-      if (material.transparent !== transparent) { material.transparent = transparent; material.needsUpdate = true; }
-      material.opacity = opacity * (isKey ? smooth(t / .15) : 1);
-    });
-    shadowMaterial.opacity = opacity;
-    treasureLight.intensity = open * (t < 3.85 ? 9 : 3) * opacity;
+    keyGold.opacity = smooth(t / .15);
+    treasureLight.intensity = open * (t < 3.85 ? 9 : 3);
     scene.updateMatrixWorld(true);
     renderer.render(scene, camera);
     // Useful for lifecycle verification without exposing Three.js objects globally.
     canvas.dataset.lidAngle = String(hinge.rotation.x);
     canvas.dataset.frameTime = String(t);
-    canvas.dataset.chestOpacity = String(opacity);
+    canvas.dataset.chestVisible = String(chest.visible);
+    canvas.dataset.chestScale = chest.scale.toArray().join(',');
     canvas.dataset.chestPosition = chest.position.toArray().join(',');
     canvas.dataset.keyPosition = treasureKey.position.toArray().join(',');
     canvas.dataset.keyAngle = String(treasureKey.rotation.z);

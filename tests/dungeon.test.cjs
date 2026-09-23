@@ -106,10 +106,13 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
       return clip.startsWith('inset(') && clip.match(/[\d.]+/g).every(value => Number(value) === 0);
     }));
     assert(await page.locator('.dt-header').evaluate(el => el.getBoundingClientRect().bottom < document.querySelector('.dt-scroll').getBoundingClientRect().top));
-    const fadingOpacity = Number(await page.locator('.dt-model').getAttribute('data-chest-opacity'));
-    assert(fadingOpacity > 0 && fadingOpacity < .5, 'chest is mostly faded after 150ms');
+    assert.equal(await page.locator('.dt-model').getAttribute('data-chest-scale'), '1,1,1');
+    assert.equal(await page.locator('.dt-model').getAttribute('data-chest-position'), '0,0,0');
     await seek(5200);
-    assert.equal(await page.locator('.dt-model').getAttribute('data-chest-opacity'), '0');
+    assert.equal(await page.locator('.dt-model').getAttribute('data-chest-scale'), '1,1,1');
+    assert.equal(await page.locator('.dt-model').getAttribute('data-chest-position'), '0,0,0');
+    assert(Number(await page.locator('.dt-model').getAttribute('data-lid-angle')) < -1, 'chest remains open after the reveal');
+    assert.equal(await page.locator('.dt-model').getAttribute('data-chest-visible'), 'true');
     assert.equal(await page.locator('.dt-model').getAttribute('data-ground-opacity'), '1');
     assert.equal(await page.locator('.dt-model').isVisible(), true);
     assert.equal(await page.locator('.dt-chest-effects').isVisible(), false);
@@ -127,7 +130,7 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
     assert.equal(await page.locator('[data-award-team]').textContent(), '第三支隊伍');
     assert.equal(await page.locator('.dt-model').getAttribute('data-lid-angle'), '0');
     assert.equal(await page.locator('.dt-chest').isVisible(), true);
-    assert.equal(await page.locator('.dt-model').getAttribute('data-chest-opacity'), '1');
+    assert.equal(await page.locator('.dt-model').getAttribute('data-chest-visible'), 'true');
     assert.equal(await page.locator('.dt-model').getAttribute('data-key-visible'), 'false');
 
     await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -140,7 +143,7 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
       assert.equal(await page.locator('.dt-scroll-flight').isVisible(), false);
       await page.evaluate(() => app.themeManager.reveal());
       assert.equal(await page.locator('.dt-scroll-copy').evaluate(el => getComputedStyle(el).opacity), '1');
-      assert.equal(await page.locator('.dt-model').getAttribute('data-chest-opacity'), '0');
+      assert.equal(await page.locator('.dt-model').getAttribute('data-chest-visible'), 'true');
       assert.equal(await page.locator('.dt-model').getAttribute('data-ground-opacity'), '1');
       assert.equal(await page.locator('.dt-model').isVisible(), true);
       assert.equal(await page.locator('[data-award-team] img').count(), 0);
@@ -196,7 +199,7 @@ test('dungeon still reveals the award when WebGL is unavailable', { timeout: 300
     assert.equal(await page.locator('.dt-scroll-flight').isVisible(), false);
     await page.keyboard.press('Space');
     assert.equal(await page.locator('.dt-scroll-flight').isVisible(), true);
-    assert.equal(await page.locator('.dt-model-fallback').isVisible(), false);
+    assert.equal(await page.locator('.dt-model-fallback').isVisible(), true);
     assert.deepEqual(errors, []);
   } finally { await browser.close(); }
 });
