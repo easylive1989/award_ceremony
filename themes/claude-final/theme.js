@@ -33,7 +33,6 @@ window.AwardThemes.set('claude-final', (host) => {
         <div class="paper-flap"></div>
       </div>
     </div>
-    <canvas class="paper-stars" aria-hidden="true"></canvas>
     <div class="paper-envelope-front" aria-hidden="true">
       <div class="paper-shell">
         <div class="paper-pocket"></div>
@@ -57,6 +56,7 @@ window.AwardThemes.set('claude-final', (host) => {
       <div class="final-crowd-fan final-crowd-right final-crowd-three"><div class="final-crowd-bob"><img src="assets/images/clawd-lightbulb.png" width="630" height="924" alt="" draggable="false"></div></div>
       <div class="final-crowd-fan final-crowd-right final-crowd-four"><div class="final-crowd-bob"><img src="assets/images/clawd-magnifier.png" width="924" height="834" alt="" draggable="false"></div></div>
     </div>
+    <canvas class="paper-stars" aria-hidden="true"></canvas>
     <div class="paper-delivery" aria-hidden="true">
       <div class="paper-helper paper-helper-rear">
         <div class="paper-helper-body">
@@ -109,16 +109,37 @@ window.AwardThemes.set('claude-final', (host) => {
   const burst = Array.from({ length: 90 }, () => ({ angle: random() * Math.PI * 2, speed: .07 + random() * .3, delay: random() * .25, size: .4 + random() * 1.7 }));
   // Stars and ribbons share the same Claude palette.
   const colors = ['217,119,87', '98,153,135', '120,140,93', '130,125,189', '203,202,219'];
-  const stars = Array.from({ length: 24 }, (_, index) => ({
-    origin: (index % 2 ? 1 : -1) * (.135 + random() * .015),
+  const stars = Array.from({ length: 10 }, (_, index) => ({
+    origin: (index % 2 ? 1 : -1) * (.105 + random() * .015),
     vx: (index % 2 ? 1 : -1) * (.1 + random() * .2),
     vy: .24 + random() * .2,
     delay: random() * .12,
     lifetime: 1.5 + random() * .6,
-    radius: 6 + random() * 5,
+    radius: 13 + random() * 5,
     rotation: random() * Math.PI * 2,
     spin: (random() - .5) * 7,
   }));
+
+  // Round each tip and inner corner with a tangent quadratic curve.
+  const starPoints = Array.from({ length: 10 }, (_, index) => {
+    const angle = -Math.PI / 2 + index * Math.PI / 5;
+    const radius = index % 2 ? .44 : 1;
+    return { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius };
+  });
+  const starPath = new Path2D();
+  starPoints.forEach((point, index) => {
+    const previous = starPoints[(index + 9) % 10];
+    const next = starPoints[(index + 1) % 10];
+    const roundness = index % 2 ? .18 : .28;
+    const entryX = point.x + (previous.x - point.x) * roundness;
+    const entryY = point.y + (previous.y - point.y) * roundness;
+    const exitX = point.x + (next.x - point.x) * roundness;
+    const exitY = point.y + (next.y - point.y) * roundness;
+    if (index === 0) starPath.moveTo(entryX, entryY);
+    else starPath.lineTo(entryX, entryY);
+    starPath.quadraticCurveTo(point.x, point.y, exitX, exitY);
+  });
+  starPath.closePath();
 
   function drawStars(revealAge) {
     if (!starCtx) return;
@@ -129,24 +150,19 @@ window.AwardThemes.set('claude-final', (host) => {
       if (age < 0 || age >= star.lifetime) return;
       const progress = age / star.lifetime;
       const travel = (1 - Math.exp(-1.6 * age)) / 1.6;
-      // Launch outward from both pocket corners, behind the envelope front.
-      const x = width * (.5 + star.origin + star.vx * travel);
-      const y = height * .38 + width * (.035 - star.vy * travel + .035 * age * age);
+      // Rise through the opening before spreading outward from either side.
+      const outwardAge = Math.max(0, age - .16);
+      const outwardTravel = (1 - Math.exp(-1.6 * outwardAge)) / 1.6;
+      const x = width * (.5 + star.origin + star.vx * outwardTravel);
+      const y = height * .38 + width * (.08 - star.vy * travel + .035 * age * age);
       const radius = star.radius * width / 1600 * (1 - .3 * progress);
       const fade = Math.min(1, age / .06) * Math.min(1, (1 - progress) / .4);
       starCtx.save();
       starCtx.translate(x, y);
       starCtx.rotate(star.rotation + star.spin * age);
       starCtx.fillStyle = `rgba(${colors[index % colors.length]},${fade * .95})`;
-      starCtx.beginPath();
-      for (let point = 0; point < 10; point++) {
-        const angle = -Math.PI / 2 + point * Math.PI / 5;
-        const r = point % 2 ? radius * .44 : radius;
-        if (point === 0) starCtx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
-        else starCtx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
-      }
-      starCtx.closePath();
-      starCtx.fill();
+      starCtx.scale(radius, radius);
+      starCtx.fill(starPath);
       starCtx.restore();
     });
   }

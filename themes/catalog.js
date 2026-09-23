@@ -1,6 +1,6 @@
 // Add a local theme here. No changes to app.js or index.html are needed.
 window.AWARD_THEME_CATALOG = {
-  assetVersion: '20260923-claude-stars-2',
+  assetVersion: '20260923-claude-stars-5',
   defaultId: 'black-gold',
   themes: [
     {

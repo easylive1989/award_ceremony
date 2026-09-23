@@ -181,6 +181,8 @@
 }
 
 [data-theme="claude-final"] .paper-card-window { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+/* Stars share the card's pocket mask until they clear the envelope. */
+[data-theme="claude-final"].paper-run .paper-stars,
 [data-theme="claude-final"].paper-run .paper-card-window { animation: claudePaperCardWindow 2s 1.85s both; }
 @keyframes claudePaperCardWindow {
   0%, 55% { z-index: 6; clip-path: polygon(0 0, 100% 0, 100% 38%, 67% 38%, 53.4% 52.08%, 50% 47.6%, 46.6% 52.08%, 33% 38%, 0 38%); }
