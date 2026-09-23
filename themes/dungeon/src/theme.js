@@ -82,7 +82,7 @@ window.AwardThemes.set('dungeon', (host) => {
     model.resize(canvas.clientWidth, canvas.clientHeight);
     renderModel();
     // Project the actual model rim into stage coordinates to mask the emerging scroll.
-    const toStage = point => ({ x: 25 + point.x * 50, y: 30 + point.y * 58 });
+    const toStage = point => ({ x: 25 + point.x * 50, y: 32 + point.y * 58 });
     const left = toStage(model.project(-2.075, 1.67, 1.18));
     const right = toStage(model.project(2.075, 1.67, 1.18));
     const back = toStage(model.project(2.075, 1.67, -1.18));

@@ -204,19 +204,34 @@ export function createChestModel(canvas) {
     const object = new THREE.Mesh(coinGeometry, brass); object.position.set(x, y, z); object.rotation.z = tilt; parent.add(object);
   }
   for (let i = 0; i < 55; i++) coin(chest, (random() - .5) * 3.5, 1.27 + random() * .17, (random() - .5) * 1.6, (random() - .5) * .5);
-  // Permanent treasure sits outside the box footprint and below the revealed scroll.
-  // Repeated coins use instancing so richer piles do not add hundreds of draw calls.
+  // Lay out treasure on the SVG platform's ellipse in the canonical 1600 × 900 stage.
+  // Unproject to the floor so back piles are naturally occluded by the actual chest.
+  camera.left = -2.7 * 800 / 522; camera.right = 2.7 * 800 / 522;
+  camera.updateProjectionMatrix(); camera.updateMatrixWorld(true);
+  const floorDirection = camera.getWorldDirection(new THREE.Vector3());
+  function platformPoint(angle, radius = 1) {
+    const sx = 800 + Math.cos(angle) * 272 * radius;
+    const sy = 733 + Math.sin(angle) * 47 * radius;
+    const point = new THREE.Vector3((sx - 400) / 800 * 2 - 1, 1 - (sy - 288) / 522 * 2, 0).unproject(camera);
+    point.addScaledVector(floorDirection, (.025 - point.y) / floorDirection.y);
+    return [point.x, point.z];
+  }
+  // Repeated coins use instancing; low rear piles and taller front piles follow the rim.
   const coinPlacements = [];
-  for (const [cx, cz, spread] of [[-2.45, 1.25, .6], [2.4, 1.45, .55], [-.8, 2.15, .48]]) {
-    for (let i = 0; i < 25; i++) {
-      const angle = random() * Math.PI * 2, radius = Math.sqrt(random());
-      coinPlacements.push([cx + Math.cos(angle) * radius * spread, .025 + (1 - radius) * .16, cz + Math.sin(angle) * radius * spread * .65, (random() - .5) * .2]);
+  function platformCoin(angle, radius, height, tilt = 0) {
+    const [x, z] = platformPoint(angle, radius);
+    coinPlacements.push([x, height, z, tilt]);
+  }
+  const pileAngles = [.12, .43, .77, 1.12, 1.48, 1.83].map(value => value * Math.PI);
+  for (const angle of pileAngles) {
+    for (let i = 0; i < 23; i++) {
+      const spread = random();
+      platformCoin(angle + (random() - .5) * .24, .88 + (random() - .5) * .13, .025 + (1 - spread) * .1, (random() - .5) * .16);
     }
+    const count = angle < Math.PI ? 6 : 4;
+    for (let i = 0; i < count; i++) platformCoin(angle, .88, .025 + i * .039);
   }
-  for (const [x, z, count] of [[-2.2, 1.45, 7], [-2.65, 1.05, 5], [2.3, 1.55, 8], [2.65, 1.25, 5], [-.8, 2.1, 6]]) {
-    for (let i = 0; i < count; i++) coinPlacements.push([x + (random() - .5) * .025, .025 + i * .039, z, 0]);
-  }
-  for (let i = 0; i < 18; i++) coinPlacements.push([(random() - .5) * 5.5, .025, 1.85 + random() * .8, (random() - .5) * .12]);
+  for (let i = 0; i < 35; i++) platformCoin(i / 35 * Math.PI * 2, .82 + random() * .13, .025, (random() - .5) * .12);
   const coinRimGeometry = keep(new THREE.RingGeometry(.095, .115, 16));
   coinRimGeometry.rotateX(-Math.PI / 2); coinRimGeometry.translate(0, .0205, 0);
   const goldHighlight = keep(new THREE.MeshStandardMaterial({ color: 0xf2cc78, metalness: .7, roughness: .32 }));
@@ -238,33 +253,44 @@ export function createChestModel(canvas) {
     stone.scale.set(size, size * .75, size * .8); stone.rotation.set(.25, angle, .2);
     return stone;
   }
-  const floorGem = looseGem(gem, 2.85, 1.05, .28, .7);
-  looseGem(ruby, -2.7, 1.85, .22, .4);
-  looseGem(sapphire, -1.65, 1.95, .25, .8);
-  looseGem(amethyst, 2, 2.05, .23, .2);
-  looseGem(gem, -.2, 2.55, .13, .9);
-  looseGem(ruby, 1.35, 2.45, .14, 1.1);
+  function platformGem(material, angle, radius, size, rotation) {
+    return looseGem(material, ...platformPoint(angle * Math.PI, radius), size, rotation);
+  }
+  const floorGem = platformGem(gem, .04, .94, .28, .7);
+  platformGem(ruby, .91, .93, .22, .4);
+  platformGem(sapphire, .65, .91, .25, .8);
+  platformGem(amethyst, .28, .91, .23, .2);
+  platformGem(gem, .56, .82, .13, .9);
+  platformGem(ruby, .35, .85, .14, 1.1);
+  platformGem(amethyst, 1.1, .94, .22, .5);
+  platformGem(sapphire, 1.88, .95, .24, .7);
+  platformGem(gem, 1.5, .9, .18, .3);
 
   // Bevelled gold ingots, a jewelled ring, and a loosely draped pearl necklace.
   const ingotShape = new THREE.Shape();
   ingotShape.moveTo(-.29, 0); ingotShape.lineTo(.29, 0); ingotShape.lineTo(.23, .16); ingotShape.lineTo(-.23, .16); ingotShape.closePath();
   const ingotGeometry = keep(new THREE.ExtrudeGeometry(ingotShape, { depth: .28, bevelEnabled: true, bevelSize: .018, bevelThickness: .018, bevelSegments: 1, steps: 1 }));
   ingotGeometry.translate(0, 0, -.14);
-  for (const [x, y, z, angle] of [[.65, .04, 1.95, -.12], [1.2, .04, 1.86, -.12], [.93, .24, 1.92, .12]]) {
-    const bar = mesh(ingotGeometry, brass, ground, x, y, z); bar.rotation.y = angle;
+  const [barX, barZ] = platformPoint(.35 * Math.PI, .76);
+  for (const [dx, y, dz, angle] of [[-.28, .04, 0, -.12], [.28, .04, -.09, -.12], [0, .24, -.04, .12]]) {
+    const bar = mesh(ingotGeometry, brass, ground, barX + dx, y, barZ + dz); bar.rotation.y = angle;
   }
-  const ring = mesh(new THREE.TorusGeometry(.14, .025, 8, 24), goldHighlight, ground, -1.9, .11, 2.4);
+  const [rearBarX, rearBarZ] = platformPoint(1.77 * Math.PI, .94);
+  const rearBar = mesh(ingotGeometry, brass, ground, rearBarX, .04, rearBarZ); rearBar.rotation.y = -.4;
+  const [ringX, ringZ] = platformPoint(.84 * Math.PI, .89);
+  const ring = mesh(new THREE.TorusGeometry(.14, .025, 8, 24), goldHighlight, ground, ringX, .11, ringZ);
   ring.rotation.x = -Math.PI / 3;
-  looseGem(ruby, -1.9, 2.28, .09, .4).position.y = .22;
+  looseGem(ruby, ringX, ringZ - .12, .09, .4).position.y = .22;
   const pearl = keep(new THREE.MeshStandardMaterial({ color: 0xeee3c5, metalness: .12, roughness: .26 }));
   const pearlGeometry = keep(new THREE.SphereGeometry(.047, 8, 6));
+  const [necklaceX, necklaceZ] = platformPoint(.53 * Math.PI, .91);
   for (let i = 0; i < 29; i++) {
     const angle = i / 28 * Math.PI * 1.8;
-    mesh(pearlGeometry, pearl, ground, .35 + Math.cos(angle) * .55, .06, 2.62 + Math.sin(angle) * .2);
+    mesh(pearlGeometry, pearl, ground, necklaceX + Math.cos(angle) * .55, .06, necklaceZ + Math.sin(angle) * .2);
   }
-  const pendant = mesh(new THREE.TorusGeometry(.095, .025, 8, 20), goldHighlight, ground, .1, .07, 2.87);
+  const pendant = mesh(new THREE.TorusGeometry(.095, .025, 8, 20), goldHighlight, ground, necklaceX - .25, .07, necklaceZ + .25);
   pendant.rotation.x = -Math.PI / 2;
-  looseGem(sapphire, .1, 2.87, .077, .2).position.y = .095;
+  looseGem(sapphire, necklaceX - .25, necklaceZ + .25, .077, .2).position.y = .095;
   // A soft contact shadow is a local canvas texture, not a remote asset.
   const shadowCanvas = document.createElement('canvas'); shadowCanvas.width = shadowCanvas.height = 64;
   const shadowBrush = shadowCanvas.getContext('2d');
