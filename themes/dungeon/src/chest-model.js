@@ -83,7 +83,25 @@ export function createChestModel(canvas) {
   for (const x of [-1.74, 1.74]) for (const z of [-.86, .86]) box(chest, [.38, .2, .38], [x, .06, z], brassDark);
   box(chest, [.48, .6, .075], [0, 1.3, 1.16], brassDark);
   box(chest, [.36, .48, .045], [0, 1.32, 1.22]);
-  const jewel = mesh(new THREE.OctahedronGeometry(.15), gem, chest, 0, 1.35, 1.29); jewel.scale.z = .55;
+  const lock = new THREE.Group(); lock.position.set(0, 1.3, 1.27); chest.add(lock);
+  const keyholeMaterial = keep(new THREE.MeshStandardMaterial({ color: 0x160f09, roughness: .9 }));
+  mesh(new THREE.TorusGeometry(.115, .025, 8, 24), brassDark, lock);
+  mesh(new THREE.CircleGeometry(.087, 24), keyholeMaterial, lock, 0, 0, .005);
+  box(lock, [.065, .105, .012], [0, -.072, .009], keyholeMaterial);
+
+  // The shaft follows the lock's Z axis: approach, insert, then turn in place.
+  const treasureKey = new THREE.Group(); chest.add(treasureKey);
+  const keyGold = keep(new THREE.MeshStandardMaterial({ color: 0xf2c66d, metalness: .72, roughness: .25, emissive: 0x6c3b08, emissiveIntensity: .15 }));
+  const shaft = mesh(new THREE.CylinderGeometry(.035, .035, .86, 12), keyGold, treasureKey, 0, 0, .43);
+  shaft.rotation.x = Math.PI / 2;
+  for (const z of [.07, .18]) box(treasureKey, [.055, .1, .055], [0, -.065, z], keyGold);
+  const bow = mesh(new THREE.TorusGeometry(.23, .047, 10, 32), keyGold, treasureKey, 0, 0, 1.08);
+  bow.scale.y = 1.35;
+  const innerBow = mesh(new THREE.TorusGeometry(.16, .018, 8, 32), keyGold, treasureKey, 0, 0, 1.08);
+  innerBow.scale.y = 1.35;
+  box(treasureKey, [.11, .11, .17], [0, 0, .83], keyGold);
+  const keyJewel = mesh(new THREE.OctahedronGeometry(.075), gem, treasureKey, 0, .3, 1.08);
+  keyJewel.scale.z = .6;
 
   // One volumetric curved lid, pivoting about the X axis at the rear rim.
   const hinge = new THREE.Group(); hinge.position.set(0, 1.68, -1.1); chest.add(hinge);
@@ -143,11 +161,67 @@ export function createChestModel(canvas) {
     const object = new THREE.Mesh(coinGeometry, brass); object.position.set(x, y, z); object.rotation.z = tilt; parent.add(object);
   }
   for (let i = 0; i < 55; i++) coin(chest, (random() - .5) * 3.5, 1.27 + random() * .17, (random() - .5) * 1.6, (random() - .5) * .5);
-  for (let i = 0; i < 23; i++) {
-    const side = i < 10 ? -1 : 1;
-    coin(ground, side * (2.22 + random() * .52), .025 + (i % 3) * .038, .75 + random() * .95, (random() - .5) * .2);
+  // Permanent treasure sits outside the box footprint and below the revealed scroll.
+  // Repeated coins use instancing so richer piles do not add hundreds of draw calls.
+  const coinPlacements = [];
+  for (const [cx, cz, spread] of [[-2.45, 1.25, .6], [2.4, 1.45, .55], [-.8, 2.15, .48]]) {
+    for (let i = 0; i < 25; i++) {
+      const angle = random() * Math.PI * 2, radius = Math.sqrt(random());
+      coinPlacements.push([cx + Math.cos(angle) * radius * spread, .025 + (1 - radius) * .16, cz + Math.sin(angle) * radius * spread * .65, (random() - .5) * .2]);
+    }
   }
-  const floorGem = mesh(new THREE.OctahedronGeometry(.26), gem, ground, 2.75, .21, .3); floorGem.rotation.set(.3, .7, .1);
+  for (const [x, z, count] of [[-2.2, 1.45, 7], [-2.65, 1.05, 5], [2.3, 1.55, 8], [2.65, 1.25, 5], [-.8, 2.1, 6]]) {
+    for (let i = 0; i < count; i++) coinPlacements.push([x + (random() - .5) * .025, .025 + i * .039, z, 0]);
+  }
+  for (let i = 0; i < 18; i++) coinPlacements.push([(random() - .5) * 5.5, .025, 1.85 + random() * .8, (random() - .5) * .12]);
+  const coinRimGeometry = keep(new THREE.RingGeometry(.095, .115, 16));
+  coinRimGeometry.rotateX(-Math.PI / 2); coinRimGeometry.translate(0, .0205, 0);
+  const goldHighlight = keep(new THREE.MeshStandardMaterial({ color: 0xf2cc78, metalness: .7, roughness: .32 }));
+  const coins = new THREE.InstancedMesh(coinGeometry, brass, coinPlacements.length);
+  const coinRims = new THREE.InstancedMesh(coinRimGeometry, goldHighlight, coinPlacements.length);
+  const coinPose = new THREE.Object3D();
+  coinPlacements.forEach(([x, y, z, tilt], index) => {
+    coinPose.position.set(x, y, z); coinPose.rotation.z = tilt; coinPose.updateMatrix();
+    coins.setMatrixAt(index, coinPose.matrix); coinRims.setMatrixAt(index, coinPose.matrix);
+  });
+  ground.add(coins, coinRims); keep(coins); keep(coinRims);
+
+  const ruby = keep(new THREE.MeshStandardMaterial({ color: 0xb72f51, metalness: .25, roughness: .2, flatShading: true }));
+  const sapphire = keep(new THREE.MeshStandardMaterial({ color: 0x3988c8, metalness: .3, roughness: .17, flatShading: true }));
+  const amethyst = keep(new THREE.MeshStandardMaterial({ color: 0x8b61b9, metalness: .25, roughness: .22, flatShading: true }));
+  const cutGemGeometry = keep(new THREE.OctahedronGeometry(1));
+  function looseGem(material, x, z, size, angle) {
+    const stone = mesh(cutGemGeometry, material, ground, x, size * .65, z);
+    stone.scale.set(size, size * .75, size * .8); stone.rotation.set(.25, angle, .2);
+    return stone;
+  }
+  const floorGem = looseGem(gem, 2.85, 1.05, .28, .7);
+  looseGem(ruby, -2.7, 1.85, .22, .4);
+  looseGem(sapphire, -1.65, 1.95, .25, .8);
+  looseGem(amethyst, 2, 2.05, .23, .2);
+  looseGem(gem, -.2, 2.55, .13, .9);
+  looseGem(ruby, 1.35, 2.45, .14, 1.1);
+
+  // Bevelled gold ingots, a jewelled ring, and a loosely draped pearl necklace.
+  const ingotShape = new THREE.Shape();
+  ingotShape.moveTo(-.29, 0); ingotShape.lineTo(.29, 0); ingotShape.lineTo(.23, .16); ingotShape.lineTo(-.23, .16); ingotShape.closePath();
+  const ingotGeometry = keep(new THREE.ExtrudeGeometry(ingotShape, { depth: .28, bevelEnabled: true, bevelSize: .018, bevelThickness: .018, bevelSegments: 1, steps: 1 }));
+  ingotGeometry.translate(0, 0, -.14);
+  for (const [x, y, z, angle] of [[.65, .04, 1.95, -.12], [1.2, .04, 1.86, -.12], [.93, .24, 1.92, .12]]) {
+    const bar = mesh(ingotGeometry, brass, ground, x, y, z); bar.rotation.y = angle;
+  }
+  const ring = mesh(new THREE.TorusGeometry(.14, .025, 8, 24), goldHighlight, ground, -1.9, .11, 2.4);
+  ring.rotation.x = -Math.PI / 3;
+  looseGem(ruby, -1.9, 2.28, .09, .4).position.y = .22;
+  const pearl = keep(new THREE.MeshStandardMaterial({ color: 0xeee3c5, metalness: .12, roughness: .26 }));
+  const pearlGeometry = keep(new THREE.SphereGeometry(.047, 8, 6));
+  for (let i = 0; i < 29; i++) {
+    const angle = i / 28 * Math.PI * 1.8;
+    mesh(pearlGeometry, pearl, ground, .35 + Math.cos(angle) * .55, .06, 2.62 + Math.sin(angle) * .2);
+  }
+  const pendant = mesh(new THREE.TorusGeometry(.095, .025, 8, 20), goldHighlight, ground, .1, .07, 2.87);
+  pendant.rotation.x = -Math.PI / 2;
+  looseGem(sapphire, .1, 2.87, .077, .2).position.y = .095;
   // A soft contact shadow is a local canvas texture, not a remote asset.
   const shadowCanvas = document.createElement('canvas'); shadowCanvas.width = shadowCanvas.height = 64;
   const shadowBrush = shadowCanvas.getContext('2d');
@@ -181,16 +255,22 @@ export function createChestModel(canvas) {
     const t = revealing ? seconds : 0;
     const open = smooth((t - 1.45) / 1.25);
     hinge.rotation.x = -open * Math.PI * .59;
-    const shake = t > 0 && t < 1.45 ? Math.sin(t * 48) * Math.sin(t / 1.45 * Math.PI) : 0;
-    chest.rotation.z = shake * .045; chest.position.x = shake * .035;
+    const approach = smooth(t / .65);
+    const insertion = smooth((t - .65) / .3);
+    const turn = smooth((t - .95) / .45);
+    treasureKey.visible = t > 0;
+    treasureKey.position.set((1 - approach) * 1.6, 1.3 + (1 - approach), 1.58 + (1 - approach) * 1.15 - insertion * .46);
+    treasureKey.rotation.set(0, -.75 * (1 - approach), -turn * Math.PI / 2);
+    lock.rotation.z = -turn * Math.PI / 2;
     const settle = smooth((t - 3.85) / 1.1);
     chest.scale.setScalar(1 - settle * .25); chest.position.y = -settle * .2;
     const opacity = 1 - smooth((t - 4.95) / .25);
     chest.visible = opacity > 0;
     chestMaterials.forEach(material => {
-      const transparent = opacity < 1;
+      const isKey = material === chestMaterials.get(keyGold);
+      const transparent = opacity < 1 || isKey;
       if (material.transparent !== transparent) { material.transparent = transparent; material.needsUpdate = true; }
-      material.opacity = opacity;
+      material.opacity = opacity * (isKey ? smooth(t / .15) : 1);
     });
     shadowMaterial.opacity = opacity;
     treasureLight.intensity = open * (t < 3.85 ? 9 : 3) * opacity;
@@ -200,6 +280,10 @@ export function createChestModel(canvas) {
     canvas.dataset.lidAngle = String(hinge.rotation.x);
     canvas.dataset.frameTime = String(t);
     canvas.dataset.chestOpacity = String(opacity);
+    canvas.dataset.chestPosition = chest.position.toArray().join(',');
+    canvas.dataset.keyPosition = treasureKey.position.toArray().join(',');
+    canvas.dataset.keyAngle = String(treasureKey.rotation.z);
+    canvas.dataset.keyVisible = String(treasureKey.visible && chest.visible);
     canvas.dataset.groundOpacity = String(floorGem.material.opacity);
     canvas.dataset.groundPosition = floorGem.getWorldPosition(new THREE.Vector3()).toArray().join(',');
   }

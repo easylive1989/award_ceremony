@@ -34,6 +34,7 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
     assert.equal(await page.locator('.dt-model-fallback').isVisible(), false);
     assert.equal(await page.evaluate(() => pendingFrames.size), 0);
     assert.equal(await page.locator('.dt-scroll-flight').isVisible(), false);
+    assert.equal(await page.locator('.dt-model').getAttribute('data-key-visible'), 'false');
     await page.waitForTimeout(4200);
     assert.equal(await page.locator('.dt-scroll-flight').isVisible(), false);
     assert.equal(await page.evaluate(() => app.themeManager.revealed), false);
@@ -48,8 +49,25 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
       }, time);
       await page.waitForFunction(time => Math.abs(Number(document.querySelector('.dt-model').dataset.frameTime) - time / 1000) < .001, time);
     };
-    // Ground meshes must not inherit the chest's shake or settle transform.
-    await seek(870);
+    // The chest stays still while the key approaches, inserts, and turns before opening.
+    const keyPositions = [];
+    for (const time of [300, 650, 950]) {
+      await seek(time);
+      keyPositions.push((await page.locator('.dt-model').getAttribute('data-key-position')).split(',').map(Number));
+      assert.equal(await page.locator('.dt-model').getAttribute('data-chest-position'), '0,0,0');
+      assert.equal(await page.locator('.dt-model').getAttribute('data-key-angle'), '0');
+      assert.equal(await page.locator('.dt-model').getAttribute('data-lid-angle'), '0');
+    }
+    assert(keyPositions[0][0] > 0 && keyPositions[1][0] === 0, 'key aligns with the lock before insertion');
+    assert(keyPositions[1][2] > keyPositions[2][2], 'key moves into the lock along the shaft');
+    assert.equal(keyPositions[1][1], keyPositions[2][1]);
+    await seek(1175);
+    const halfTurn = Number(await page.locator('.dt-model').getAttribute('data-key-angle'));
+    assert(halfTurn < 0 && halfTurn > -Math.PI / 2);
+    await seek(1450);
+    assert.equal(Number(await page.locator('.dt-model').getAttribute('data-key-angle')), -Math.PI / 2);
+    assert.equal(await page.locator('.dt-model').getAttribute('data-lid-angle'), '0');
+    assert.equal(await page.locator('.dt-model').getAttribute('data-key-visible'), 'true');
     assert.equal(await page.locator('.dt-model').getAttribute('data-ground-position'), groundPosition);
     const hingeTransforms = [];
     for (const time of [1650, 1950, 2400]) {
@@ -110,6 +128,7 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
     assert.equal(await page.locator('.dt-model').getAttribute('data-lid-angle'), '0');
     assert.equal(await page.locator('.dt-chest').isVisible(), true);
     assert.equal(await page.locator('.dt-model').getAttribute('data-chest-opacity'), '1');
+    assert.equal(await page.locator('.dt-model').getAttribute('data-key-visible'), 'false');
 
     await page.emulateMedia({ reducedMotion: 'reduce' });
     for (const viewport of [{ width: 390, height: 844 }, { width: 1920, height: 1080 }]) {
