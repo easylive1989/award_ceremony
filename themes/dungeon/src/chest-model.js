@@ -232,6 +232,19 @@ export function createChestModel(canvas) {
     for (let i = 0; i < count; i++) platformCoin(angle, .88, .025 + i * .039);
   }
   for (let i = 0; i < 35; i++) platformCoin(i / 35 * Math.PI * 2, .82 + random() * .13, .025, (random() - .5) * .12);
+  // Fill the foreground between the box and rim with overlapping, uneven coin layers.
+  for (let row = 0; row < 9; row++) {
+    const count = 16 + row * 4;
+    for (let i = 0; i < count; i++) {
+      const angle = (.08 + .84 * (i + random() * .65) / count) * Math.PI;
+      const radius = .3 + row * .065 + (random() - .5) * .045;
+      const height = .045 + (1 - radius) * .14 + random() * .055;
+      platformCoin(angle, radius, height, (random() - .5) * .24);
+    }
+  }
+  for (const [angle, radius, count] of [[.24, .52, 6], [.46, .57, 8], [.69, .58, 5], [.8, .7, 7]]) {
+    for (let i = 0; i < count; i++) platformCoin(angle * Math.PI, radius, .1 + i * .039);
+  }
   const coinRimGeometry = keep(new THREE.RingGeometry(.095, .115, 16));
   coinRimGeometry.rotateX(-Math.PI / 2); coinRimGeometry.translate(0, .0205, 0);
   const goldHighlight = keep(new THREE.MeshStandardMaterial({ color: 0xf2cc78, metalness: .7, roughness: .32 }));
@@ -265,6 +278,9 @@ export function createChestModel(canvas) {
   platformGem(amethyst, 1.1, .94, .22, .5);
   platformGem(sapphire, 1.88, .95, .24, .7);
   platformGem(gem, 1.5, .9, .18, .3);
+  for (const [material, angle, radius, size] of [[ruby, .57, .53, .17], [sapphire, .77, .65, .16], [amethyst, .41, .68, .18], [gem, .22, .65, .16]]) {
+    platformGem(material, angle, radius, size, angle * 3).position.y += .12;
+  }
 
   // Bevelled gold ingots, a jewelled ring, and a loosely draped pearl necklace.
   const ingotShape = new THREE.Shape();
@@ -277,6 +293,10 @@ export function createChestModel(canvas) {
   }
   const [rearBarX, rearBarZ] = platformPoint(1.77 * Math.PI, .94);
   const rearBar = mesh(ingotGeometry, brass, ground, rearBarX, .04, rearBarZ); rearBar.rotation.y = -.4;
+  const [frontBarX, frontBarZ] = platformPoint(.7 * Math.PI, .53);
+  for (const [dx, y, dz, angle] of [[0, .14, 0, .3], [.16, .33, -.04, -.15]]) {
+    const bar = mesh(ingotGeometry, brass, ground, frontBarX + dx, y, frontBarZ + dz); bar.rotation.y = angle;
+  }
   const [ringX, ringZ] = platformPoint(.84 * Math.PI, .89);
   const ring = mesh(new THREE.TorusGeometry(.14, .025, 8, 24), goldHighlight, ground, ringX, .11, ringZ);
   ring.rotation.x = -Math.PI / 3;
