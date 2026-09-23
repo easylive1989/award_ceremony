@@ -36,7 +36,8 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
     // Ground decorations remain fixed even at the strongest point of the shake.
     await seek(870);
     assert.deepEqual(await page.locator('.dt-ground').boundingBox(), groundBox);
-    assert.equal(await page.locator('.dt-ground').evaluate(el => el.getAnimations({ subtree: true }).length), 0);
+    assert.equal(await page.locator('.dt-ground').evaluate(el => getComputedStyle(el).transform), 'none');
+    assert.equal(await page.locator('.dt-ground').evaluate(el => getComputedStyle(el).opacity), '1');
     assert.equal(await page.locator('.dt-ground .dt-chest-shake').count(), 0);
     const hingeTransforms = [];
     for (const time of [1650, 1950, 2400]) {
@@ -76,6 +77,11 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
       return clip.startsWith('inset(') && clip.match(/[\d.]+/g).every(value => Number(value) === 0);
     }));
     assert(await page.locator('.dt-header').evaluate(el => el.getBoundingClientRect().bottom < document.querySelector('.dt-scroll').getBoundingClientRect().top));
+    await seek(5700);
+    for (const selector of ['.dt-chest', '.dt-chest-front', '.dt-ground']) {
+      assert.equal(await page.locator(selector).isVisible(), false);
+    }
+    assert.equal(await page.locator('.dt-scroll-flight').isVisible(), true);
 
     // Preparing a new award mid-reveal cannot allow the previous animation to leak through.
     await page.evaluate(() => {
@@ -87,6 +93,8 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
     assert.equal(await page.locator('.dt-scroll-flight').isVisible(), false);
     assert.equal(await page.locator('[data-award-team]').textContent(), '第三支隊伍');
     assert.equal(await page.locator('.dt-lid-hinge').evaluate(el => getComputedStyle(el).transform), 'none');
+    assert.equal(await page.locator('.dt-chest').isVisible(), true);
+    assert.equal(await page.locator('.dt-ground').isVisible(), true);
 
     await page.emulateMedia({ reducedMotion: 'reduce' });
     for (const viewport of [{ width: 390, height: 844 }, { width: 1920, height: 1080 }]) {
@@ -98,6 +106,9 @@ test('dungeon waits, opens, unfurls, resets, and cleans up its animations', { ti
       assert.equal(await page.locator('.dt-scroll-flight').isVisible(), false);
       await page.evaluate(() => app.themeManager.reveal());
       assert.equal(await page.locator('.dt-scroll-copy').evaluate(el => getComputedStyle(el).opacity), '1');
+      assert.equal(await page.locator('.dt-chest').isVisible(), false);
+      assert.equal(await page.locator('.dt-chest-front').isVisible(), false);
+      assert.equal(await page.locator('.dt-ground').isVisible(), false);
       assert.equal(await page.locator('[data-award-team] img').count(), 0);
       assert(await page.locator('[data-award-team]').evaluate(el => {
         const bounds = el.getBoundingClientRect();

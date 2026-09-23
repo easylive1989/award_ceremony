@@ -68,7 +68,8 @@
 [data-theme="dungeon"].dt-run .dt-lid-hinge { animation: dtOpen 1.25s 1.45s cubic-bezier(.42,0,.22,1) both; }
 [data-theme="dungeon"].dt-run .dt-chest-light { animation: dtChestLight 2.4s 1.45s ease-out both; }
 [data-theme="dungeon"].dt-run .dt-opening-glow { animation: dtOpeningGlow 2.5s 1.45s ease-out both; }
-[data-theme="dungeon"].dt-run .dt-chest, [data-theme="dungeon"].dt-run .dt-chest-front { animation: dtSettle 1.1s 3.85s cubic-bezier(.2,.7,.2,1) both; }
+[data-theme="dungeon"].dt-run .dt-chest, [data-theme="dungeon"].dt-run .dt-chest-front { animation: dtSettle 1.1s 3.85s cubic-bezier(.2,.7,.2,1) both, dtChestExit .55s 4.95s ease-in both; }
+[data-theme="dungeon"].dt-run .dt-ground { animation: dtChestExit .55s 4.95s ease-in both; }
 [data-theme="dungeon"].dt-run .dt-suspense { animation: dtSuspense .5s 1.3s ease both; }
 [data-theme="dungeon"].dt-run .dt-rays { animation: dtRays 2.8s 1.45s ease-out both; }
 [data-theme="dungeon"].dt-run .dt-burst i { animation: dtSpark 2s calc(1.7s + var(--lag)) ease-out both; }
@@ -88,6 +89,7 @@
 @keyframes dtChestLight { 0% { opacity: 0; transform: scale(.8,.2); } 8% { opacity: .5; transform: scale(1,.5); } 30%, 55% { opacity: 1; transform: scale(1.1,1.7); } 100% { opacity: .55; transform: scale(1,1); } }
 @keyframes dtOpeningGlow { 0% { opacity: 0; transform: scale(.55,.15); } 12% { opacity: .65; } 35%, 55% { opacity: 1; transform: scale(1.15,1.1); } 100% { opacity: .25; transform: scale(1.2,1.15); } }
 @keyframes dtSettle { from { transform: translateY(0) scale(1); } to { transform: translateY(4cqw) scale(.66); } }
+@keyframes dtChestExit { from { opacity: 1; visibility: visible; } to { opacity: 0; visibility: hidden; } }
 @keyframes dtSuspense { to { opacity: 0; visibility: hidden; transform: translateY(-.6cqw); } }
 @keyframes dtRays { 0% { opacity: 0; transform: scaleX(.6); } 25% { opacity: 1; } 100% { opacity: .25; transform: scaleX(1.1); } }
 @keyframes dtSpark { 0% { opacity: 0; transform: translate(0,0) scale(.3); } 12% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx),var(--dy)) rotate(var(--turn)) scale(.3); } }
@@ -116,6 +118,7 @@
 [data-theme="dungeon"].dt-reduced.dt-run .dt-scroll-copy { opacity: 1; }
 [data-theme="dungeon"].dt-reduced.dt-run .dt-scroll-window { z-index: 7; clip-path: none; }
 [data-theme="dungeon"].dt-reduced.dt-run .dt-chest, [data-theme="dungeon"].dt-reduced.dt-run .dt-chest-front { transform: translateY(4cqw) scale(.66); }
+[data-theme="dungeon"].dt-reduced.dt-run .dt-chest, [data-theme="dungeon"].dt-reduced.dt-run .dt-chest-front, [data-theme="dungeon"].dt-reduced.dt-run .dt-ground { opacity: 0; visibility: hidden; }
 [data-theme="dungeon"].dt-reduced.dt-run .dt-lid-hinge { transform: rotateX(-165deg); }
 [data-theme="dungeon"].dt-reduced.dt-run .dt-chest-light { opacity: .65; }
 [data-theme="dungeon"].dt-reduced.dt-run .dt-suspense { opacity: 0; visibility: hidden; }
