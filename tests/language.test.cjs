@@ -25,7 +25,7 @@ test('setup stays Chinese while stage presents Chinese and English together', { 
     assert.equal(await page.locator('body').evaluate(el => getComputedStyle(el).color), 'rgb(20, 20, 19)');
     assert.match(await page.locator('body').evaluate(el => getComputedStyle(el).fontFamily), /Arial/);
     assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()), '#d97757');
-    assert.equal(await page.locator('h1').textContent(), '頒獎典禮名單設定');
+    assert.equal(await page.locator('h1').textContent(), '頒獎典禮播放系統');
     assert.equal(await page.locator('h1 small').count(), 0);
     assert.equal(await page.locator('.input-group').first().locator('label').textContent(), '得獎組別 / 獎項');
     assert.equal(await page.locator('.team-input-group').first().locator('label').textContent(), '獲獎隊伍');
@@ -58,8 +58,7 @@ test('setup stays Chinese while stage presents Chinese and English together', { 
     await page.reload();
     await page.waitForFunction(() => window.app?.themeManager?.current);
     assert.equal(await page.locator('#language-select').count(), 0);
-    assert.match(await page.locator('.subtitle').textContent(), /點擊一次揭曉/);
-    assert.doesNotMatch(await page.locator('.subtitle').textContent(), /Click once to reveal/);
+    assert.equal(await page.locator('.header .badge, .header .subtitle').count(), 0);
     assert.deepEqual(errors, []);
   } finally {
     await browser.close();

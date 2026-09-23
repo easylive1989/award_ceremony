@@ -14,9 +14,7 @@ const AWARD_STORAGE_KEY = 'award_ceremony_data';
 
 const UI_COPY = {
   documentTitle: '頒獎典禮播放系統',
-  badge: '頒獎典禮播放系統',
-  heading: '頒獎典禮名單設定',
-  subtitle: '設定得獎組別與獲獎隊伍，點擊一次揭曉，再點擊切換下一組。',
+  heading: '頒獎典禮播放系統',
   themeLabel: '舞台外觀', musicLabel: '配樂音量', musicControls: '配樂控制',
   displayRegion: '播放螢幕設定', displayLabel: '播放螢幕', displayControls: '播放螢幕控制', currentDisplay: '目前所在螢幕', detectDisplays: '偵測螢幕',
   displayHelp: '初次偵測時，瀏覽器會詢問多螢幕管理權限。',

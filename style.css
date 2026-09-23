@@ -60,15 +60,6 @@ body:has(#stage:not(.hidden))::before { display: none; }
   margin-bottom: 42px;
 }
 
-.badge {
-  display: inline-block;
-  font-size: 0.76rem;
-  letter-spacing: .16em;
-  font-weight: 700;
-  color: var(--accent);
-  margin-bottom: 10px;
-}
-
 .header h1 {
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 5vw, 4.2rem);
@@ -76,12 +67,6 @@ body:has(#stage:not(.hidden))::before { display: none; }
   line-height: 1.08;
   margin-bottom: 14px;
   letter-spacing: -.045em;
-}
-
-.subtitle {
-  color: var(--text-muted);
-  font-size: 1rem;
-  line-height: 1.75;
 }
 
 .card {
