@@ -1,9 +1,27 @@
 window.AwardThemes.set('claude-final', (host) => {
+  // Small, alternating bends keep the connected stem organic at every size.
+  const laurelStem = (index) => index % 2
+    ? 'M0 32C8 33 14 30 23 31S38 34 46 32S57 31 64 32'
+    : 'M0 32C9 33 15 29 24 31S39 35 47 33S58 31 64 32';
   const laurelLeaf = (index) => `
-    <svg class="final-laurel-leaf${index % 2 ? ' final-laurel-leaf-alt' : ''}" viewBox="0 0 54 30" fill="none" aria-hidden="true">
-      <path class="final-laurel-leaf-shadow" d="M3 25C9 8 27-2 51 4C45 21 27 33 3 25Z"/>
-      <path class="final-laurel-leaf-fill" d="M3 23C10 8 27 0 49 5C42 20 26 29 3 23Z"/>
-      <path class="final-laurel-vein" d="M7 21C20 16 32 11 45 6"/>
+    <svg class="final-laurel-leaf${index % 2 ? ' final-laurel-leaf-alt' : ''}" viewBox="0 0 64 64" preserveAspectRatio="none" fill="none" aria-hidden="true">
+      <g class="final-laurel-sprig">
+        <path class="final-laurel-stem" d="${laurelStem(index)}"/>
+        <path class="final-laurel-stem-highlight" d="${laurelStem(index)}"/>
+        <path class="final-laurel-twig" d="M7 32Q12 32 14 29M26 32Q30 33 31 36"/>
+        <g transform="rotate(32 14 29)">
+          <path class="final-laurel-leaf-fill" d="M14 29C9 17 21 8 39 3C39 18 31 29 14 29Z"/>
+          <path class="final-laurel-leaf-fold" d="M14 29C9 17 21 8 39 3C32 13 24 23 14 29Z"/>
+          <path class="final-laurel-vein" d="M14 29Q29 17 39 3"/>
+          <path class="final-laurel-vein-detail" d="M20 24L18 18M25 19L25 13M30 13L32 9M23 22L30 22M29 16L35 15"/>
+        </g>
+        <g transform="rotate(-32 31 36)">
+          <path class="final-laurel-leaf-fill" d="M31 36C46 35 54 47 57 61C40 58 28 50 31 36Z"/>
+          <path class="final-laurel-leaf-fold" d="M31 36C46 35 54 47 57 61C48 51 40 43 31 36Z"/>
+          <path class="final-laurel-vein" d="M31 36Q46 48 57 61"/>
+          <path class="final-laurel-vein-detail" d="M37 41L44 41M43 47L49 47M48 53L53 54M37 42L36 48M43 48L43 53"/>
+        </g>
+      </g>
     </svg>`;
   const laurelRail = (count) => Array.from({ length: count }, (_, index) => laurelLeaf(index)).join('');
   const laurelFrame = (horizontalCount, verticalCount, sizeClass) => `

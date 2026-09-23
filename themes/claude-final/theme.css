@@ -189,7 +189,7 @@
   56%, 100% { z-index: 8; clip-path: polygon(0 0, 100% 0, 100% 100%, 67% 100%, 53.4% 100%, 50% 100%, 46.6% 100%, 33% 100%, 0 100%); }
 }
 
-/* Claude Final: straight metallic laurel rails cover all four sides of each frame. */
+/* Paired, veined laurel leaves grow along a gently wandering gold stem. */
 [data-theme="claude-final"] {
   --final-laurel-dark: #94651e;
   --final-laurel-gold: #c8912f;
@@ -217,35 +217,36 @@
   pointer-events: none;
   filter: drop-shadow(0 .2cqw .2cqw rgba(91, 58, 13, .18));
 }
-[data-theme="claude-final"] .final-laurel-rail { position: absolute; display: flex; align-items: center; justify-content: space-evenly; }
+[data-theme="claude-final"] .final-laurel-rail { position: absolute; display: flex; align-items: center; }
 [data-theme="claude-final"] .final-laurel-top,
-[data-theme="claude-final"] .final-laurel-bottom { left: 1.25cqw; right: 1.25cqw; height: 1.7cqw; }
-[data-theme="claude-final"] .final-laurel-top { top: -1.05cqw; }
-[data-theme="claude-final"] .final-laurel-bottom { bottom: -1.05cqw; }
+[data-theme="claude-final"] .final-laurel-bottom { left: .8cqw; right: .8cqw; height: 2.4cqw; }
+[data-theme="claude-final"] .final-laurel-top { top: -1.2cqw; }
+[data-theme="claude-final"] .final-laurel-bottom { bottom: -1.2cqw; }
 [data-theme="claude-final"] .final-laurel-left,
-[data-theme="claude-final"] .final-laurel-right { top: 1.25cqw; bottom: 1.25cqw; width: 1.7cqw; flex-direction: column; }
-[data-theme="claude-final"] .final-laurel-left { left: -1.05cqw; }
-[data-theme="claude-final"] .final-laurel-right { right: -1.05cqw; }
-[data-theme="claude-final"] .final-laurel-leaf { position: relative; z-index: 1; display: block; width: 1.5cqw; height: .84cqw; flex: 0 0 auto; overflow: visible; }
+[data-theme="claude-final"] .final-laurel-right { top: .8cqw; bottom: .8cqw; width: 2.4cqw; flex-direction: column; }
+[data-theme="claude-final"] .final-laurel-left { left: -1.2cqw; }
+[data-theme="claude-final"] .final-laurel-right { right: -1.2cqw; }
+[data-theme="claude-final"] .final-laurel-leaf { position: relative; z-index: 1; display: block; width: 0; height: 100%; min-width: 0; min-height: 0; flex: 1 1 0; overflow: visible; }
 [data-theme="claude-final"] .final-laurel-left .final-laurel-leaf,
-[data-theme="claude-final"] .final-laurel-right .final-laurel-leaf { width: 1.75cqw; height: .98cqw; }
-[data-theme="claude-final"] .final-laurel-top .final-laurel-leaf-alt { transform: rotate(180deg); }
-[data-theme="claude-final"] .final-laurel-bottom .final-laurel-leaf { transform: scaleY(-1); }
-[data-theme="claude-final"] .final-laurel-bottom .final-laurel-leaf-alt { transform: rotate(180deg) scaleY(-1); }
-[data-theme="claude-final"] .final-laurel-left .final-laurel-leaf { transform: rotate(-90deg); }
-[data-theme="claude-final"] .final-laurel-left .final-laurel-leaf-alt { transform: rotate(90deg); }
-[data-theme="claude-final"] .final-laurel-right .final-laurel-leaf { transform: rotate(90deg); }
-[data-theme="claude-final"] .final-laurel-right .final-laurel-leaf-alt { transform: rotate(-90deg); }
-[data-theme="claude-final"] .final-laurel-leaf-shadow { fill: rgba(91, 58, 13, .2); transform: translateY(1.4px); }
-[data-theme="claude-final"] .final-laurel-leaf-fill { fill: var(--final-laurel-gold); stroke: var(--final-laurel-dark); stroke-width: 1.2; }
-[data-theme="claude-final"] .final-laurel-leaf-alt .final-laurel-leaf-fill { fill: var(--final-laurel-light); }
-[data-theme="claude-final"] .final-laurel-vein { fill: none; stroke: rgba(255, 242, 194, .82); stroke-width: 1.25; stroke-linecap: round; }
-[data-theme="claude-final"] .final-laurel-corner { position: absolute; z-index: 2; display: block; width: 2.1cqw; height: 1.2cqw; }
+[data-theme="claude-final"] .final-laurel-right .final-laurel-leaf { width: 100%; height: 0; }
+[data-theme="claude-final"] .final-laurel-sprig { transform-origin: 32px 32px; }
+[data-theme="claude-final"] .final-laurel-bottom .final-laurel-sprig { transform: rotate(180deg); }
+[data-theme="claude-final"] .final-laurel-left .final-laurel-sprig { transform: rotate(-90deg); }
+[data-theme="claude-final"] .final-laurel-right .final-laurel-sprig { transform: rotate(90deg); }
+[data-theme="claude-final"] .final-laurel-stem { fill: none; stroke: var(--final-laurel-gold); stroke-width: 2.1; stroke-linecap: round; }
+[data-theme="claude-final"] .final-laurel-stem-highlight { fill: none; stroke: #fff0b5; stroke-width: .65; stroke-linecap: round; transform: translateY(-.45px); }
+[data-theme="claude-final"] .final-laurel-twig { stroke: var(--final-laurel-gold); stroke-width: 1.8; stroke-linecap: round; }
+[data-theme="claude-final"] .final-laurel-leaf-fill { fill: var(--final-laurel-gold); stroke: var(--final-laurel-dark); stroke-width: .75; stroke-linejoin: round; }
+[data-theme="claude-final"] .final-laurel-leaf-fold { fill: var(--final-laurel-light); }
+[data-theme="claude-final"] .final-laurel-leaf-alt .final-laurel-leaf-fold { fill: #e5bb5d; }
+[data-theme="claude-final"] .final-laurel-vein { fill: none; stroke: #fff0b5; stroke-width: 1; stroke-linecap: round; }
+[data-theme="claude-final"] .final-laurel-vein-detail { fill: none; stroke: #80581d; stroke-opacity: .32; stroke-width: .65; stroke-linecap: round; }
+[data-theme="claude-final"] .final-laurel-corner { position: absolute; z-index: 2; display: block; width: 2cqw; height: 2.4cqw; }
 [data-theme="claude-final"] .final-laurel-corner .final-laurel-leaf { width: 100%; height: 100%; }
-[data-theme="claude-final"] .final-laurel-corner-tl { top: -.62cqw; left: -.62cqw; transform: rotate(45deg); }
-[data-theme="claude-final"] .final-laurel-corner-tr { top: -.62cqw; right: -.62cqw; transform: rotate(135deg); }
-[data-theme="claude-final"] .final-laurel-corner-br { right: -.62cqw; bottom: -.62cqw; transform: rotate(-135deg); }
-[data-theme="claude-final"] .final-laurel-corner-bl { bottom: -.62cqw; left: -.62cqw; transform: rotate(-45deg); }
+[data-theme="claude-final"] .final-laurel-corner-tl { top: -.95cqw; left: -.85cqw; transform: rotate(-45deg); }
+[data-theme="claude-final"] .final-laurel-corner-tr { top: -.95cqw; right: -.85cqw; transform: rotate(45deg); }
+[data-theme="claude-final"] .final-laurel-corner-br { right: -.85cqw; bottom: -.95cqw; transform: rotate(135deg); }
+[data-theme="claude-final"] .final-laurel-corner-bl { bottom: -.95cqw; left: -.85cqw; transform: rotate(-135deg); }
 
 [data-theme="claude-final"] .final-crowd {
   position: absolute;
