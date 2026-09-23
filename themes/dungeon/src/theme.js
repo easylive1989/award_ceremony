@@ -24,8 +24,10 @@ window.AwardThemes.set('dungeon', (host) => {
       <canvas class="dt-model"></canvas>
       <div class="dt-model-clock"></div>
       <div class="dt-model-fallback"><img src="themes/dungeon/chest-front.svg" alt=""><img src="themes/dungeon/lid.svg" alt=""></div>
-      <div class="dt-opening-glow"></div>
-      <div class="dt-chest-light"></div>
+      <div class="dt-chest-effects">
+        <div class="dt-opening-glow"></div>
+        <div class="dt-chest-light"></div>
+      </div>
     </div>
     <div class="dt-burst" aria-hidden="true">${sparks}</div>
     <div class="dt-scroll-window">
@@ -64,7 +66,7 @@ window.AwardThemes.set('dungeon', (host) => {
 
   function renderModel() {
     const revealing = host.classList.contains('dt-run');
-    const time = motion.matches && revealing ? 5.5 : Number(clock.getAnimations()[0]?.currentTime || 0) / 1000;
+    const time = motion.matches && revealing ? 5.2 : Number(clock.getAnimations()[0]?.currentTime || 0) / 1000;
     model?.render(time, revealing);
     return time;
   }
@@ -72,7 +74,7 @@ window.AwardThemes.set('dungeon', (host) => {
   function frame() {
     frameId = null;
     if (disposed || !visible || document.hidden || motion.matches || !model) return;
-    if (renderModel() < 5.5 && host.classList.contains('dt-run')) frameId = requestAnimationFrame(frame);
+    if (renderModel() < 5.2 && host.classList.contains('dt-run')) frameId = requestAnimationFrame(frame);
   }
 
   function resizeModel() {
@@ -107,7 +109,7 @@ window.AwardThemes.set('dungeon', (host) => {
     if (frameId !== null) cancelAnimationFrame(frameId);
     frameId = null;
     if (visible) { fit(); resizeModel(); }
-    if (visible && !document.hidden && !motion.matches && host.classList.contains('dt-run') && model && renderModel() < 5.5) frameId = requestAnimationFrame(frame);
+    if (visible && !document.hidden && !motion.matches && host.classList.contains('dt-run') && model && renderModel() < 5.2) frameId = requestAnimationFrame(frame);
   }
 
   function setAward(award) {

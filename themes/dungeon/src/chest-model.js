@@ -157,6 +157,17 @@ export function createChestModel(canvas) {
   const shadowMaterial = keep(new THREE.MeshBasicMaterial({ map: keep(new THREE.CanvasTexture(shadowCanvas)), transparent: true, depthWrite: false }));
   const shadow = mesh(new THREE.PlaneGeometry(6, 3.8), shadowMaterial, ground, 0, -.06, 0); shadow.rotation.x = -Math.PI / 2;
 
+  // Coins and gems share the original materials; only chest meshes may fade.
+  const chestMaterials = new Map();
+  function fadingMaterial(material) {
+    if (!chestMaterials.has(material)) chestMaterials.set(material, keep(material.clone()));
+    return chestMaterials.get(material);
+  }
+  chest.traverse(object => {
+    if (!object.isMesh) return;
+    object.material = Array.isArray(object.material) ? object.material.map(fadingMaterial) : fadingMaterial(object.material);
+  });
+
   let disposed = false;
   function resize(width, height) {
     if (disposed || !width || !height) return;
@@ -174,12 +185,22 @@ export function createChestModel(canvas) {
     chest.rotation.z = shake * .045; chest.position.x = shake * .035;
     const settle = smooth((t - 3.85) / 1.1);
     chest.scale.setScalar(1 - settle * .25); chest.position.y = -settle * .2;
-    treasureLight.intensity = open * (t < 3.85 ? 9 : 3);
+    const opacity = 1 - smooth((t - 4.95) / .25);
+    chest.visible = opacity > 0;
+    chestMaterials.forEach(material => {
+      const transparent = opacity < 1;
+      if (material.transparent !== transparent) { material.transparent = transparent; material.needsUpdate = true; }
+      material.opacity = opacity;
+    });
+    shadowMaterial.opacity = opacity;
+    treasureLight.intensity = open * (t < 3.85 ? 9 : 3) * opacity;
     scene.updateMatrixWorld(true);
     renderer.render(scene, camera);
     // Useful for lifecycle verification without exposing Three.js objects globally.
     canvas.dataset.lidAngle = String(hinge.rotation.x);
     canvas.dataset.frameTime = String(t);
+    canvas.dataset.chestOpacity = String(opacity);
+    canvas.dataset.groundOpacity = String(floorGem.material.opacity);
     canvas.dataset.groundPosition = floorGem.getWorldPosition(new THREE.Vector3()).toArray().join(',');
   }
   function project(x, y, z) {
