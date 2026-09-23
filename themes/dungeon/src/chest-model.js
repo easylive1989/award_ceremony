@@ -81,27 +81,70 @@ export function createChestModel(canvas) {
     handle.rotation.y = Math.PI / 2;
   }
   for (const x of [-1.74, 1.74]) for (const z of [-.86, .86]) box(chest, [.38, .2, .38], [x, .06, z], brassDark);
-  box(chest, [.48, .6, .075], [0, 1.3, 1.16], brassDark);
-  box(chest, [.36, .48, .045], [0, 1.32, 1.22]);
+  box(chest, [.48, .78, .075], [0, 1.25, 1.16], brassDark);
+  box(chest, [.36, .65, .045], [0, 1.25, 1.22]);
   const lock = new THREE.Group(); lock.position.set(0, 1.3, 1.27); chest.add(lock);
   const keyholeMaterial = keep(new THREE.MeshStandardMaterial({ color: 0x160f09, roughness: .9 }));
-  mesh(new THREE.TorusGeometry(.115, .025, 8, 24), brassDark, lock);
-  mesh(new THREE.CircleGeometry(.087, 24), keyholeMaterial, lock, 0, 0, .005);
-  box(lock, [.065, .105, .012], [0, -.072, .009], keyholeMaterial);
+  // A single continuous silhouette: round head and a flared, tapered lower slot.
+  function keyholeOutline(scale = 1) {
+    const shape = new THREE.Shape();
+    shape.moveTo(.052 * scale, -.064 * scale);
+    shape.absarc(0, 0, .082 * scale, -.884, Math.PI + .884, false);
+    shape.lineTo(-.092 * scale, -.225 * scale);
+    shape.lineTo(.092 * scale, -.225 * scale);
+    shape.closePath();
+    return shape;
+  }
+  const lockRim = new THREE.Shape(keyholeOutline(1.22).getPoints(32));
+  lockRim.holes.push(new THREE.Path(keyholeOutline().getPoints(32)));
+  mesh(new THREE.ExtrudeGeometry(lockRim, { depth: .016, bevelEnabled: true, bevelSize: .005, bevelThickness: .004, bevelSegments: 2, steps: 1 }), brassDark, lock);
+  mesh(new THREE.ShapeGeometry(keyholeOutline(), 32), keyholeMaterial, lock, 0, 0, .002);
 
   // The shaft follows the lock's Z axis: approach, insert, then turn in place.
   const treasureKey = new THREE.Group(); chest.add(treasureKey);
   const keyGold = keep(new THREE.MeshStandardMaterial({ color: 0xf2c66d, metalness: .72, roughness: .25, emissive: 0x6c3b08, emissiveIntensity: .15 }));
-  const shaft = mesh(new THREE.CylinderGeometry(.035, .035, .86, 12), keyGold, treasureKey, 0, 0, .43);
+  const shaft = mesh(new THREE.CylinderGeometry(.04, .04, .99, 16), keyGold, treasureKey, 0, 0, .495);
   shaft.rotation.x = Math.PI / 2;
-  for (const z of [.07, .18]) box(treasureKey, [.055, .1, .055], [0, -.065, z], keyGold);
-  const bow = mesh(new THREE.TorusGeometry(.23, .047, 10, 32), keyGold, treasureKey, 0, 0, 1.08);
-  bow.scale.y = 1.35;
-  const innerBow = mesh(new THREE.TorusGeometry(.16, .018, 8, 32), keyGold, treasureKey, 0, 0, 1.08);
-  innerBow.scale.y = 1.35;
-  box(treasureKey, [.11, .11, .17], [0, 0, .83], keyGold);
-  const keyJewel = mesh(new THREE.OctahedronGeometry(.075), gem, treasureKey, 0, .3, 1.08);
-  keyJewel.scale.z = .6;
+  for (const [z, radius, length] of [[.32, .064, .045], [.4, .062, .035], [.86, .067, .08], [.95, .08, .045]]) {
+    const collar = mesh(new THREE.CylinderGeometry(radius, radius, length, 20), keyGold, treasureKey, 0, 0, z);
+    collar.rotation.x = Math.PI / 2;
+  }
+  // A flat, pierced floral bow in the same plane as the shaft, with raised gold edging.
+  const bowOutline = new THREE.Shape();
+  bowOutline.moveTo(0, -.3);
+  bowOutline.bezierCurveTo(.23, -.3, .39, -.13, .32, .03);
+  bowOutline.bezierCurveTo(.52, .26, .14, .49, 0, .23);
+  bowOutline.bezierCurveTo(-.14, .49, -.52, .26, -.32, .03);
+  bowOutline.bezierCurveTo(-.39, -.13, -.23, -.3, 0, -.3);
+  const bowPoints = bowOutline.getPoints(24);
+  const bowShape = new THREE.Shape(bowPoints);
+  bowShape.holes.push(new THREE.Path(bowPoints.map(point => point.clone().multiplyScalar(.66))));
+  const bowGroup = new THREE.Group(); treasureKey.add(bowGroup);
+  bowGroup.position.z = 1.22;
+  bowGroup.rotation.set(Math.PI / 2, 0, Math.PI / 2, 'ZYX');
+  const bowGeometry = new THREE.ExtrudeGeometry(bowShape, { depth: .045, bevelEnabled: true, bevelSize: .012, bevelThickness: .008, bevelSegments: 2, steps: 1 });
+  bowGeometry.translate(0, 0, -.0225);
+  mesh(bowGeometry, keyGold, bowGroup);
+  for (const side of [-1, 1]) {
+    const rimCurve = new THREE.CatmullRomCurve3(bowPoints.slice(0, -1).map(point => new THREE.Vector3(point.x * .94, point.y * .94, side * .034)), true);
+    mesh(new THREE.TubeGeometry(rimCurve, 80, .009, 6, true), keyGold, bowGroup);
+    const boss = mesh(new THREE.SphereGeometry(.085, 16, 10), keyGold, bowGroup, 0, -.245, side * .027);
+    boss.scale.z = .4;
+    for (const [x, y] of [[-.23, -.12], [.23, -.12], [-.29, .15], [.29, .15], [-.16, .275], [.16, .275]]) {
+      const rivet = mesh(studGeometry, keyGold, bowGroup, x, y, side * .035);
+      rivet.scale.set(.4, .4, .22);
+    }
+  }
+  // A broad notched bit, including the reference's small pierced cross detail.
+  const bitShape = new THREE.Shape();
+  const bitPoints = [[.055, 0], [.27, 0], [.27, -.2], [.22, -.2], [.22, -.15], [.18, -.15], [.18, -.225], [.12, -.225], [.12, -.18], [.09, -.18], [.09, -.225], [.055, -.225]];
+  bitPoints.forEach(([x, y], i) => i ? bitShape.lineTo(x, y) : bitShape.moveTo(x, y)); bitShape.closePath();
+  const cross = new THREE.Path();
+  const crossPoints = [[-.015, .04], [.015, .04], [.015, .015], [.04, .015], [.04, -.015], [.015, -.015], [.015, -.04], [-.015, -.04], [-.015, -.015], [-.04, -.015], [-.04, .015], [-.015, .015]];
+  crossPoints.forEach(([x, y], i) => i ? cross.lineTo(.16 + x, -.085 + y) : cross.moveTo(.16 + x, -.085 + y)); cross.closePath(); bitShape.holes.push(cross);
+  const bitGeometry = new THREE.ExtrudeGeometry(bitShape, { depth: .04, bevelEnabled: true, bevelSize: .005, bevelThickness: .004, bevelSegments: 1, steps: 1 });
+  bitGeometry.translate(0, 0, -.02); bitGeometry.rotateY(-Math.PI / 2);
+  mesh(bitGeometry, keyGold, treasureKey);
 
   // One volumetric curved lid, pivoting about the X axis at the rear rim.
   const hinge = new THREE.Group(); hinge.position.set(0, 1.68, -1.1); chest.add(hinge);
@@ -259,9 +302,8 @@ export function createChestModel(canvas) {
     const insertion = smooth((t - .65) / .3);
     const turn = smooth((t - .95) / .45);
     treasureKey.visible = t > 0;
-    treasureKey.position.set((1 - approach) * 1.6, 1.3 + (1 - approach), 1.58 + (1 - approach) * 1.15 - insertion * .46);
-    treasureKey.rotation.set(0, -.75 * (1 - approach), -turn * Math.PI / 2);
-    lock.rotation.z = -turn * Math.PI / 2;
+    treasureKey.position.set((1 - approach) * 1.6, 1.3 + (1 - approach), 1.58 + (1 - approach) * 1.15 - insertion * .6);
+    treasureKey.rotation.set(0, -1.1 * (1 - approach), -turn * Math.PI / 2);
     const settle = smooth((t - 3.85) / 1.1);
     chest.scale.setScalar(1 - settle * .25); chest.position.y = -settle * .2;
     const opacity = 1 - smooth((t - 4.95) / .25);
