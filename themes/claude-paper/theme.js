@@ -12,6 +12,7 @@ window.AwardThemes.set('claude-paper', (host) => {
         <div class="paper-flap"></div>
       </div>
     </div>
+    <canvas class="paper-stars" aria-hidden="true"></canvas>
     <div class="paper-envelope-front" aria-hidden="true">
       <div class="paper-shell">
         <div class="paper-pocket"></div>
@@ -60,6 +61,8 @@ window.AwardThemes.set('claude-paper', (host) => {
   `;
   const canvas = host.querySelector('canvas');
   const ctx = canvas.getContext('2d');
+  const starCanvas = host.querySelector('.paper-stars');
+  const starCtx = starCanvas.getContext('2d');
   const category = host.querySelector('[data-award-category]');
   const team = host.querySelector('[data-award-team]');
   const suspense = host.querySelector('.paper-suspense');
@@ -72,6 +75,49 @@ window.AwardThemes.set('claude-paper', (host) => {
   const random = () => ((seed = seed * 16807 % 2147483647) - 1) / 2147483646;
   const confetti = Array.from({ length: 54 }, () => ({ x: random(), y: random(), phase: random() * 6.28, speed: .5 + random(), size: 9 + random() * 9 }));
   const burst = Array.from({ length: 90 }, () => ({ angle: random() * Math.PI * 2, speed: .07 + random() * .3, delay: random() * .25, size: .4 + random() * 1.7 }));
+  // Stars and ribbons share the same Claude palette.
+  const colors = ['217,119,87', '98,153,135', '120,140,93', '130,125,189', '203,202,219'];
+  const stars = Array.from({ length: 48 }, (_, index) => ({
+    origin: (random() - .5) * .08,
+    vx: (index % 2 ? 1 : -1) * (.14 + random() * .34),
+    vy: .24 + random() * .2,
+    delay: random() * .12,
+    lifetime: 1.5 + random() * .6,
+    radius: 4 + random() * 5,
+    rotation: random() * Math.PI * 2,
+    spin: (random() - .5) * 7,
+  }));
+
+  function drawStars(revealAge) {
+    if (!starCtx) return;
+    starCtx.clearRect(0, 0, width, height);
+    if (reduced || revealAge < 0 || revealAge > 2.25) return;
+    stars.forEach((star, index) => {
+      const age = revealAge - star.delay;
+      if (age < 0 || age >= star.lifetime) return;
+      const progress = age / star.lifetime;
+      const travel = (1 - Math.exp(-1.6 * age)) / 1.6;
+      // Start inside the pocket; the front layer hides the stars until they emerge.
+      const x = width * (.5 + star.origin + star.vx * travel);
+      const y = height * .38 + width * (.065 - star.vy * travel + .035 * age * age);
+      const radius = star.radius * width / 1600 * (1 - .3 * progress);
+      const fade = Math.min(1, age / .06) * Math.min(1, (1 - progress) / .4);
+      starCtx.save();
+      starCtx.translate(x, y);
+      starCtx.rotate(star.rotation + star.spin * age);
+      starCtx.fillStyle = `rgba(${colors[index % colors.length]},${fade * .95})`;
+      starCtx.beginPath();
+      for (let point = 0; point < 10; point++) {
+        const angle = -Math.PI / 2 + point * Math.PI / 5;
+        const r = point % 2 ? radius * .44 : radius;
+        if (point === 0) starCtx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
+        else starCtx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+      }
+      starCtx.closePath();
+      starCtx.fill();
+      starCtx.restore();
+    });
+  }
 
   function applyBilingualCopy() {
     suspense.innerHTML = '<span class="copy-zh">得獎的是…</span><span class="copy-en" lang="en">And the winner is…</span>';
@@ -95,10 +141,10 @@ window.AwardThemes.set('claude-paper', (host) => {
     const w = width, h = height, unit = w / 1600;
     const revealAge = host.classList.contains('paper-waiting') ? -1 : reduced ? 8 : elapsed - REVEAL_AT;
     const celebration = reduced ? 1 : Math.min(1, Math.max(0, revealAge));
+    drawStars(revealAge);
     ctx.clearRect(0, 0, w, h);
     ctx.globalCompositeOperation = 'source-over';
     // Broad paper ribbons use only the CwC 2026 Claude palette.
-    const colors = ['217,119,87', '98,153,135', '120,140,93', '130,125,189', '203,202,219'];
     if (celebration > 0) {
       confetti.forEach((piece, index) => {
         const y = ((piece.y + time * .015 * piece.speed) % 1) * h;
@@ -147,6 +193,9 @@ window.AwardThemes.set('claude-paper', (host) => {
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
     ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+    starCanvas.width = canvas.width;
+    starCanvas.height = canvas.height;
+    starCtx?.setTransform(dpr, 0, 0, dpr, 0, 0);
     fitText();
     draw();
   }
