@@ -39,7 +39,6 @@ window.AwardThemes.set('claude-final', (host) => {
     <canvas class="paper-effects" aria-hidden="true"></canvas>
     <div class="paper-vignette" aria-hidden="true"></div>
     <div class="paper-header" aria-live="polite" aria-atomic="true">
-      ${laurelFrame(18, 5, 'final-laurel-header')}
       <span class="paper-header-label">Group 組別</span><span class="paper-header-value" data-award-category></span>
     </div>
     <div class="paper-suspense" aria-hidden="true">And the winner is…</div>

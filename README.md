@@ -50,7 +50,7 @@
 
 ## Claude Final
 
-在該筆名單的「舞台外觀」選擇「Claude Final」。播放流程與 Claude 相同，組別標題框及得獎卡以密集金色月桂葉直接覆蓋原有四邊及圓角，不另加底線。得獎卡抽出時，多款 Clawd 會從畫面左右露出半身，以傾斜姿態上下歡呼。
+在該筆名單的「舞台外觀」選擇「Claude Final」。播放流程與 Claude 相同，組別標題保留簡潔細框，得獎卡則以金色月桂葉覆蓋四邊及圓角，葉片沿微彎枝幹兩側排列。得獎卡抽出時，多款 Clawd 會從畫面左右露出半身，以傾斜姿態上下歡呼。
 
 配色參考 [Anthropic 公開品牌指南](https://github.com/anthropics/skills/blob/main/skills/brand-guidelines/SKILL.md) 的 `#faf9f5`、`#141413`、`#d97757` 等色彩；這是一款風格改編的頒獎皮膚。
 

@@ -68,15 +68,12 @@ test(`${themeId} conceals, reveals, and replays each winner`, { timeout: 90000 }
       assert(await page.locator('.paper-envelope-glow').evaluate(el => Number(getComputedStyle(el).zIndex))
         < await page.locator('.paper-envelope').evaluate(el => Number(getComputedStyle(el).zIndex)));
       if (themeId === 'claude-final') {
-        assert.equal(await page.locator('.final-laurel-frame').count(), 2);
-        assert.equal(await page.locator('.final-laurel-rail').count(), 8);
-        assert.equal(await page.locator('.final-laurel-corner').count(), 8);
-        assert.equal(await page.locator('.final-laurel-leaf').count(), 150);
+        assert.equal(await page.locator('.paper-header .final-laurel-frame').count(), 0);
+        assert.equal(await page.locator('.paper-card .final-laurel-frame').count(), 1);
+        assert.equal(await page.locator('.final-laurel-rail').count(), 4);
+        assert.equal(await page.locator('.final-laurel-corner').count(), 4);
+        assert.equal(await page.locator('.final-laurel-leaf').count(), 100);
         assert.equal(await page.locator('.final-crowd-fan').count(), 8);
-        assert(await page.locator('.paper-header').evaluate(header => (
-          parseFloat(getComputedStyle(header.querySelector('.final-laurel-top')).top) < 0
-          && parseFloat(getComputedStyle(header.querySelector('.final-laurel-corner-tl')).left) < 0
-        )));
         assert(await page.locator('.paper-card').evaluate(card => (
           parseFloat(getComputedStyle(card.querySelector('.final-laurel-bottom')).bottom) < 0
           && parseFloat(getComputedStyle(card.querySelector('.final-laurel-corner-br')).right) < 0
